@@ -1,17 +1,13 @@
-# Voces y Melodías Lojanas · Prototipo web v3
+# Prototipo v6 · Línea de tiempo interactiva
 
-## Cambios principales
-- Bootstrap 5 para estructura responsiva.
-- Rediseño integral de portada, tarjetas y navegación.
-- Estadísticas dinámicas desde la API.
-- Ficha individual rediseñada.
-- Blanca Cano Palacio como caso piloto destacado.
-- Sección de obras normalizada visualmente.
-- Tres experiencias educativas diferenciadas.
-- Mantiene conexión JSONP con Google Sheets/Apps Script.
+Novedades:
+- Nueva página `linea-tiempo.html`.
+- Generación automática de eventos a partir de años ya presentes en la API.
+- Distingue nacimientos y obras fechadas.
+- Filtros por tipo de evento y creadora.
+- Panel de detalle con fuente.
+- Los registros sin año se excluyen en lugar de inferirse.
+- Enlaces cruzados con el explorador de conexiones y el archivo principal.
 
-## Para actualizar GitHub Pages
-Reemplace en el repositorio todos los archivos por los de este paquete.
-Espere 1–3 minutos y haga recarga forzada.
-
-No es necesario modificar Apps Script.
+No requiere cambios adicionales en Apps Script ni Google Sheets.
+Para publicar, sustituya los archivos del repositorio GitHub Pages por los de este paquete.

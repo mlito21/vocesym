@@ -111,7 +111,7 @@ function openProfile(id){
         <div class="list-group list-group-flush mb-4">${works.length?works.map(w=>`<div class="list-group-item px-0 bg-transparent"><strong>${cleanTitle(w.title)}</strong><br><small class="text-secondary">${w.type||"Por clasificar"} · ${w.role||"Rol por verificar"}</small></div>`).join(""):`<div class="text-secondary">Sin obras cargadas.</div>`}</div>
         <h3 class="h4">Fuente preliminar</h3>
         <p class="text-secondary">${c.source||"Pendiente de normalización bibliográfica."}</p>
-        ${isBlanca?`<button class="btn btn-brand rounded-pill mt-2" data-profile-learning="CR-047">Abrir Laboratorio sonoro</button>`:""}
+        ${isBlanca?`<a class="btn btn-brand rounded-pill mt-2" href="laboratorio-blanca.html">Abrir Laboratorio sonoro completo</a>`:""}
       </div>
     </div>
   </div></div>`;

@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Línea de tiempo interactiva de Voces y Melodías Lojanas">
+<title>Línea de tiempo · Voces y Melodías Lojanas</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<style>
+.timeline-hero{padding:72px 0 52px;background:linear-gradient(135deg,var(--brand-deep),var(--brand));color:#fff}
+.timeline-title{font:700 clamp(3rem,6vw,5.6rem) Georgia,serif;line-height:1;letter-spacing:-.045em}
+.timeline-controls{background:#fff;border:1px solid var(--line);border-radius:22px;padding:20px;box-shadow:var(--shadow)}
+.timeline-shell{position:relative;padding:24px 0}
+.timeline-axis{position:absolute;left:50%;top:0;bottom:0;width:2px;background:var(--soft-2);transform:translateX(-50%)}
+.timeline-event{position:relative;display:grid;grid-template-columns:1fr 90px 1fr;gap:18px;align-items:center;margin-bottom:28px}
+.timeline-event:nth-child(odd) .event-card{grid-column:1}
+.timeline-event:nth-child(odd) .event-empty{grid-column:3}
+.timeline-event:nth-child(even) .event-card{grid-column:3}
+.timeline-event:nth-child(even) .event-empty{grid-column:1}
+.event-year{grid-column:2;grid-row:1;width:72px;height:72px;border-radius:50%;display:grid;place-items:center;background:var(--brand);color:#fff;font:700 1.1rem Georgia,serif;margin:auto;z-index:2;box-shadow:0 8px 20px rgba(0,0,0,.12)}
+.event-card{grid-row:1;background:#fff;border:1px solid var(--line);border-radius:20px;padding:22px;box-shadow:var(--shadow);cursor:pointer;transition:.2s}
+.event-card:hover{transform:translateY(-3px)}
+.event-type{display:inline-flex;padding:.3rem .6rem;border-radius:999px;background:var(--soft);font-size:.7rem;font-weight:800;color:var(--brand-dark)}
+.event-title{font:700 1.45rem Georgia,serif;margin:.7rem 0 .35rem}
+.event-meta{font-size:.86rem;color:var(--muted)}
+.detail-panel{background:var(--brand-dark);color:#fff;border-radius:24px;padding:28px;position:sticky;top:110px}
+.detail-panel .small{color:rgba(255,255,255,.65)}
+.legend-dot{display:inline-block;width:10px;height:10px;border-radius:50%;background:var(--brand);margin-right:6px}
+@media(max-width:800px){
+ .timeline-axis{left:28px}
+ .timeline-event{grid-template-columns:56px 1fr;gap:12px}
+ .event-year{grid-column:1!important;grid-row:1;width:54px;height:54px;font-size:.9rem}
+ .timeline-event .event-card{grid-column:2!important;grid-row:1}
+ .event-empty{display:none}
+}
+</style>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg site-navbar sticky-top">
+<div class="container-xxl py-2">
+<a class="navbar-brand d-flex align-items-center gap-3" href="index.html">
+<span class="brand-seal">VM</span>
+<span><strong class="d-block">Voces y Melodías Lojanas</strong><small>Línea de tiempo</small></span>
+</a>
+<div class="ms-auto d-flex gap-2">
+<a class="btn btn-outline-brand rounded-pill" href="conexiones.html">Conexiones</a>
+<a class="btn btn-outline-brand rounded-pill" href="index.html">Volver al archivo</a>
+</div>
+</div>
+</nav>
+
+<header class="timeline-hero">
+<div class="container-xxl">
+<div class="eyebrow text-white-50">Explora · contexto histórico</div>
+<h1 class="timeline-title mt-3">Creadoras y obras a través del tiempo.</h1>
+<p class="lead text-white-50 mt-4 col-lg-8">La cronología se genera automáticamente desde los años documentados en la Base Maestra. Los registros sin fecha verificable no se fuerzan en la visualización.</p>
+</div>
+</header>
+
+<main class="section-space">
+<div class="container-xxl">
+<div id="timeline-status" class="api-status mb-4">Conectando con la Base Maestra…</div>
+
+<div class="timeline-controls mb-5">
+<div class="row g-3 align-items-end">
+<div class="col-md-4">
+<label class="form-label fw-bold">Tipo de evento</label>
+<select class="form-select" id="filter-type">
+<option value="Todos">Todos</option>
+<option value="Nacimiento">Nacimientos</option>
+<option value="Obra">Obras fechadas</option>
+</select>
+</div>
+<div class="col-md-4">
+<label class="form-label fw-bold">Creadora</label>
+<select class="form-select" id="filter-creator"><option value="Todas">Todas</option></select>
+</div>
+<div class="col-md-4">
+<div class="small text-secondary"><span class="legend-dot"></span>Solo se muestran eventos con año disponible en la base.</div>
+</div>
+</div>
+</div>
+
+<div class="row g-5">
+<div class="col-lg-8">
+<div class="timeline-shell">
+<div class="timeline-axis"></div>
+<div id="timeline-events"></div>
+</div>
+</div>
+<div class="col-lg-4">
+<aside class="detail-panel" id="timeline-detail">
+<div class="eyebrow text-white-50">Selecciona un evento</div>
+<h2 class="h3 mt-2">Explora la cronología</h2>
+<p class="small mb-0">Haz clic en cualquier evento para ver su contexto, tipo, creadora relacionada y fuente disponible.</p>
+</aside>
+</div>
+</div>
+
+<section class="mt-5 pt-5">
+<div class="architecture-card">
+<div class="row align-items-center g-4">
+<div class="col-lg-8">
+<div class="eyebrow text-white-50">Lectura crítica</div>
+<h2 class="h1 mt-2">Una línea de tiempo también muestra vacíos.</h2>
+<p class="text-white-50 mb-0">La ausencia de fechas no se corrige inventando datos. El archivo conserva esas lagunas como parte del proceso de investigación y las convierte en preguntas para futuras búsquedas documentales.</p>
+</div>
+<div class="col-lg-4 text-lg-end"><a class="btn btn-light btn-lg rounded-pill" href="index.html#investiga">Ver proceso de validación</a></div>
+</div>
+</div>
+</section>
+</div>
+</main>
+
+<footer class="site-footer"><div class="container-xxl"><strong>Voces y Melodías Lojanas</strong><p class="mb-0">Línea de tiempo interactiva · Vista PREVIEW.</p></div></footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="config.js"></script>
+<script src="linea-tiempo.js"></script>
+</body>
+</html>
