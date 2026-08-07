@@ -1,5 +1,7 @@
-// API de desarrollo confirmada el 7-08-2026
+// API estable de Apps Script · versión 4
 window.VML_CONFIG = {
-  API_URL: "https://script.google.com/a/macros/unl.edu.ec/s/AKfycbzDsOmCljtJLoGP2cWGZ62lVPan90TeBWI_DVdXZ8y9d6VknlD07PL2NxK3BVy8chp8wA/exec?mode=preview",
-  DEMO_URL: "data/demo.json"
+  API_URL: "https://script.google.com/a/macros/unl.edu.ec/s/AKfycbzYV_dguLGDQRfFvxtPJkRX7Kzd-40CAtsQ514Jm7uNFxkpmmovheA_LWsweMNx4vH8Rg/exec",
+  API_MODE: "preview",
+  DEMO_URL: "data/demo.json",
+  JSONP_TIMEOUT_MS: 12000
 };

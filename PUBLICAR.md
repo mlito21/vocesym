@@ -1,26 +1,34 @@
-# Publicación del prototipo
+# Publicación v2 · GitHub Pages + JSONP
 
-Este paquete ya apunta a la API PREVIEW confirmada de Google Apps Script.
+Esta versión ya utiliza JSONP para evitar el bloqueo CORS entre GitHub Pages y Google Apps Script.
 
-## Opción recomendada para prueba
-Publicar la carpeta completa como sitio estático en un hosting HTTPS.
+API configurada:
+https://script.google.com/a/macros/unl.edu.ec/s/AKfycbzYV_dguLGDQRfFvxtPJkRX7Kzd-40CAtsQ514Jm7uNFxkpmmovheA_LWsweMNx4vH8Rg/exec
 
-Archivos imprescindibles:
-- index.html
-- styles.css
-- app.js
-- config.js
+Modo configurado:
+preview
 
-La carpeta `data` queda como respaldo de demostración.
+## Archivos que debe reemplazar en GitHub
+Como mínimo:
+- `app.js`
+- `config.js`
 
-## Comprobación
-Al abrir el sitio debe aparecer:
+Para evitar inconsistencias, se recomienda sustituir todos los archivos del repositorio por los incluidos en este paquete.
+
+## Resultado esperado
+En https://mlito21.github.io/vocesym/ debe aparecer:
 - “Modo vista previa · datos preliminares desde Google Sheets”.
 - Matilde Hidalgo Navarro.
 - Blanca Cano Palacio.
 - Emily Katherine Ordóñez Celi.
-- Obras asociadas.
-- Laboratorios educativos.
+- Obras relacionadas.
+- Recursos educativos piloto.
 
-## Importante
-El endpoint usado es PREVIEW. No debe considerarse la versión pública definitiva.
+## Caché
+Después de subir los cambios:
+1. Espere 1–3 minutos.
+2. Recargue con Ctrl+Shift+R (Windows/Linux) o Cmd+Shift+R (macOS).
+3. Si persiste la versión anterior, abra una ventana de incógnito.
+
+## Seguridad
+Esta es una vista PREVIEW. No incluya en las hojas PREVIEW teléfonos, correos, consentimientos privados ni otros datos sensibles.
