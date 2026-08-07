@@ -112,6 +112,8 @@ function openProfile(id){
         <h3 class="h4">Fuente preliminar</h3>
         <p class="text-secondary">${c.source||"Pendiente de normalización bibliográfica."}</p>
         ${isBlanca?`<a class="btn btn-brand rounded-pill mt-2" href="laboratorio-blanca.html">Abrir Laboratorio sonoro completo</a>`:""}
+        ${c.id==="CR-001"?`<a class="btn btn-brand rounded-pill mt-2" href="laboratorio-matilde.html">Abrir Laboratorio de poesía completo</a>`:""}
+        ${c.id==="CR-058"?`<a class="btn btn-brand rounded-pill mt-2" href="laboratorio-emily.html">Abrir Laboratorio del arreglo completo</a>`:""}
       </div>
     </div>
   </div></div>`;

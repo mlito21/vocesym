@@ -15,6 +15,8 @@ function doGet(e) {
     payload = getResources_(mode);
   } else if (action === 'relations') {
     payload = getRelations_(mode);
+  } else if (action === 'locations') {
+    payload = getLocations_(mode);
   } else {
     payload = getSitePayload_(mode);
   }
@@ -37,6 +39,7 @@ function getSitePayload_(mode) {
   var works = getWorks_(mode).items;
   var resources = getResources_(mode).items;
   var relations = getRelations_(mode).items;
+  var locations = getLocations_(mode).items;
 
   var byCreatorWorks = groupBy_(works, 'ID_CREADORA');
   var byCreatorResources = groupBy_(resources, 'ID_CREADORA');
@@ -45,6 +48,7 @@ function getSitePayload_(mode) {
     mode: mode === 'preview' ? 'preview' : 'live',
     generatedAt: new Date().toISOString(),
     relations: relations,
+    locations: locations,
     creators: creators.map(function(c) {
       return {
         id: c.ID_CREADORA,
@@ -100,6 +104,12 @@ function getRelations_(mode) {
   return mode === 'preview'
     ? readView_('16_PREVIEW_Relaciones', 3, 14)
     : readView_('17_WEB_Relaciones', 3, 14);
+}
+
+function getLocations_(mode) {
+  return mode === 'preview'
+    ? readView_('19_PREVIEW_Lugares', 3, 13)
+    : readView_('20_WEB_Lugares', 3, 13);
 }
 
 function readView_(sheetName, headerRow, width) {

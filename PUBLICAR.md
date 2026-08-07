@@ -1,13 +1,19 @@
-# Prototipo v6 · Línea de tiempo interactiva
+# Prototipo v10 · Portal educativo
 
-Novedades:
-- Nueva página `linea-tiempo.html`.
-- Generación automática de eventos a partir de años ya presentes en la API.
-- Distingue nacimientos y obras fechadas.
-- Filtros por tipo de evento y creadora.
-- Panel de detalle con fuente.
-- Los registros sin año se excluyen en lugar de inferirse.
-- Enlaces cruzados con el explorador de conexiones y el archivo principal.
+Cambio estructural:
+- `index.html` pasa a ser la portada/portal del proyecto.
+- El antiguo sitio dinámico de fichas se conserva como `archivo.html`.
+- La portada organiza el ecosistema en cuatro rutas:
+  1. Descubrir creadoras
+  2. Explorar patrimonio
+  3. Aprender
+  4. Investigar
+- Se presentan conjuntamente los tres laboratorios piloto.
+- Se conectan cronología, mapa y relaciones como exploradores patrimoniales.
 
-No requiere cambios adicionales en Apps Script ni Google Sheets.
-Para publicar, sustituya los archivos del repositorio GitHub Pages por los de este paquete.
+No requiere cambios en Apps Script ni Google Sheets.
+
+Para publicar:
+1. Sustituir los archivos del repositorio por este paquete.
+2. Confirmar que `index.html` sea la nueva portada.
+3. Hacer recarga forzada del navegador.
