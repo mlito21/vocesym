@@ -1,0 +1,110 @@
+{
+  "mode": "demo",
+  "notice": "Datos preliminares para prototipo. No equivalen a publicación validada.",
+  "creators": [
+    {
+      "id": "CR-001",
+      "name": "Matilde Hidalgo Navarro",
+      "discipline": "Poeta",
+      "category": "Poetas",
+      "birth": 1887,
+      "place": "Pendiente de verificación",
+      "bio": "Registro preliminar del proyecto. La ficha definitiva incorporará una biografía validada y trazable.",
+      "source": "Estrada Jenny (2015). Una mujer total. Matilde Hidalgo de Procel. Biografía y Poemario.",
+      "initials": "MH",
+      "works": [
+        {
+          "id": "OB-0001",
+          "title": "Himno patrio celicano",
+          "type": "Poesía / himno",
+          "role": "Autoría literaria",
+          "status": "Preliminar"
+        }
+      ],
+      "learning": {
+        "title": "Laboratorio de poesía",
+        "steps": [
+          "Leer el texto seleccionado",
+          "Escuchar una lectura interpretativa",
+          "Identificar imágenes, símbolos y referencias territoriales",
+          "Situar autora y obra en su contexto",
+          "Crear una reinterpretación breve y documentar las decisiones"
+        ]
+      }
+    },
+    {
+      "id": "CR-047",
+      "name": "Blanca Cano Palacio",
+      "discipline": "Compositora",
+      "category": "Compositoras",
+      "birth": 1929,
+      "place": "Pendiente de verificación",
+      "bio": "Compositora incluida en la base preliminar. La publicación final requiere contrastar trayectoria, obras, fechas y derechos.",
+      "source": "Jaramillo Rogelio (2011). Loja cuna de artistas. Segunda edición.",
+      "initials": "BC",
+      "works": [
+        {
+          "id": "OB-0072",
+          "title": "Loja en septiembre de flores",
+          "type": "Pasacalle",
+          "role": "Composición",
+          "status": "Preliminar"
+        },
+        {
+          "id": "OB-0073",
+          "title": "Cecilia",
+          "type": "Pasillo",
+          "role": "Composición",
+          "status": "Preliminar"
+        }
+      ],
+      "learning": {
+        "title": "Laboratorio sonoro",
+        "steps": [
+          "Escuchar una obra o fragmento autorizado",
+          "Reconocer género y rasgos musicales",
+          "Relacionar la obra con su contexto cultural",
+          "Observar una partitura o representación musical cuando exista",
+          "Proponer una interpretación o creación derivada"
+        ]
+      }
+    },
+    {
+      "id": "CR-058",
+      "name": "Emily Katherine Ordóñez Celi",
+      "discipline": "Arreglista",
+      "category": "Arreglistas",
+      "birth": 2002,
+      "place": "Pendiente de verificación",
+      "bio": "Arreglista registrada en la base preliminar. Su trabajo permite explicar pedagógicamente la transformación de una obra mediante el arreglo.",
+      "source": "Emily Ordoñez (2024). Blanca Cano. Arreglos corales para voces femeninas pertenecientes a la compositora lojana.",
+      "initials": "EO",
+      "works": [
+        {
+          "id": "OB-0091",
+          "title": "Arreglos corales para voces femeninas",
+          "type": "Arreglo",
+          "role": "Arreglo",
+          "status": "Preliminar"
+        },
+        {
+          "id": "OB-0092",
+          "title": "Arreglos para trío de flautas",
+          "type": "Arreglo",
+          "role": "Arreglo",
+          "status": "Preliminar"
+        }
+      ],
+      "learning": {
+        "title": "Laboratorio del arreglo",
+        "steps": [
+          "Escuchar o examinar la obra de partida",
+          "Examinar la versión arreglada",
+          "Comparar instrumentación, textura, registro y estructura",
+          "Identificar decisiones de la arreglista",
+          "Reconstruir una pequeña transformación musical o explicar cómo se realizaría"
+        ]
+      }
+    }
+  ]
+}

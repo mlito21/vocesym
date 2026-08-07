@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="Prototipo educativo del archivo digital Voces y Melodías Lojanas">
+  <title>Voces y Melodías Lojanas · Archivo Digital Educativo</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="brand">
+    <div class="brand-mark" aria-hidden="true">VM</div>
+    <div>
+      <strong>Voces y Melodías Lojanas</strong>
+      <span>Archivo Digital Educativo · Prototipo</span>
+    </div>
+  </div>
+  <nav aria-label="Navegación principal">
+    <a href="#descubre">Descubre</a>
+    <a href="#obra">Lee y escucha</a>
+    <a href="#aprende">Aprende</a>
+    <a href="#metodo">Investiga</a>
+  </nav>
+</header>
+
+<main>
+  <section class="hero">
+    <div class="hero-copy">
+      <p class="eyebrow">Patrimonio · memoria · educación</p>
+      <h1>Descubre las creadoras que escribieron, compusieron y transformaron la memoria cultural de Loja.</h1>
+      <p class="lead">Este prototipo convierte la base de investigación del proyecto en una experiencia web navegable, trazable y educativa.</p>
+      <div class="hero-actions">
+        <a class="button primary" href="#descubre">Explorar creadoras</a>
+        <a class="button secondary" href="#metodo">Cómo se valida</a>
+      </div>
+      <p class="status" id="data-status">Cargando datos…</p>
+    </div>
+    <aside class="hero-panel">
+      <span class="panel-label">Arquitectura del prototipo</span>
+      <ol>
+        <li>Google Sheets = base maestra</li>
+        <li>Apps Script = API de publicación</li>
+        <li>Web = experiencia educativa</li>
+      </ol>
+    </aside>
+  </section>
+
+  <section id="descubre" class="section">
+    <div class="section-heading">
+      <div>
+        <p class="eyebrow">Descubre</p>
+        <h2>Creadoras piloto</h2>
+      </div>
+      <div class="filters" role="group" aria-label="Filtrar por disciplina">
+        <button class="chip active" data-filter="Todas">Todas</button>
+        <button class="chip" data-filter="Poeta">Poeta</button>
+        <button class="chip" data-filter="Compositora">Compositora</button>
+        <button class="chip" data-filter="Arreglista">Arreglista</button>
+      </div>
+    </div>
+    <div id="creator-grid" class="creator-grid" aria-live="polite"></div>
+  </section>
+
+  <section id="perfil" class="section detail-section" hidden>
+    <button class="back-link" id="close-profile">← Volver a creadoras</button>
+    <article id="creator-profile"></article>
+  </section>
+
+  <section id="obra" class="section">
+    <div class="section-heading">
+      <div>
+        <p class="eyebrow">Lee y escucha</p>
+        <h2>Obras y relaciones</h2>
+      </div>
+    </div>
+    <div id="works-list" class="works-list"></div>
+  </section>
+
+  <section id="aprende" class="section learning">
+    <p class="eyebrow">Aprende</p>
+    <h2>Tres formas de aprender con el patrimonio</h2>
+    <div class="learning-grid">
+      <article>
+        <span class="step-number">01</span>
+        <h3>Laboratorio de poesía</h3>
+        <p>Leer → escuchar → interpretar → situar → crear.</p>
+        <button class="text-button" data-open-learning="CR-001">Abrir experiencia piloto</button>
+      </article>
+      <article>
+        <span class="step-number">02</span>
+        <h3>Laboratorio sonoro</h3>
+        <p>Escuchar → observar → comprender → interpretar → crear.</p>
+        <button class="text-button" data-open-learning="CR-047">Abrir experiencia piloto</button>
+      </article>
+      <article>
+        <span class="step-number">03</span>
+        <h3>Laboratorio del arreglo</h3>
+        <p>Escuchar → comparar → identificar transformaciones → reconstruir.</p>
+        <button class="text-button" data-open-learning="CR-058">Abrir experiencia piloto</button>
+      </article>
+    </div>
+    <div id="learning-panel" class="learning-panel" hidden></div>
+  </section>
+
+  <section id="metodo" class="section method">
+    <p class="eyebrow">Investiga</p>
+    <h2>Del registro preliminar a la publicación</h2>
+    <div class="method-flow">
+      <span>Preliminar</span><b>→</b><span>En revisión</span><b>→</b><span>Verificado</span><b>→</b><span>Autorizado</span><b>→</b><span>Web</span>
+    </div>
+    <p>El sitio definitivo no consultará directamente las hojas internas. Consumirá únicamente las vistas de publicación de Google Sheets, evitando exponer contactos, datos de levantamiento o materiales sin autorización.</p>
+  </section>
+</main>
+
+<footer>
+  <p>Voces y Melodías Lojanas · Prototipo académico de mediación digital.</p>
+  <p class="small">Los datos mostrados en modo demostración son preliminares y requieren validación documental antes de publicación pública.</p>
+</footer>
+
+<script src="config.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

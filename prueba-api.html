@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Prueba API · Voces y Melodías Lojanas</title>
+<style>
+body{font-family:system-ui,sans-serif;max-width:900px;margin:40px auto;padding:0 20px}
+pre{white-space:pre-wrap;background:#f4f4f4;padding:20px;border-radius:12px;overflow:auto}
+.ok{color:#087f5b} .bad{color:#c92a2a}
+</style>
+</head>
+<body>
+<h1>Prueba de conexión con Google Sheets</h1>
+<p id="status">Consultando la API…</p>
+<pre id="output"></pre>
+<script>
+const API = 'https://script.google.com/a/macros/unl.edu.ec/s/AKfycbxK_fgTdPm2W-dnniIzm9-M-HiWKPqZ9l0Z8t-BQq1oic_a-BDVs9GDMkDstAvM8Wbogg/exec';
+fetch(API)
+ .then(r => {
+   if (!r.ok) throw new Error('HTTP ' + r.status);
+   return r.text();
+ })
+ .then(t => {
+   document.getElementById('status').textContent='Conexión correcta.';
+   document.getElementById('status').className='ok';
+   try {
+     const j=JSON.parse(t);
+     document.getElementById('output').textContent=JSON.stringify(j,null,2);
+   } catch(e) {
+     document.getElementById('output').textContent=t;
+   }
+ })
+ .catch(e => {
+   document.getElementById('status').textContent='No se pudo conectar: ' + e.message;
+   document.getElementById('status').className='bad';
+ });
+</script>
+</body>
+</html>
