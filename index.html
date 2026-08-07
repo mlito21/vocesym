@@ -3,121 +3,190 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="description" content="Prototipo educativo del archivo digital Voces y Melodías Lojanas">
+  <meta name="description" content="Archivo Digital Educativo del proyecto Voces y Melodías Lojanas">
   <title>Voces y Melodías Lojanas · Archivo Digital Educativo</title>
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-<header class="site-header">
-  <div class="brand">
-    <div class="brand-mark" aria-hidden="true">VM</div>
-    <div>
-      <strong>Voces y Melodías Lojanas</strong>
-      <span>Archivo Digital Educativo · Prototipo</span>
+
+<nav class="navbar navbar-expand-lg sticky-top site-navbar">
+  <div class="container-xxl py-2">
+    <a class="navbar-brand d-flex align-items-center gap-3" href="#">
+      <span class="brand-seal">VM</span>
+      <span>
+        <strong class="d-block">Voces y Melodías Lojanas</strong>
+        <small>Archivo Digital Educativo · Vista previa</small>
+      </span>
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="mainNav">
+      <ul class="navbar-nav ms-auto gap-lg-2">
+        <li class="nav-item"><a class="nav-link" href="#descubre">Descubre</a></li>
+        <li class="nav-item"><a class="nav-link" href="#obras">Lee y escucha</a></li>
+        <li class="nav-item"><a class="nav-link" href="#aprende">Aprende</a></li>
+        <li class="nav-item"><a class="nav-link" href="#investiga">Investiga</a></li>
+      </ul>
     </div>
   </div>
-  <nav aria-label="Navegación principal">
-    <a href="#descubre">Descubre</a>
-    <a href="#obra">Lee y escucha</a>
-    <a href="#aprende">Aprende</a>
-    <a href="#metodo">Investiga</a>
-  </nav>
-</header>
+</nav>
 
 <main>
-  <section class="hero">
-    <div class="hero-copy">
-      <p class="eyebrow">Patrimonio · memoria · educación</p>
-      <h1>Descubre las creadoras que escribieron, compusieron y transformaron la memoria cultural de Loja.</h1>
-      <p class="lead">Este prototipo convierte la base de investigación del proyecto en una experiencia web navegable, trazable y educativa.</p>
-      <div class="hero-actions">
-        <a class="button primary" href="#descubre">Explorar creadoras</a>
-        <a class="button secondary" href="#metodo">Cómo se valida</a>
-      </div>
-      <p class="status" id="data-status">Cargando datos…</p>
-    </div>
-    <aside class="hero-panel">
-      <span class="panel-label">Arquitectura del prototipo</span>
-      <ol>
-        <li>Google Sheets = base maestra</li>
-        <li>Apps Script = API de publicación</li>
-        <li>Web = experiencia educativa</li>
-      </ol>
-    </aside>
-  </section>
-
-  <section id="descubre" class="section">
-    <div class="section-heading">
-      <div>
-        <p class="eyebrow">Descubre</p>
-        <h2>Creadoras piloto</h2>
-      </div>
-      <div class="filters" role="group" aria-label="Filtrar por disciplina">
-        <button class="chip active" data-filter="Todas">Todas</button>
-        <button class="chip" data-filter="Poeta">Poeta</button>
-        <button class="chip" data-filter="Compositora">Compositora</button>
-        <button class="chip" data-filter="Arreglista">Arreglista</button>
+  <section class="hero-section">
+    <div class="container-xxl">
+      <div class="row align-items-center g-5 min-vh-75">
+        <div class="col-lg-8">
+          <div class="eyebrow mb-3">Patrimonio · memoria · educación</div>
+          <h1 class="display-title">Creadoras que escribieron, compusieron y transformaron la memoria cultural de Loja.</h1>
+          <p class="lead hero-lead mt-4">
+            Un archivo digital educativo que conecta investigación, patrimonio cultural y experiencias de aprendizaje.
+          </p>
+          <div class="d-flex flex-wrap gap-3 mt-4">
+            <a class="btn btn-brand btn-lg rounded-pill px-4" href="#descubre">Explorar creadoras</a>
+            <a class="btn btn-outline-brand btn-lg rounded-pill px-4" href="#investiga">Cómo se valida</a>
+          </div>
+          <div id="data-status" class="api-status mt-4">Conectando con la Base Maestra…</div>
+        </div>
+        <div class="col-lg-4">
+          <div class="architecture-card">
+            <div class="eyebrow text-light-emphasis">Arquitectura del prototipo</div>
+            <div class="arch-step"><span>01</span><div><strong>Google Sheets</strong><small>Base maestra de investigación</small></div></div>
+            <div class="arch-step"><span>02</span><div><strong>Apps Script</strong><small>API controlada de publicación</small></div></div>
+            <div class="arch-step"><span>03</span><div><strong>Sitio web</strong><small>Experiencia educativa</small></div></div>
+          </div>
+        </div>
       </div>
     </div>
-    <div id="creator-grid" class="creator-grid" aria-live="polite"></div>
   </section>
 
-  <section id="perfil" class="section detail-section" hidden>
-    <button class="back-link" id="close-profile">← Volver a creadoras</button>
-    <article id="creator-profile"></article>
-  </section>
-
-  <section id="obra" class="section">
-    <div class="section-heading">
-      <div>
-        <p class="eyebrow">Lee y escucha</p>
-        <h2>Obras y relaciones</h2>
+  <section class="stats-strip">
+    <div class="container-xxl">
+      <div class="row g-3 text-center">
+        <div class="col-6 col-lg-3"><div class="stat-box"><strong id="stat-creators">—</strong><span>Creadoras piloto</span></div></div>
+        <div class="col-6 col-lg-3"><div class="stat-box"><strong id="stat-works">—</strong><span>Obras vinculadas</span></div></div>
+        <div class="col-6 col-lg-3"><div class="stat-box"><strong>3</strong><span>Experiencias educativas</span></div></div>
+        <div class="col-6 col-lg-3"><div class="stat-box"><strong>1</strong><span>Base maestra conectada</span></div></div>
       </div>
     </div>
-    <div id="works-list" class="works-list"></div>
   </section>
 
-  <section id="aprende" class="section learning">
-    <p class="eyebrow">Aprende</p>
-    <h2>Tres formas de aprender con el patrimonio</h2>
-    <div class="learning-grid">
-      <article>
-        <span class="step-number">01</span>
-        <h3>Laboratorio de poesía</h3>
-        <p>Leer → escuchar → interpretar → situar → crear.</p>
-        <button class="text-button" data-open-learning="CR-001">Abrir experiencia piloto</button>
-      </article>
-      <article>
-        <span class="step-number">02</span>
-        <h3>Laboratorio sonoro</h3>
-        <p>Escuchar → observar → comprender → interpretar → crear.</p>
-        <button class="text-button" data-open-learning="CR-047">Abrir experiencia piloto</button>
-      </article>
-      <article>
-        <span class="step-number">03</span>
-        <h3>Laboratorio del arreglo</h3>
-        <p>Escuchar → comparar → identificar transformaciones → reconstruir.</p>
-        <button class="text-button" data-open-learning="CR-058">Abrir experiencia piloto</button>
-      </article>
+  <section id="descubre" class="section-space">
+    <div class="container-xxl">
+      <div class="row align-items-end mb-4 g-4">
+        <div class="col-lg-7">
+          <div class="eyebrow">Descubre</div>
+          <h2 class="section-title">Creadoras piloto</h2>
+          <p class="section-intro">Tres perfiles permiten validar la navegación, el modelo de datos y distintas formas de mediación educativa.</p>
+        </div>
+        <div class="col-lg-5">
+          <div class="filter-wrap d-flex flex-wrap justify-content-lg-end gap-2">
+            <button class="btn filter-chip active" data-filter="Todas">Todas</button>
+            <button class="btn filter-chip" data-filter="Poeta">Poeta</button>
+            <button class="btn filter-chip" data-filter="Compositora">Compositora</button>
+            <button class="btn filter-chip" data-filter="Arreglista">Arreglista</button>
+          </div>
+        </div>
+      </div>
+      <div id="creator-grid" class="row g-4" aria-live="polite"></div>
     </div>
-    <div id="learning-panel" class="learning-panel" hidden></div>
   </section>
 
-  <section id="metodo" class="section method">
-    <p class="eyebrow">Investiga</p>
-    <h2>Del registro preliminar a la publicación</h2>
-    <div class="method-flow">
-      <span>Preliminar</span><b>→</b><span>En revisión</span><b>→</b><span>Verificado</span><b>→</b><span>Autorizado</span><b>→</b><span>Web</span>
+  <section id="perfil" class="profile-section section-space" hidden>
+    <div class="container-xxl">
+      <button class="btn btn-sm btn-outline-brand rounded-pill mb-4" id="close-profile">← Volver a creadoras</button>
+      <div id="creator-profile"></div>
     </div>
-    <p>El sitio definitivo no consultará directamente las hojas internas. Consumirá únicamente las vistas de publicación de Google Sheets, evitando exponer contactos, datos de levantamiento o materiales sin autorización.</p>
+  </section>
+
+  <section id="obras" class="section-space works-section">
+    <div class="container-xxl">
+      <div class="row mb-4">
+        <div class="col-lg-7">
+          <div class="eyebrow">Lee y escucha</div>
+          <h2 class="section-title">Obras y relaciones</h2>
+          <p class="section-intro">Las obras se vinculan con cada creadora mediante identificadores persistentes y fuentes trazables.</p>
+        </div>
+      </div>
+      <div id="works-list" class="row g-3"></div>
+    </div>
+  </section>
+
+  <section id="aprende" class="learning-section section-space">
+    <div class="container-xxl">
+      <div class="eyebrow eyebrow-light">Aprende</div>
+      <h2 class="section-title text-white">Tres formas de aprender con el patrimonio</h2>
+      <p class="learning-intro">Cada disciplina requiere una mediación diferente. El recurso educativo no replica la ficha: transforma la información en una experiencia de aprendizaje.</p>
+
+      <div class="row g-4 mt-2">
+        <div class="col-lg-4">
+          <article class="learning-card h-100">
+            <span class="learning-number">01</span>
+            <span class="learning-badge">Poetas</span>
+            <h3>Laboratorio de poesía</h3>
+            <p>Leer → escuchar → interpretar → situar → crear.</p>
+            <button class="btn btn-light rounded-pill mt-auto" data-open-learning="CR-001">Explorar experiencia</button>
+          </article>
+        </div>
+        <div class="col-lg-4">
+          <article class="learning-card h-100 featured-learning">
+            <span class="learning-number">02</span>
+            <span class="learning-badge">Compositoras</span>
+            <h3>Laboratorio sonoro</h3>
+            <p>Escuchar → observar → comprender → interpretar → crear.</p>
+            <button class="btn btn-light rounded-pill mt-auto" data-open-learning="CR-047">Explorar experiencia</button>
+          </article>
+        </div>
+        <div class="col-lg-4">
+          <article class="learning-card h-100">
+            <span class="learning-number">03</span>
+            <span class="learning-badge">Arreglistas</span>
+            <h3>Laboratorio del arreglo</h3>
+            <p>Escuchar → comparar → identificar transformaciones → reconstruir.</p>
+            <button class="btn btn-light rounded-pill mt-auto" data-open-learning="CR-058">Explorar experiencia</button>
+          </article>
+        </div>
+      </div>
+
+      <div id="learning-panel" class="learning-panel mt-4" hidden></div>
+    </div>
+  </section>
+
+  <section id="investiga" class="section-space">
+    <div class="container-xxl">
+      <div class="row g-5 align-items-center">
+        <div class="col-lg-5">
+          <div class="eyebrow">Investiga</div>
+          <h2 class="section-title">Del registro preliminar a la publicación</h2>
+          <p class="section-intro">El archivo diferencia investigación, revisión editorial, derechos de uso y publicación web.</p>
+        </div>
+        <div class="col-lg-7">
+          <div class="validation-flow">
+            <div><span>01</span><strong>Preliminar</strong><small>Dato incorporado</small></div>
+            <div><span>02</span><strong>En revisión</strong><small>Contraste de fuentes</small></div>
+            <div><span>03</span><strong>Verificado</strong><small>Validación académica</small></div>
+            <div><span>04</span><strong>Autorizado</strong><small>Derechos y permisos</small></div>
+            <div><span>05</span><strong>Web</strong><small>Publicación controlada</small></div>
+          </div>
+        </div>
+      </div>
+    </div>
   </section>
 </main>
 
-<footer>
-  <p>Voces y Melodías Lojanas · Prototipo académico de mediación digital.</p>
-  <p class="small">Los datos mostrados en modo demostración son preliminares y requieren validación documental antes de publicación pública.</p>
+<footer class="site-footer">
+  <div class="container-xxl d-lg-flex justify-content-between gap-4">
+    <div>
+      <strong>Voces y Melodías Lojanas</strong>
+      <p class="mb-0">Archivo Digital Educativo · prototipo de investigación y mediación cultural.</p>
+    </div>
+    <p class="small mb-0">Vista PREVIEW. Los datos todavía pueden requerir verificación documental y autorización de publicación.</p>
+  </div>
 </footer>
 
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script src="config.js"></script>
 <script src="app.js"></script>
 </body>
