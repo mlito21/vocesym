@@ -27,6 +27,66 @@ Un recurso educativo puede estar técnicamente desarrollado y, sin embargo, su p
 
 Sin embargo, `PUBLICABLE_WEB` continúa en **No**, por lo que no debe pasar a la vista WEB hasta completar los controles pendientes.
 
+## Checklist de producción · CR-047 Blanca Cano Palacio
+
+### Ficha de creadora
+
+- [x] Identificador estable: `CR-047`.
+- [x] Nombre completo normalizado: Blanca Cano Palacio.
+- [x] Año de nacimiento: 1929.
+- [x] Lugar de nacimiento: Loja, Ecuador.
+- [x] Año de fallecimiento: 1982.
+- [x] Biografía desarrollada.
+- [x] Fuentes principales identificadas y trazables.
+- [ ] Revisión académica final de la biografía.
+- [ ] Fuente fotográfica definitiva seleccionada.
+- [ ] Derechos/autorización de fotografía resueltos.
+- [ ] Estado de verificación = Verificado.
+- [ ] `PUBLICABLE_WEB = Sí`.
+
+### Obras actualmente registradas
+
+| ID | Obra | Estado documental | Pendiente principal |
+|---|---|---|---|
+| OB-0072 | Loja en septiembre de flores | En revisión | Confirmar alcance exacto de la autoría textual de Antonio J. Castro y resolver derechos de obra |
+| OB-0073 | Cecilia | En revisión | Completar año de obra si existe evidencia suficiente y resolver derechos |
+| OB-0096 | Ensueño | En revisión | Completar fecha cuando exista fuente y resolver derechos |
+| OB-0097 | Primaveral | En revisión | Resolver la posible correspondencia con “Primavera” y derechos |
+| OB-0098 | La voz del maizal | En revisión | Precisar rol de Antonio J. Castro y resolver derechos |
+| OB-0099 | Sobre el pajonal | En revisión | Precisar rol de Antonio J. Castro y resolver derechos |
+| OB-0100 | Estrella | En revisión | Completar fecha cuando exista fuente y resolver derechos |
+
+Ninguna de estas obras debe pasar todavía a WEB: `DERECHOS_OBRA` permanece en **Pendiente de revisión** y `PUBLICABLE_WEB` en **No**.
+
+### Recurso educativo RE-047
+
+El Laboratorio sonoro presenta un nivel de desarrollo alto:
+
+- secuencia: Contextualizar → escuchar/examinar → identificar → comparar → interpretar/crear;
+- áreas: Educación Musical, Patrimonio cultural y Lengua y Literatura;
+- nivel: Bachillerato y educación superior, adaptable a EGB Superior;
+- objetivo de aprendizaje definido;
+- actividad interactiva de cinco estaciones;
+- evidencia prevista;
+- rúbrica analítica definida conceptualmente;
+- criterios de accesibilidad previstos;
+- implementación HTML5 + Bootstrap + JavaScript.
+
+Pendientes para considerarlo un REA publicable:
+
+- [ ] Incorporar únicamente audios/partituras con derechos o autorización resueltos.
+- [ ] Implementar transcripciones/subtítulos cuando se incorpore audio/video.
+- [ ] Incorporar alternativa textual para partituras o elementos musicales visuales.
+- [ ] Convertir la rúbrica conceptual en instrumento visible y aplicable dentro del recurso.
+- [ ] Verificar navegación completa por teclado.
+- [ ] Revisar contraste y foco visible en todos los estados interactivos.
+- [ ] Realizar revisión pedagógica final.
+- [ ] Cambiar estado de `En desarrollo` a un estado editorial aprobado solo después de la revisión.
+
+### Decisión actual
+
+**CR-047 no debe publicarse todavía en las vistas WEB.** Sí puede mantenerse como perfil piloto completo en PREVIEW. El siguiente hito es resolver autorías/roles de las obras y derechos de uso antes de activar la publicación.
+
 ## Campos críticos del corpus
 
 La revisión general de `01_Creadoras` muestra un patrón claro:
