@@ -1,193 +1,57 @@
 <!doctype html>
-<html lang="es">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="description" content="Archivo Digital Educativo del proyecto Voces y Melodías Lojanas">
-  <title>Voces y Melodías Lojanas · Archivo Digital Educativo</title>
-
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css">
-</head>
-<body>
-
-<nav class="navbar navbar-expand-lg sticky-top site-navbar">
-  <div class="container-xxl py-2">
-    <a class="navbar-brand d-flex align-items-center gap-3" href="#">
-      <span class="brand-seal">VM</span>
-      <span>
-        <strong class="d-block">Voces y Melodías Lojanas</strong>
-        <small>Archivo Digital Educativo · Vista previa</small>
-      </span>
-    </a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="mainNav">
-      <ul class="navbar-nav ms-auto gap-lg-2">
-        <li class="nav-item"><a class="nav-link" href="#descubre">Descubre</a></li>
-        <li class="nav-item"><a class="nav-link" href="#obras">Lee y escucha</a></li><li class="nav-item"><a class="nav-link" href="conexiones.html">Conexiones</a></li><li class="nav-item"><a class="nav-link" href="linea-tiempo.html">Cronología</a></li><li class="nav-item"><a class="nav-link" href="mapa.html">Mapa</a></li>
-        <li class="nav-item"><a class="nav-link" href="#aprende">Aprende</a></li>
-        <li class="nav-item"><a class="nav-link" href="#investiga">Investiga</a></li>
-      </ul>
+<html lang="es"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Archivo de creadoras · Voces y Melodías Lojanas</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="styles-v13.css">
+<style>
+.archive-hero{padding:62px 0 42px;background:linear-gradient(135deg,var(--brand-dark),var(--brand));color:#fff}
+.archive-title{font:700 clamp(3rem,6vw,5.4rem) Georgia,serif;line-height:1;letter-spacing:-.045em}
+.search-shell{background:#fff;border:1px solid var(--line);border-radius:22px;padding:18px;box-shadow:var(--shadow)}
+.creator-card-v11{background:#fff;border:1px solid var(--line);border-radius:22px;height:100%;overflow:hidden;transition:.2s;cursor:pointer}
+.creator-card-v11:hover{transform:translateY(-4px);box-shadow:var(--shadow)}
+.monogram{height:160px;background:linear-gradient(135deg,var(--soft),#dbeae5);display:grid;place-items:center;font:700 3.3rem Georgia,serif;color:var(--brand)}
+.card-body-v11{padding:20px}.tag{display:inline-flex;border-radius:999px;background:var(--soft);padding:.3rem .6rem;font-size:.7rem;font-weight:800;color:var(--brand-dark)}
+.creator-card-v11 h3{font:700 1.45rem Georgia,serif;margin:.8rem 0 .4rem}
+.drawer{background:#fff;border:1px solid var(--line);border-radius:26px;padding:28px;box-shadow:var(--shadow)}
+.resource-pill{display:inline-flex;padding:.35rem .65rem;background:#eef4e6;border-radius:999px;font-size:.78rem;margin:.2rem}
+</style></head><body>
+<nav class="navbar navbar-expand-lg site-navbar sticky-top"><div class="container-xxl py-2">
+<a class="navbar-brand d-flex align-items-center gap-3" href="index.html"><span class="brand-seal">VM</span><span><strong class="d-block">Voces y Melodías Lojanas</strong><small>Archivo completo</small></span></a>
+<div class="ms-auto d-flex gap-2"><a href="recursos.html" class="btn btn-outline-brand rounded-pill">Recursos</a><a href="index.html" class="btn btn-outline-brand rounded-pill">Portal</a></div>
+</div></nav>
+<header class="archive-hero"><div class="container-xxl"><div class="eyebrow text-white-50">Descubre · base maestra</div><h1 class="archive-title mt-3">Archivo de creadoras</h1><p class="lead text-white-50 mt-3 col-lg-8">Consulta todas las creadoras disponibles en el entorno PREVIEW. La cantidad y el detalle se actualizan automáticamente desde Google Sheets.</p></div></header>
+<main class="section-space"><div class="container-xxl">
+<div id="archive-status" class="api-status mb-4">Conectando con la Base Maestra…</div>
+<div class="search-shell mb-5"><div class="row g-3">
+<div class="col-lg-6"><label class="form-label fw-bold">Buscar</label><input id="search" class="form-control form-control-lg" placeholder="Nombre, disciplina, categoría…"></div>
+<div class="col-md-6 col-lg-3"><label class="form-label fw-bold">Categoría</label><select id="category" class="form-select form-select-lg"><option value="">Todas</option></select></div>
+<div class="col-md-6 col-lg-3"><label class="form-label fw-bold">Orden</label><select id="sort" class="form-select form-select-lg"><option value="name">Nombre A–Z</option><option value="works">Más obras</option><option value="resources">Más recursos</option></select></div>
+</div><div class="small text-secondary mt-3"><strong id="result-count">0</strong> creadoras mostradas.</div></div>
+<div id="creator-grid-v11" class="row g-4"></div>
+<section id="creator-detail" class="mt-5" hidden><div class="drawer"><button id="close-detail" class="btn btn-sm btn-outline-brand rounded-pill mb-4">Cerrar ficha</button><div id="detail-content"></div></div></section>
+</div></main>
+<footer class="site-footer">
+  <div class="container-xxl vml-footer-inner">
+    <div class="row g-4 align-items-start">
+      <div class="col-lg-7">
+        <h2 class="vml-footer-title">Voces y Melodías Lojanas</h2>
+        <p class="vml-footer-copy">Archivo Digital Educativo para la investigación, sistematización, visibilización y mediación del patrimonio cultural femenino lojano.</p>
+      </div>
+      <div class="col-lg-5">
+        <nav class="vml-footer-nav" aria-label="Navegación de pie">
+          <a href="index.html">Inicio</a><a href="archivo.html">Creadoras</a><a href="recursos.html">Recursos</a>
+          <a href="linea-tiempo.html">Cronología</a><a href="mapa.html">Mapa</a><a href="conexiones.html">Conexiones</a>
+        </nav>
+      </div>
     </div>
   </div>
-</nav>
-
-<main>
-  <section class="hero-section">
-    <div class="container-xxl">
-      <div class="row align-items-center g-5 min-vh-75">
-        <div class="col-lg-8">
-          <div class="eyebrow mb-3">Patrimonio · memoria · educación</div>
-          <h1 class="display-title">Creadoras que escribieron, compusieron y transformaron la memoria cultural de Loja.</h1>
-          <p class="lead hero-lead mt-4">
-            Un archivo digital educativo que conecta investigación, patrimonio cultural y experiencias de aprendizaje.
-          </p>
-          <div class="d-flex flex-wrap gap-3 mt-4">
-            <a class="btn btn-brand btn-lg rounded-pill px-4" href="#descubre">Explorar creadoras</a>
-            <a class="btn btn-outline-brand btn-lg rounded-pill px-4" href="#investiga">Cómo se valida</a>
-          </div>
-          <div id="data-status" class="api-status mt-4">Conectando con la Base Maestra…</div>
-        </div>
-        <div class="col-lg-4">
-          <div class="architecture-card">
-            <div class="eyebrow text-light-emphasis">Arquitectura del prototipo</div>
-            <div class="arch-step"><span>01</span><div><strong>Google Sheets</strong><small>Base maestra de investigación</small></div></div>
-            <div class="arch-step"><span>02</span><div><strong>Apps Script</strong><small>API controlada de publicación</small></div></div>
-            <div class="arch-step"><span>03</span><div><strong>Sitio web</strong><small>Experiencia educativa</small></div></div>
-          </div>
-        </div>
-      </div>
+  <div class="vml-footer-bottom">
+    <div class="container-xxl d-flex flex-wrap justify-content-between gap-2">
+      <span>Universidad Nacional de Loja</span><span>Prototipo académico · entorno PREVIEW</span>
     </div>
-  </section>
-
-  <section class="stats-strip">
-    <div class="container-xxl">
-      <div class="row g-3 text-center">
-        <div class="col-6 col-lg-3"><div class="stat-box"><strong id="stat-creators">—</strong><span>Creadoras piloto</span></div></div>
-        <div class="col-6 col-lg-3"><div class="stat-box"><strong id="stat-works">—</strong><span>Obras vinculadas</span></div></div>
-        <div class="col-6 col-lg-3"><div class="stat-box"><strong>3</strong><span>Experiencias educativas</span></div></div>
-        <div class="col-6 col-lg-3"><div class="stat-box"><strong>1</strong><span>Base maestra conectada</span></div></div>
-      </div>
-    </div>
-  </section>
-
-  <section id="descubre" class="section-space">
-    <div class="container-xxl">
-      <div class="row align-items-end mb-4 g-4">
-        <div class="col-lg-7">
-          <div class="eyebrow">Descubre</div>
-          <h2 class="section-title">Creadoras piloto</h2>
-          <p class="section-intro">Tres perfiles permiten validar la navegación, el modelo de datos y distintas formas de mediación educativa.</p>
-        </div>
-        <div class="col-lg-5">
-          <div class="filter-wrap d-flex flex-wrap justify-content-lg-end gap-2">
-            <button class="btn filter-chip active" data-filter="Todas">Todas</button>
-            <button class="btn filter-chip" data-filter="Poeta">Poeta</button>
-            <button class="btn filter-chip" data-filter="Compositora">Compositora</button>
-            <button class="btn filter-chip" data-filter="Arreglista">Arreglista</button>
-          </div>
-        </div>
-      </div>
-      <div id="creator-grid" class="row g-4" aria-live="polite"></div>
-    </div>
-  </section>
-
-  <section id="perfil" class="profile-section section-space" hidden>
-    <div class="container-xxl">
-      <button class="btn btn-sm btn-outline-brand rounded-pill mb-4" id="close-profile">← Volver a creadoras</button>
-      <div id="creator-profile"></div>
-    </div>
-  </section>
-
-  <section id="obras" class="section-space works-section">
-    <div class="container-xxl">
-      <div class="row mb-4">
-        <div class="col-lg-7">
-          <div class="eyebrow">Lee y escucha</div>
-          <h2 class="section-title">Obras y relaciones</h2>
-          <p class="section-intro">Las obras se vinculan con cada creadora mediante identificadores persistentes y fuentes trazables.</p>
-        </div>
-      </div>
-      <div id="works-list" class="row g-3"></div>
-    </div>
-  </section>
-
-  <section class="section-space pt-0"><div class="container-xxl"><div class="architecture-card"><div class="row align-items-center g-4"><div class="col-lg-8"><div class="eyebrow text-white-50">Nueva experiencia</div><h2 class="h1 mt-2">Explora cómo una obra se transforma</h2><p class="text-white-50 mb-0">Visualiza la relación entre las composiciones de Blanca Cano y los arreglos corales de Emily Ordóñez.</p></div><div class="col-lg-4 text-lg-end"><a href="conexiones.html" class="btn btn-light btn-lg rounded-pill">Explorar conexiones</a></div></div></div></div></section><section class="section-space pt-0"><div class="container-xxl"><div class="row g-4"><div class="col-lg-6"><div class="station-card h-100"><div class="eyebrow">Explora en el tiempo</div><h2 class="h1 mt-2">Cronología interactiva</h2><p class="text-secondary">Relaciona nacimientos y obras fechadas sin ocultar los vacíos documentales.</p><a href="linea-tiempo.html" class="btn btn-brand rounded-pill">Abrir cronología</a></div></div><div class="col-lg-6"><div class="station-card h-100"><div class="eyebrow">Explora en red</div><h2 class="h1 mt-2">Conexiones creativas</h2><p class="text-secondary">Sigue la transformación de las composiciones de Blanca Cano en arreglos posteriores.</p><a href="conexiones.html" class="btn btn-outline-brand rounded-pill">Abrir conexiones</a></div></div></div></div></section><section class="section-space pt-0"><div class="container-xxl"><div class="station-card"><div class="row align-items-center g-4"><div class="col-lg-8"><div class="eyebrow">Explora el territorio</div><h2 class="h1 mt-2">Mapa cultural interactivo</h2><p class="text-secondary mb-0">Relaciona creadoras y memoria cultural con lugares documentados y niveles explícitos de precisión geográfica.</p></div><div class="col-lg-4 text-lg-end"><a href="mapa.html" class="btn btn-brand btn-lg rounded-pill">Abrir mapa</a></div></div></div></div></section><section id="aprende" class="learning-section section-space">
-    <div class="container-xxl">
-      <div class="eyebrow eyebrow-light">Aprende</div>
-      <h2 class="section-title text-white">Tres formas de aprender con el patrimonio</h2>
-      <p class="learning-intro">Cada disciplina requiere una mediación diferente. El recurso educativo no replica la ficha: transforma la información en una experiencia de aprendizaje.</p>
-
-      <div class="row g-4 mt-2">
-        <div class="col-lg-4">
-          <article class="learning-card h-100">
-            <span class="learning-number">01</span>
-            <span class="learning-badge">Poetas</span>
-            <h3>Laboratorio de poesía</h3>
-            <p>Leer → escuchar → interpretar → situar → crear.</p>
-            <a class="btn btn-light rounded-pill mt-auto" href="laboratorio-matilde.html">Abrir laboratorio completo</a>
-          </article>
-        </div>
-        <div class="col-lg-4">
-          <article class="learning-card h-100 featured-learning">
-            <span class="learning-number">02</span>
-            <span class="learning-badge">Compositoras</span>
-            <h3>Laboratorio sonoro</h3>
-            <p>Escuchar → observar → comprender → interpretar → crear.</p>
-            <a class="btn btn-light rounded-pill mt-auto" href="laboratorio-blanca.html">Abrir laboratorio completo</a>
-          </article>
-        </div>
-        <div class="col-lg-4">
-          <article class="learning-card h-100">
-            <span class="learning-number">03</span>
-            <span class="learning-badge">Arreglistas</span>
-            <h3>Laboratorio del arreglo</h3>
-            <p>Escuchar → comparar → identificar transformaciones → reconstruir.</p>
-            <a class="btn btn-light rounded-pill mt-auto" href="laboratorio-emily.html">Abrir laboratorio completo</a>
-          </article>
-        </div>
-      </div>
-
-      <div id="learning-panel" class="learning-panel mt-4" hidden></div>
-    </div>
-  </section>
-
-  <section id="investiga" class="section-space">
-    <div class="container-xxl">
-      <div class="row g-5 align-items-center">
-        <div class="col-lg-5">
-          <div class="eyebrow">Investiga</div>
-          <h2 class="section-title">Del registro preliminar a la publicación</h2>
-          <p class="section-intro">El archivo diferencia investigación, revisión editorial, derechos de uso y publicación web.</p>
-        </div>
-        <div class="col-lg-7">
-          <div class="validation-flow">
-            <div><span>01</span><strong>Preliminar</strong><small>Dato incorporado</small></div>
-            <div><span>02</span><strong>En revisión</strong><small>Contraste de fuentes</small></div>
-            <div><span>03</span><strong>Verificado</strong><small>Validación académica</small></div>
-            <div><span>04</span><strong>Autorizado</strong><small>Derechos y permisos</small></div>
-            <div><span>05</span><strong>Web</strong><small>Publicación controlada</small></div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-</main>
-
-<footer class="site-footer">
-  <div class="container-xxl d-lg-flex justify-content-between gap-4">
-    <div>
-      <strong>Voces y Melodías Lojanas</strong>
-      <p class="mb-0">Archivo Digital Educativo · prototipo de investigación y mediación cultural.</p>
-    </div>
-    <p class="small mb-0">Vista PREVIEW. Los datos todavía pueden requerir verificación documental y autorización de publicación.</p>
   </div>
 </footer>
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-<script src="config.js"></script>
-<script src="app.js"></script>
-</body>
-</html>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script><script src="config.js"></script><script src="vml-data.js"></script><script src="archivo.js"></script>
+</body></html>

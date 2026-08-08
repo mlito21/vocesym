@@ -1,19 +1,15 @@
-# Prototipo v10 · Portal educativo
+# v13 · Estabilización visual y paquete completo
 
-Cambio estructural:
-- `index.html` pasa a ser la portada/portal del proyecto.
-- El antiguo sitio dinámico de fichas se conserva como `archivo.html`.
-- La portada organiza el ecosistema en cuatro rutas:
-  1. Descubrir creadoras
-  2. Explorar patrimonio
-  3. Aprender
-  4. Investigar
-- Se presentan conjuntamente los tres laboratorios piloto.
-- Se conectan cronología, mapa y relaciones como exploradores patrimoniales.
+Esta versión corrige la regresión de v12.
 
-No requiere cambios en Apps Script ni Google Sheets.
+- Incluye nuevamente todos los CSS y JavaScript requeridos.
+- Conserva la lógica escalable de v11.
+- Conserva la portada narrativa y el mapa de cobertura de v12.
+- Añade `styles-v13.css` como sistema visual común.
+- Uniforma cabecera, títulos, espaciado y pie en las páginas principales.
+- El pie integra navegación, identificación institucional y estado PREVIEW.
 
-Para publicar:
-1. Sustituir los archivos del repositorio por este paquete.
-2. Confirmar que `index.html` sea la nueva portada.
-3. Hacer recarga forzada del navegador.
+Si Apps Script ya está actualizado a v11, no debe modificarlo.
+
+Para publicar, sustituya TODOS los archivos de GitHub por los de este paquete.
+No copie solo los HTML: deben subirse también CSS, JS y carpetas auxiliares.

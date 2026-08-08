@@ -6,6 +6,7 @@
 <title>Laboratorio sonoro · Blanca Cano Palacio</title>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 <link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="styles-v13.css">
 <style>
 .lab-hero{background:linear-gradient(135deg,var(--brand-dark),var(--brand));color:#fff;padding:70px 0 55px}.lab-title{font:700 clamp(2.8rem,6vw,5.8rem) Georgia,serif;letter-spacing:-.04em;line-height:1}.lab-progress{height:10px;background:rgba(255,255,255,.16)}.lab-progress .progress-bar{background:#fff}.station-nav{position:sticky;top:78px;z-index:10;background:rgba(246,243,236,.96);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}.station-btn{border-radius:999px;border:1px solid var(--line);background:#fff;color:var(--ink);font-weight:750}.station-btn.active{background:var(--brand);color:#fff;border-color:var(--brand)}.station{display:none}.station.active{display:block}.station-card{background:#fff;border:1px solid var(--line);border-radius:24px;padding:26px;box-shadow:var(--shadow)}.media-placeholder{border:2px dashed #b9cbc5;border-radius:20px;padding:28px;background:var(--soft);text-align:center}.choice-btn{display:block;width:100%;text-align:left;border:1px solid var(--line);background:#fff;border-radius:14px;padding:12px 14px;margin-bottom:10px}.choice-btn.selected{border-color:var(--brand);background:var(--soft)}.feedback{border-radius:14px;padding:12px 14px;margin-top:12px}.feedback.ok{background:#e5f4ed;color:#215f50}.feedback.warn{background:#fff3d6;color:#71571d}.compare-column{background:var(--paper);border:1px solid var(--line);border-radius:20px;padding:20px}.lab-textarea{min-height:150px}.completion-card{background:var(--brand-dark);color:#fff;border-radius:24px;padding:28px}
 </style>
@@ -21,6 +22,26 @@
 <section class="station" data-panel="4"><div class="station-card"><div class="eyebrow">Estación 4 · Compara</div><h2 class="section-title fs-1">De la composición al arreglo</h2><p class="section-intro">Compara el rol compositivo de Blanca Cano con el trabajo posterior de arreglo coral de Emily Katherine Ordóñez Celi.</p><div class="row g-4 mt-2"><div class="col-lg-6"><div class="compare-column"><span class="creator-badge">Compositora</span><h3 class="mt-3">Blanca Cano Palacio</h3><p>Obra de partida: <strong>Loja en septiembre de flores</strong>.</p><p class="text-secondary">Identifica qué elementos pertenecen a la concepción compositiva de la obra.</p></div></div><div class="col-lg-6"><div class="compare-column"><span class="creator-badge">Arreglista</span><h3 class="mt-3">Emily Katherine Ordóñez Celi</h3><p>Versión posterior: <strong>arreglo coral para voces femeninas</strong>.</p><p class="text-secondary">Identifica qué decisiones pueden corresponder al proceso de adaptación y arreglo.</p></div></div></div><label class="form-label mt-4"><strong>¿Qué diferencia existe entre componer y arreglar una obra?</strong></label><textarea class="form-control lab-textarea" data-save="comparison-reflection" placeholder="Explica la diferencia con tus propias palabras…"></textarea><button class="btn btn-brand rounded-pill mt-4 next-station" data-next="5">Continuar</button></div></section>
 <section class="station" data-panel="5"><div class="row g-4"><div class="col-lg-8"><div class="station-card h-100"><div class="eyebrow">Estación 5 · Crea</div><h2 class="section-title fs-1">Produce una interpretación patrimonial</h2><p>Elige una opción:</p><button class="choice-btn" data-create-choice="A"><strong>A.</strong> Comentario curatorial de 150–200 palabras.</button><button class="choice-btn" data-create-choice="B"><strong>B.</strong> Propuesta de reinterpretación musical.</button><button class="choice-btn" data-create-choice="C"><strong>C.</strong> Actividad educativa para bachillerato o universidad.</button><textarea class="form-control lab-textarea" data-save="final-product" placeholder="Desarrolla aquí tu producto final…"></textarea></div></div><div class="col-lg-4"><div class="completion-card h-100"><div class="eyebrow text-white-50">Cierre</div><h3 class="h2 mt-2">Tu evidencia</h3><p class="text-white-50">Tus respuestas se guardan temporalmente en este navegador.</p><ul><li>Contextualización patrimonial</li><li>Análisis de evidencias</li><li>Argumentación</li><li>Creación o interpretación</li></ul><button class="btn btn-light rounded-pill mt-3" id="complete-lab">Marcar como completado</button><div id="completion-message" class="mt-3"></div></div></div></div></section>
 </div></main>
-<footer class="site-footer"><div class="container-xxl"><strong>Voces y Melodías Lojanas</strong><p class="mb-0">Laboratorio sonoro piloto · Vista PREVIEW.</p></div></footer>
+<footer class="site-footer">
+  <div class="container-xxl vml-footer-inner">
+    <div class="row g-4 align-items-start">
+      <div class="col-lg-7">
+        <h2 class="vml-footer-title">Voces y Melodías Lojanas</h2>
+        <p class="vml-footer-copy">Archivo Digital Educativo para la investigación, sistematización, visibilización y mediación del patrimonio cultural femenino lojano.</p>
+      </div>
+      <div class="col-lg-5">
+        <nav class="vml-footer-nav" aria-label="Navegación de pie">
+          <a href="index.html">Inicio</a><a href="archivo.html">Creadoras</a><a href="recursos.html">Recursos</a>
+          <a href="linea-tiempo.html">Cronología</a><a href="mapa.html">Mapa</a><a href="conexiones.html">Conexiones</a>
+        </nav>
+      </div>
+    </div>
+  </div>
+  <div class="vml-footer-bottom">
+    <div class="container-xxl d-flex flex-wrap justify-content-between gap-2">
+      <span>Universidad Nacional de Loja</span><span>Prototipo académico · entorno PREVIEW</span>
+    </div>
+  </div>
+</footer>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script><script src="config.js"></script><script src="laboratorio-blanca.js"></script>
 </body></html>

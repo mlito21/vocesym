@@ -44,12 +44,21 @@ function getSitePayload_(mode) {
   var byCreatorWorks = groupBy_(works, 'ID_CREADORA');
   var byCreatorResources = groupBy_(resources, 'ID_CREADORA');
 
+  var normalizedResources = resources.map(function(r) {
+    return normalizeResource_(r);
+  });
+
   return {
     mode: mode === 'preview' ? 'preview' : 'live',
     generatedAt: new Date().toISOString(),
     relations: relations,
     locations: locations,
+    resources: normalizedResources,
     creators: creators.map(function(c) {
+      var creatorResources = (byCreatorResources[c.ID_CREADORA] || []).map(function(r) {
+        return normalizeResource_(r);
+      });
+
       return {
         id: c.ID_CREADORA,
         category: c['CATEGORÍA'],
@@ -72,7 +81,8 @@ function getSitePayload_(mode) {
             source: w.FUENTE
           };
         }),
-        learning: normalizeLearning_((byCreatorResources[c.ID_CREADORA] || [])[0])
+        resources: creatorResources,
+        learning: creatorResources.length ? creatorResources[0] : null
       };
     })
   };
@@ -157,18 +167,27 @@ function initials_(name) {
     .toUpperCase();
 }
 
-function normalizeLearning_(r) {
+function normalizeResource_(r) {
   if (!r) return null;
   return {
+    id: r.ID_RECURSO,
+    creatorId: r.ID_CREADORA,
+    creator: r.CREADORA,
     title: r.TIPO_RECURSO,
     sequence: r['SECUENCIA_PEDAGÓGICA'],
     areas: r['ÁREAS_SUGERIDAS'],
     level: r.NIVEL_EDUCATIVO,
+    workBase: r.OBRA_BASE,
     objective: r.OBJETIVO_APRENDIZAJE,
     activity: r.ACTIVIDAD_INTERACTIVA,
     evidence: r.EVIDENCIA,
     assessment: r['INSTRUMENTO_EVALUACIÓN'],
     accessibility: r.ACCESIBILIDAD,
-    technology: r['TECNOLOGÍA']
+    technology: r['TECNOLOGÍA'],
+    projectObjective: r.OBJETIVO_PROYECTO
   };
+}
+
+function normalizeLearning_(r) {
+  return normalizeResource_(r);
 }

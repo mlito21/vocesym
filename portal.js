@@ -1,0 +1,1 @@
+VML.load().then(d=>{const c=(d.creators||[]).length,r=(d.resources||[]).length,w=(d.creators||[]).reduce((n,x)=>n+(x.works||[]).length,0);document.querySelector("#portal-live-status").textContent=`Catálogo PREVIEW conectado: ${c} creadoras · ${w} obras · ${r} recursos educativos.`}).catch(()=>{document.querySelector("#portal-live-status").textContent="Portal en modo PREVIEW."});
