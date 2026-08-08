@@ -1,54 +1,127 @@
 <!doctype html>
 <html lang="es">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Explorador de conexiones entre creadoras, obras y transformaciones en Voces y Melodías Lojanas">
 <title>Conexiones · Voces y Melodías Lojanas</title>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 <link rel="stylesheet" href="styles.css">
 <link rel="stylesheet" href="styles-v13.css">
 <style>
 .connections-hero{padding:72px 0 50px;background:linear-gradient(135deg,#0b302a,#006b5e);color:#fff}
-.connections-title{font:700 clamp(3rem,6vw,5.5rem) Georgia,serif;line-height:1;letter-spacing:-.045em}
+.connections-title{font:700 clamp(3rem,6vw,5.5rem) Georgia,serif;line-height:1;letter-spacing:-.045em;max-width:980px}
 .network-shell{background:#fff;border:1px solid var(--line);border-radius:30px;padding:32px;box-shadow:var(--shadow)}
 .network-flow{display:grid;grid-template-columns:1fr 70px 1.3fr 70px 1fr;align-items:center;gap:12px}
 .node{border:1px solid var(--line);border-radius:24px;padding:24px;text-align:center;background:var(--paper);min-height:190px;display:flex;flex-direction:column;justify-content:center}
 .node.person{background:var(--soft)}.node.work{background:#fff9e9}.arrow{font-size:2rem;text-align:center;color:var(--brand)}
-.relation-list{display:grid;gap:14px}.relation-item{border:1px solid var(--line);border-radius:18px;padding:18px;background:#fff;cursor:pointer}.relation-item.active{border-color:var(--brand);background:var(--soft)}
+.relation-list{display:grid;gap:14px}.relation-item{border:1px solid var(--line);border-radius:18px;padding:18px;background:#fff;cursor:pointer;transition:.2s}
+.relation-item:hover,.relation-item.active{border-color:var(--brand);background:var(--soft);transform:translateY(-1px)}
+.relation-item:focus-visible{outline:3px solid rgba(0,107,94,.25);outline-offset:2px}
 .role-label{font-size:.72rem;text-transform:uppercase;letter-spacing:.12em;font-weight:850;color:var(--brand)}
+.understand-section{padding:72px 0 18px}.understand-head{max-width:860px;margin-bottom:28px}
+.understand-title{font:700 clamp(2.2rem,4vw,3.7rem) Georgia,"Times New Roman",serif;line-height:1.02;letter-spacing:-.035em;color:var(--brand-dark);margin:0}
+.understand-intro{max-width:760px;color:var(--muted);font-size:1.06rem;line-height:1.65;margin-top:16px}
+.role-compare-card{height:100%;background:#fff;border:1px solid var(--line);border-radius:24px;padding:28px;box-shadow:0 16px 38px rgba(23,54,47,.06);position:relative;overflow:hidden}
+.role-compare-card::before{content:"";position:absolute;inset:0 auto 0 0;width:5px;background:var(--brand)}
+.role-compare-card.arrange::before{background:#8a7a3d}.role-step{display:flex;align-items:center;gap:10px;margin-bottom:18px}
+.role-step-num{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;background:var(--soft);color:var(--brand);font-weight:850;font-size:.83rem}
+.role-step-label{font-size:.74rem;text-transform:uppercase;letter-spacing:.14em;font-weight:850;color:var(--brand)}
+.role-compare-card h3{font:700 clamp(2rem,3vw,2.7rem) Georgia,"Times New Roman",serif;color:var(--brand-dark);margin:0 0 14px}
+.role-compare-card p{margin:0;color:#334842;font-size:1.02rem;line-height:1.7}.role-focus{margin-top:22px;padding-top:18px;border-top:1px solid var(--line);color:var(--muted);font-size:.9rem}
+.continuity-band{margin-top:34px;background:linear-gradient(135deg,var(--brand-dark),var(--brand));color:#fff;border-radius:26px;padding:30px;box-shadow:var(--shadow)}
+.continuity-band .eyebrow{color:rgba(255,255,255,.62)!important}.continuity-band h3{font:700 clamp(1.8rem,3vw,2.6rem) Georgia,"Times New Roman",serif;margin:8px 0 10px}
+.continuity-band p{color:rgba(255,255,255,.76);margin:0;max-width:760px;line-height:1.6}.continuity-actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end;align-items:center;height:100%}
 @media(max-width:900px){.network-flow{grid-template-columns:1fr}.arrow{transform:rotate(90deg)}}
+@media(max-width:991px){.understand-section{padding-top:54px}.continuity-actions{justify-content:flex-start;margin-top:18px}}
 </style>
 </head>
 <body>
-<nav class="navbar navbar-expand-lg site-navbar sticky-top"><div class="container-xxl py-2"><a class="navbar-brand d-flex align-items-center gap-3" href="index.html"><span class="brand-seal">VM</span><span><strong class="d-block">Voces y Melodías Lojanas</strong><small>Explorador de conexiones</small></span></a><div class="ms-auto d-flex gap-2"><a href="linea-tiempo.html" class="btn btn-outline-brand rounded-pill">Cronología</a><a href="index.html" class="btn btn-outline-brand rounded-pill">Volver al archivo</a></div></div></nav>
-
-<header class="connections-hero"><div class="container-xxl"><div class="eyebrow text-white-50">Explora · redes de creación</div><h1 class="connections-title mt-3">Una obra también cuenta la historia de sus transformaciones.</h1><p class="lead text-white-50 mt-4 col-lg-8">Este explorador hace visible la relación entre composición, obra y arreglo. Los vínculos proceden de la Base Maestra del proyecto.</p></div></header>
-
-<main class="section-space"><div class="container-xxl">
-<div id="connection-status" class="api-status mb-4">Conectando con la Base Maestra…</div>
-<div class="row g-4">
-<div class="col-lg-4">
-  <div class="eyebrow mb-2">Relaciones documentadas</div>
-  <h2 class="h2 mb-4">Blanca Cano ↔ Emily Ordóñez</h2>
-  <div id="relation-list" class="relation-list"></div>
-</div>
-<div class="col-lg-8">
-  <div class="network-shell">
-    <div id="network-flow" class="network-flow"></div>
-    <hr class="my-4">
-    <div id="relation-detail"></div>
+<nav class="navbar navbar-expand-lg site-navbar sticky-top">
+  <div class="container-xxl py-2">
+    <a class="navbar-brand d-flex align-items-center gap-3" href="index.html">
+      <span class="brand-seal">VM</span>
+      <span><strong class="d-block">Voces y Melodías Lojanas</strong><small>Explorador de conexiones</small></span>
+    </a>
+    <div class="ms-auto d-flex gap-2 flex-wrap">
+      <a href="linea-tiempo.html" class="btn btn-outline-brand rounded-pill">Cronología</a>
+      <a href="archivo.html" class="btn btn-outline-brand rounded-pill">Archivo</a>
+    </div>
   </div>
-</div>
-</div>
+</nav>
 
-<section class="mt-5 pt-5">
-<div class="row g-4">
-<div class="col-lg-6"><div class="station-card h-100"><div class="eyebrow">Comprende</div><h3 class="h2 mt-2">Componer</h3><p>La compositora concibe la obra musical. En este archivo, Blanca Cano se registra como responsable de la composición de las piezas vinculadas.</p></div></div>
-<div class="col-lg-6"><div class="station-card h-100"><div class="eyebrow">Comprende</div><h3 class="h2 mt-2">Arreglar</h3><p>La arreglista transforma una obra existente para otro formato o conjunto, tomando decisiones sobre distribución vocal/instrumental, textura, registro y otros aspectos de la realización musical.</p></div></div>
-</div>
-</section>
+<header class="connections-hero">
+  <div class="container-xxl">
+    <div class="eyebrow text-white-50">Explora · redes de creación</div>
+    <h1 class="connections-title mt-3">Una obra también cuenta la historia de sus transformaciones.</h1>
+    <p class="lead text-white-50 mt-4 col-lg-8">Este explorador hace visible la relación entre creadoras, obras originales y transformaciones posteriores documentadas en la Base Maestra.</p>
+  </div>
+</header>
 
-<div class="mt-5"><a class="btn btn-brand btn-lg rounded-pill" href="laboratorio-blanca.html">Continuar al Laboratorio sonoro</a></div>
-</div></main>
+<main class="section-space">
+<div class="container-xxl">
+  <div id="connection-status" class="api-status mb-4">Conectando con la Base Maestra…</div>
+
+  <div class="row g-4">
+    <div class="col-lg-4">
+      <div class="eyebrow mb-2">Relaciones disponibles</div>
+      <h2 class="h2 mb-3">Red documental</h2>
+      <p class="text-secondary small mb-4">Selecciona una relación para examinar la creadora de origen, la obra vinculada y la transformación registrada.</p>
+      <div id="relation-list" class="relation-list"></div>
+    </div>
+    <div class="col-lg-8">
+      <div class="network-shell">
+        <div id="network-flow" class="network-flow"></div>
+        <hr class="my-4">
+        <div id="relation-detail"></div>
+      </div>
+    </div>
+  </div>
+
+  <section class="understand-section">
+    <div class="understand-head">
+      <div class="eyebrow">Comprende la relación</div>
+      <h2 class="understand-title">¿Qué significa componer y qué significa arreglar?</h2>
+      <p class="understand-intro">La visualización anterior muestra una relación documental. Esta sección explica qué cambia cuando pasamos de la creación de una obra a su adaptación para otro formato interpretativo.</p>
+    </div>
+
+    <div class="row g-4">
+      <div class="col-lg-6">
+        <article class="role-compare-card compose">
+          <div class="role-step"><span class="role-step-num">01</span><span class="role-step-label">Composición</span></div>
+          <h3>Componer</h3>
+          <p>La compositora concibe la obra musical y define su identidad de partida: material melódico, estructura, organización sonora y decisiones expresivas.</p>
+          <div class="role-focus"><strong>Pregunta clave:</strong> ¿qué elementos permiten reconocer la identidad de la obra original?</div>
+        </article>
+      </div>
+      <div class="col-lg-6">
+        <article class="role-compare-card arrange">
+          <div class="role-step"><span class="role-step-num">02</span><span class="role-step-label">Arreglo</span></div>
+          <h3>Arreglar</h3>
+          <p>La arreglista parte de una obra existente y toma decisiones para trasladarla a otro conjunto o contexto: distribución vocal o instrumental, textura, registro, armonización, timbre y nivel técnico, entre otros aspectos.</p>
+          <div class="role-focus"><strong>Pregunta clave:</strong> ¿qué se conserva, qué se transforma y por qué?</div>
+        </article>
+      </div>
+    </div>
+
+    <div class="continuity-band">
+      <div class="row g-4 align-items-center">
+        <div class="col-lg-8">
+          <div class="eyebrow">Ahora explora la relación en la práctica</div>
+          <h3>Escucha, compara e identifica qué permanece y qué se transforma.</h3>
+          <p>Los laboratorios permiten pasar de la lectura conceptual de la relación a experiencias educativas de análisis, comparación y creación.</p>
+        </div>
+        <div class="col-lg-4">
+          <div class="continuity-actions">
+            <a class="btn btn-light btn-lg rounded-pill" href="laboratorio-blanca.html">Laboratorio sonoro</a>
+            <a class="btn btn-outline-light rounded-pill" href="laboratorio-emily.html">Laboratorio del arreglo</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+</main>
 
 <footer class="site-footer">
   <div class="container-xxl vml-footer-inner">
@@ -67,9 +140,13 @@
   </div>
   <div class="vml-footer-bottom">
     <div class="container-xxl d-flex flex-wrap justify-content-between gap-2">
-      <span>Universidad Nacional de Loja</span><span>Prototipo académico · entorno PREVIEW</span>
+      <span>Universidad Nacional de Loja</span><span data-vml-mode-label>Entorno de datos</span>
     </div>
   </div>
 </footer>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script><script src="config.js"></script><script src="conexiones.js"></script>
-</body></html>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="config.js"></script>
+<script src="vml-data.js"></script>
+<script src="conexiones.js"></script>
+</body>
+</html>
