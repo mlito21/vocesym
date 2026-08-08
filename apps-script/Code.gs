@@ -17,6 +17,8 @@ function doGet(e) {
     payload = getRelations_(mode);
   } else if (action === 'locations') {
     payload = getLocations_(mode);
+  } else if (action === 'mediations') {
+    payload = getMediations_(mode);
   } else {
     payload = getSitePayload_(mode);
   }
@@ -40,12 +42,18 @@ function getSitePayload_(mode) {
   var resources = getResources_(mode).items;
   var relations = getRelations_(mode).items;
   var locations = getLocations_(mode).items;
+  var mediations = getMediations_(mode).items;
 
   var byCreatorWorks = groupBy_(works, 'ID_CREADORA');
   var byCreatorResources = groupBy_(resources, 'ID_CREADORA');
+  var byCreatorMediations = groupBy_(mediations, 'ID_CREADORA');
 
   var normalizedResources = resources.map(function(r) {
     return normalizeResource_(r);
+  });
+
+  var normalizedMediations = mediations.map(function(m) {
+    return normalizeMediation_(m);
   });
 
   return {
@@ -54,9 +62,13 @@ function getSitePayload_(mode) {
     relations: relations,
     locations: locations,
     resources: normalizedResources,
+    mediations: normalizedMediations,
     creators: creators.map(function(c) {
       var creatorResources = (byCreatorResources[c.ID_CREADORA] || []).map(function(r) {
         return normalizeResource_(r);
+      });
+      var creatorMediations = (byCreatorMediations[c.ID_CREADORA] || []).map(function(m) {
+        return normalizeMediation_(m);
       });
 
       return {
@@ -82,7 +94,9 @@ function getSitePayload_(mode) {
           };
         }),
         resources: creatorResources,
-        learning: creatorResources.length ? creatorResources[0] : null
+        learning: creatorResources.length ? creatorResources[0] : null,
+        mediations: creatorMediations,
+        mediation: creatorMediations.length ? creatorMediations[0] : null
       };
     })
   };
@@ -120,6 +134,12 @@ function getLocations_(mode) {
   return mode === 'preview'
     ? readView_('19_PREVIEW_Lugares', 3, 13)
     : readView_('20_WEB_Lugares', 3, 13);
+}
+
+function getMediations_(mode) {
+  return mode === 'preview'
+    ? readView_('22_PREVIEW_Mediacion', 3, 18)
+    : readView_('23_WEB_Mediacion', 3, 18);
 }
 
 function readView_(sheetName, headerRow, width) {
@@ -185,6 +205,30 @@ function normalizeResource_(r) {
     accessibility: r.ACCESIBILIDAD,
     technology: r['TECNOLOGÍA'],
     projectObjective: r.OBJETIVO_PROYECTO
+  };
+}
+
+function normalizeMediation_(m) {
+  if (!m) return null;
+  return {
+    id: m.ID_MEDIACION,
+    creatorId: m.ID_CREADORA,
+    creator: m.CREADORA,
+    title: m.TITULO_PUBLICO,
+    hook: m.GANCHO,
+    guideQuestion: m.PREGUNTA_GUIA,
+    biography: m.SINTESIS_BIOGRAFICA,
+    contribution: m.APORTE_PATRIMONIAL,
+    featuredWorks: m.OBRAS_DESTACADAS,
+    experience1: m.EXPERIENCIA_1,
+    experience2: m.EXPERIENCIA_2,
+    experience3: m.EXPERIENCIA_3,
+    multimedia: m.MULTIMEDIA,
+    legacy: m.LEGADO,
+    audience: m.PUBLICO,
+    accessibility: m.ACCESIBILIDAD,
+    verificationStatus: m['ESTADO_VERIFICACIÓN'],
+    publishable: m.PUBLICABLE_WEB
   };
 }
 
