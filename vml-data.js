@@ -10,11 +10,6 @@ VML.jsonp = function (baseUrl, params = {}, timeout) {
     script.src = baseUrl + (baseUrl.includes("?") ? "&" : "?") + query.toString();
 
     let done = false;
-    const timer = setTimeout(() => {
-      clean();
-      reject(new Error("Tiempo de espera agotado"));
-    }, wait);
-
     const clean = () => {
       if (done) return;
       done = true;
@@ -22,6 +17,11 @@ VML.jsonp = function (baseUrl, params = {}, timeout) {
       if (script.parentNode) script.remove();
       try { delete window[cb]; } catch (_) { window[cb] = undefined; }
     };
+
+    const timer = setTimeout(() => {
+      clean();
+      reject(new Error("Tiempo de espera agotado"));
+    }, wait);
 
     window[cb] = data => {
       clean();
@@ -57,11 +57,25 @@ VML.safe = s => String(s || "").replace(/[&<>"']/g, m => ({
   "'": "&#039;"
 }[m]));
 
+VML.withMode = function (url) {
+  if (!url || /^(https?:|mailto:|tel:|#)/i.test(url)) return url;
+  const parts = String(url).split("#");
+  const baseAndQuery = parts[0];
+  const hash = parts[1] ? "#" + parts[1] : "";
+  const separator = baseAndQuery.includes("?") ? "&" : "?";
+  return `${baseAndQuery}${separator}mode=${encodeURIComponent(VML.mode())}${hash}`;
+};
+
 VML.applyEnvironment = function () {
   document.documentElement.dataset.vmlMode = VML.mode();
 
   document.querySelectorAll("[data-vml-mode-label]").forEach(el => {
     el.textContent = VML.modeLabel();
+  });
+
+  document.querySelectorAll("a[data-vml-preserve-mode]").forEach(link => {
+    const href = link.getAttribute("href");
+    if (href) link.setAttribute("href", VML.withMode(href));
   });
 };
 
