@@ -1,1 +1,18 @@
-VML.load().then(d=>{const c=d.creators||[],r=d.resources||[],w=c.reduce((n,x)=>n+(x.works||[]).length,0);document.querySelector("#portal-live-status").textContent=`Base PREVIEW conectada · ${c.length} creadoras · ${w} obras · ${r.length} recursos educativos`;document.querySelector("#stat-creators-v12").textContent=c.length;document.querySelector("#stat-works-v12").textContent=w;document.querySelector("#stat-resources-v12").textContent=r.length}).catch(()=>{document.querySelector("#portal-live-status").textContent="No fue posible consultar los indicadores dinámicos."});
+VML.load()
+  .then(data => {
+    const creators = data.creators || [];
+    const resources = data.resources || [];
+    const works = creators.reduce((total, creator) => total + (creator.works || []).length, 0);
+
+    document.querySelector("#portal-live-status").textContent =
+      `${VML.modeLabel()} · ${creators.length} creadoras · ${works} obras · ${resources.length} recursos educativos`;
+
+    document.querySelector("#stat-creators-v12").textContent = creators.length;
+    document.querySelector("#stat-works-v12").textContent = works;
+    document.querySelector("#stat-resources-v12").textContent = resources.length;
+  })
+  .catch(error => {
+    console.error(error);
+    document.querySelector("#portal-live-status").textContent =
+      "No fue posible consultar los indicadores dinámicos.";
+  });
