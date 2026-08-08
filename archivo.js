@@ -1,17 +1,163 @@
-const $=s=>document.querySelector(s);let data=null;
-async function init(){try{data=await VML.load();const cs=data.creators||[];$("#archive-status").textContent=`Modo vista previa · ${cs.length} creadoras cargadas desde Google Sheets`;populateFilters(cs);render()}catch(e){$("#archive-status").textContent="No fue posible cargar el archivo: "+e.message}}
-function populateFilters(cs){const cats=[...new Set(cs.map(c=>c.category||c.discipline).filter(Boolean))].sort();$("#category").innerHTML='<option value="">Todas</option>'+cats.map(c=>`<option>${VML.safe(c)}</option>`).join("")}
-function filtered(){let cs=[...(data.creators||[])];const q=$("#search").value.trim().toLowerCase(),cat=$("#category").value,sort=$("#sort").value;
- if(q)cs=cs.filter(c=>[c.name,c.category,c.discipline,c.place].join(" ").toLowerCase().includes(q));
- if(cat)cs=cs.filter(c=>(c.category||c.discipline)===cat);
- if(sort==="name")cs.sort((a,b)=>(a.name||"").localeCompare(b.name||""));
- if(sort==="works")cs.sort((a,b)=>(b.works||[]).length-(a.works||[]).length);
- if(sort==="resources")cs.sort((a,b)=>(b.resources||[]).length-(a.resources||[]).length);
- return cs}
-function render(){const cs=filtered();$("#result-count").textContent=cs.length;$("#creator-grid-v11").innerHTML=cs.map(c=>`<div class="col-sm-6 col-lg-4 col-xl-3"><article class="creator-card-v11" data-id="${c.id}" tabindex="0"><div class="monogram">${VML.safe(c.initials||"VM")}</div><div class="card-body-v11"><span class="tag">${VML.safe(c.discipline||c.category||"Por clasificar")}</span><h3>${VML.safe(c.name)}</h3><div class="small text-secondary">${VML.safe(c.birth||"Fecha por verificar")} · ${(c.works||[]).length} obra(s)</div><div class="small mt-2">${(c.resources||[]).length} recurso(s) educativo(s)</div></div></article></div>`).join("")||'<div class="col-12"><div class="alert alert-light">No hay coincidencias.</div></div>';
- document.querySelectorAll(".creator-card-v11").forEach(x=>{x.onclick=()=>openCreator(x.dataset.id);x.onkeydown=e=>{if(e.key==="Enter")openCreator(x.dataset.id)}})}
-function openCreator(id){const c=(data.creators||[]).find(x=>x.id===id);if(!c)return;const rs=c.resources||[];
- $("#detail-content").innerHTML=`<div class="row g-5"><div class="col-lg-4"><div class="monogram rounded-4">${VML.safe(c.initials||"VM")}</div><div class="mt-3"><span class="tag">${VML.safe(c.discipline||c.category||"")}</span></div></div><div class="col-lg-8"><div class="eyebrow">${VML.safe(c.id)}</div><h2 class="section-title fs-1">${VML.safe(c.name)}</h2><p class="fs-5">${VML.safe(c.bio||"Biografía pendiente de validación y redacción editorial.")}</p><div class="row g-3 my-3"><div class="col-md-6"><div class="info-box"><span>Nacimiento</span><strong>${VML.safe(c.birth||"Por verificar")}</strong></div></div><div class="col-md-6"><div class="info-box"><span>Lugar</span><strong>${VML.safe(c.place||"Por verificar")}</strong></div></div></div><h3 class="h4 mt-4">Obras (${(c.works||[]).length})</h3><div class="list-group list-group-flush">${(c.works||[]).slice(0,12).map(w=>`<div class="list-group-item px-0 bg-transparent"><strong>${VML.safe(VML.clean(w.title))}</strong><br><small class="text-secondary">${VML.safe(w.type||w.genre||"Por clasificar")}</small></div>`).join("")||'<p class="text-secondary">Sin obras cargadas.</p>'}</div><h3 class="h4 mt-4">Recursos educativos</h3>${rs.length?rs.map(r=>`<a class="resource-pill text-decoration-none text-dark" href="${resourceHref(r)}">${VML.safe(r.title||"Recurso educativo")}</a>`).join(""):'<p class="text-secondary">Sin recurso asociado todavía.</p>'}<h3 class="h4 mt-4">Fuente principal</h3><p class="small text-secondary">${VML.safe(c.source||"Pendiente de normalización.")}</p></div></div>`;
- $("#creator-detail").hidden=false;$("#creator-detail").scrollIntoView({behavior:"smooth"})}
-function resourceHref(r){if(r.id==="RE-001")return"laboratorio-matilde.html";if(r.id==="RE-047")return"laboratorio-blanca.html";if(r.id==="RE-058")return"laboratorio-emily.html";return`recurso.html?id=${encodeURIComponent(r.id)}`}
-["search","category","sort"].forEach(id=>$("#"+id).addEventListener(id==="search"?"input":"change",render));$("#close-detail").onclick=()=>{$("#creator-detail").hidden=true};init();
+const $ = s => document.querySelector(s);
+let data = null;
+
+async function init() {
+  try {
+    data = await VML.load();
+    const creators = data.creators || [];
+
+    $("#archive-status").textContent =
+      `${VML.modeLabel()} · ${creators.length} creadoras cargadas desde la Base Maestra`;
+
+    populateFilters(creators);
+    render();
+  } catch (e) {
+    $("#archive-status").textContent = "No fue posible cargar el archivo: " + e.message;
+  }
+}
+
+function populateFilters(creators) {
+  const categories = [...new Set(
+    creators.map(c => c.category || c.discipline).filter(Boolean)
+  )].sort();
+
+  $("#category").innerHTML = '<option value="">Todas</option>' +
+    categories.map(category => `<option>${VML.safe(category)}</option>`).join("");
+}
+
+function filtered() {
+  let creators = [...(data.creators || [])];
+  const query = $("#search").value.trim().toLowerCase();
+  const category = $("#category").value;
+  const sort = $("#sort").value;
+
+  if (query) {
+    creators = creators.filter(c =>
+      [c.name, c.category, c.discipline, c.place]
+        .join(" ")
+        .toLowerCase()
+        .includes(query)
+    );
+  }
+
+  if (category) {
+    creators = creators.filter(c => (c.category || c.discipline) === category);
+  }
+
+  if (sort === "name") {
+    creators.sort((a, b) => (a.name || "").localeCompare(b.name || ""));
+  }
+
+  if (sort === "works") {
+    creators.sort((a, b) => (b.works || []).length - (a.works || []).length);
+  }
+
+  if (sort === "resources") {
+    creators.sort((a, b) => (b.resources || []).length - (a.resources || []).length);
+  }
+
+  return creators;
+}
+
+function render() {
+  const creators = filtered();
+  $("#result-count").textContent = creators.length;
+
+  $("#creator-grid-v11").innerHTML = creators.map(c => `
+    <div class="col-sm-6 col-lg-4 col-xl-3">
+      <article class="creator-card-v11" data-id="${VML.safe(c.id)}" tabindex="0">
+        <div class="monogram">${VML.safe(c.initials || "VM")}</div>
+        <div class="card-body-v11">
+          <span class="tag">${VML.safe(c.discipline || c.category || "Por clasificar")}</span>
+          <h3>${VML.safe(c.name)}</h3>
+          <div class="small text-secondary">${VML.safe(c.birth || "Fecha por verificar")} · ${(c.works || []).length} obra(s)</div>
+          <div class="small mt-2">${(c.resources || []).length} recurso(s) educativo(s)</div>
+        </div>
+      </article>
+    </div>
+  `).join("") || '<div class="col-12"><div class="alert alert-light">No hay coincidencias.</div></div>';
+
+  document.querySelectorAll(".creator-card-v11").forEach(card => {
+    const open = () => openCreator(card.dataset.id);
+    card.addEventListener("click", open);
+    card.addEventListener("keydown", event => {
+      if (event.key === "Enter" || event.key === " ") {
+        event.preventDefault();
+        open();
+      }
+    });
+  });
+}
+
+function openCreator(id) {
+  const creator = (data.creators || []).find(c => c.id === id);
+  if (!creator) return;
+
+  const resources = creator.resources || [];
+  const works = creator.works || [];
+
+  $("#detail-content").innerHTML = `
+    <div class="row g-5">
+      <div class="col-lg-4">
+        <div class="monogram rounded-4">${VML.safe(creator.initials || "VM")}</div>
+        <div class="mt-3"><span class="tag">${VML.safe(creator.discipline || creator.category || "")}</span></div>
+      </div>
+      <div class="col-lg-8">
+        <div class="eyebrow">${VML.safe(creator.id)}</div>
+        <h2 class="section-title fs-1">${VML.safe(creator.name)}</h2>
+        <p class="fs-5">${VML.safe(creator.bio || "Biografía pendiente de validación y redacción editorial.")}</p>
+
+        <div class="row g-3 my-3">
+          <div class="col-md-6"><div class="info-box"><span>Nacimiento</span><strong>${VML.safe(creator.birth || "Por verificar")}</strong></div></div>
+          <div class="col-md-6"><div class="info-box"><span>Lugar</span><strong>${VML.safe(creator.place || "Por verificar")}</strong></div></div>
+        </div>
+
+        <h3 class="h4 mt-4">Obras (${works.length})</h3>
+        <div class="list-group list-group-flush">
+          ${works.length
+            ? works.map(work => `
+                <div class="list-group-item px-0 bg-transparent">
+                  <strong>${VML.safe(VML.clean(work.title))}</strong><br>
+                  <small class="text-secondary">${VML.safe(work.type || work.genre || "Por clasificar")}</small>
+                </div>
+              `).join("")
+            : '<p class="text-secondary">Sin obras cargadas.</p>'}
+        </div>
+
+        <h3 class="h4 mt-4">Recursos educativos</h3>
+        ${resources.length
+          ? resources.map(resource => `
+              <a class="resource-pill text-decoration-none text-dark" href="${resourceHref(resource)}">${VML.safe(resource.title || "Recurso educativo")}</a>
+            `).join("")
+          : '<p class="text-secondary">Sin recurso asociado todavía.</p>'}
+
+        <h3 class="h4 mt-4">Fuente principal</h3>
+        <p class="small text-secondary">${VML.safe(creator.source || "Pendiente de normalización.")}</p>
+
+        ${VML.isPreview()
+          ? '<div class="alert alert-warning mt-4 mb-0"><strong>PREVIEW:</strong> esta ficha puede contener información todavía en revisión. Su presencia aquí no equivale a aprobación para publicación definitiva.</div>'
+          : ''}
+      </div>
+    </div>
+  `;
+
+  $("#creator-detail").hidden = false;
+  $("#creator-detail").scrollIntoView({ behavior: "smooth" });
+}
+
+function resourceHref(resource) {
+  if (resource.id === "RE-001") return "laboratorio-matilde.html";
+  if (resource.id === "RE-047") return "laboratorio-blanca.html";
+  if (resource.id === "RE-058") return "laboratorio-emily.html";
+  return `recurso.html?id=${encodeURIComponent(resource.id)}`;
+}
+
+["search", "category", "sort"].forEach(id => {
+  $("#" + id).addEventListener(id === "search" ? "input" : "change", render);
+});
+
+$("#close-detail").addEventListener("click", () => {
+  $("#creator-detail").hidden = true;
+});
+
+init();
