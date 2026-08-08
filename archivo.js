@@ -40,21 +40,10 @@ function filtered() {
     );
   }
 
-  if (category) {
-    creators = creators.filter(c => (c.category || c.discipline) === category);
-  }
-
-  if (sort === "name") {
-    creators.sort((a, b) => (a.name || "").localeCompare(b.name || ""));
-  }
-
-  if (sort === "works") {
-    creators.sort((a, b) => (b.works || []).length - (a.works || []).length);
-  }
-
-  if (sort === "resources") {
-    creators.sort((a, b) => (b.resources || []).length - (a.resources || []).length);
-  }
+  if (category) creators = creators.filter(c => (c.category || c.discipline) === category);
+  if (sort === "name") creators.sort((a, b) => (a.name || "").localeCompare(b.name || ""));
+  if (sort === "works") creators.sort((a, b) => (b.works || []).length - (a.works || []).length);
+  if (sort === "resources") creators.sort((a, b) => (b.resources || []).length - (a.resources || []).length);
 
   return creators;
 }
@@ -71,7 +60,7 @@ function render() {
           <span class="tag">${VML.safe(c.discipline || c.category || "Por clasificar")}</span>
           <h3>${VML.safe(c.name)}</h3>
           <div class="small text-secondary">${VML.safe(c.birth || "Fecha por verificar")} · ${(c.works || []).length} obra(s)</div>
-          <div class="small mt-2">${(c.resources || []).length} recurso(s) educativo(s)</div>
+          <div class="small mt-2">${c.mediation ? "Experiencia patrimonial disponible" : "Ficha patrimonial en preparación"}</div>
         </div>
       </article>
     </div>
@@ -95,6 +84,7 @@ function openCreator(id) {
 
   const resources = creator.resources || [];
   const works = creator.works || [];
+  const mainResource = resources[0] || null;
 
   $("#detail-content").innerHTML = `
     <div class="row g-5">
@@ -106,6 +96,11 @@ function openCreator(id) {
         <div class="eyebrow">${VML.safe(creator.id)}</div>
         <h2 class="section-title fs-1">${VML.safe(creator.name)}</h2>
         <p class="fs-5">${VML.safe(creator.bio || "Biografía pendiente de validación y redacción editorial.")}</p>
+
+        <div class="d-flex gap-2 flex-wrap my-4">
+          <a class="btn btn-brand rounded-pill" href="creadora.html?id=${encodeURIComponent(creator.id)}">Conocer su vida y obra</a>
+          ${mainResource ? `<a class="btn btn-outline-brand rounded-pill" href="${resourceHref(mainResource)}">Aprender con su obra</a>` : ""}
+        </div>
 
         <div class="row g-3 my-3">
           <div class="col-md-6"><div class="info-box"><span>Nacimiento</span><strong>${VML.safe(creator.birth || "Por verificar")}</strong></div></div>
@@ -124,14 +119,14 @@ function openCreator(id) {
             : '<p class="text-secondary">Sin obras cargadas.</p>'}
         </div>
 
-        <h3 class="h4 mt-4">Recursos educativos</h3>
+        <h3 class="h4 mt-4">Para aprender</h3>
         ${resources.length
           ? resources.map(resource => `
               <a class="resource-pill text-decoration-none text-dark" href="${resourceHref(resource)}">${VML.safe(resource.title || "Recurso educativo")}</a>
             `).join("")
-          : '<p class="text-secondary">Sin recurso asociado todavía.</p>'}
+          : '<p class="text-secondary">Sin actividad educativa asociada todavía.</p>'}
 
-        <h3 class="h4 mt-4">Fuente principal</h3>
+        <h3 class="h4 mt-4">Fuentes e investigación</h3>
         <p class="small text-secondary">${VML.safe(creator.source || "Pendiente de normalización.")}</p>
 
         ${VML.isPreview()
