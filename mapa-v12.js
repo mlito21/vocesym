@@ -21,6 +21,7 @@ async function init(){
     renderLocations();
     renderPending(pending);
     renderInterpretation(locatedIds.size,pending.length);
+    focusRequestedCreator();
   }catch(e){
     $("#map-status").textContent="No fue posible cargar la cobertura territorial: "+e.message;
   }
@@ -35,6 +36,15 @@ function renderLocations(){
   document.querySelectorAll(".location-item").forEach(x=>x.addEventListener("click",()=>selectLocation(Number(x.dataset.index),true)));
   if(locations.length===1)map.setView([n(locations[0].LATITUD),n(locations[0].LONGITUD)],13);
   else if(locations.length>1)map.fitBounds(L.featureGroup(markers).getBounds().pad(.2));
+}
+
+function focusRequestedCreator(){
+  const creatorId=new URLSearchParams(window.location.search).get("creator");
+  if(!creatorId)return;
+  const index=locations.findIndex(l=>String(l.ID_CREADORA||"")===creatorId);
+  if(index>=0){selectLocation(index,true);return;}
+  const creator=creators.find(c=>c.id===creatorId);
+  if(creator)$("#map-status").textContent=`${VML.modeLabel(dataset)} · ${creator.name} todavía no tiene una localización georreferenciada disponible en esta vista.`;
 }
 
 function renderPending(pending){
