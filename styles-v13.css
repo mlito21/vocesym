@@ -1,4 +1,3 @@
-
 :root{
   --vml-bg:#f6f3ec; --vml-surface:#ffffff; --vml-ink:#17362f;
   --vml-muted:#65766f; --vml-brand:#006b5e; --vml-brand-dark:#123d36;
@@ -29,6 +28,17 @@ img,svg,video,canvas{max-width:100%}
 #creator-grid-v11{min-height:120px}
 .api-status{display:flex;align-items:center;gap:8px;min-height:24px;color:var(--vml-muted)}
 .api-status::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--vml-brand);opacity:.55;flex:none}
+
+/* Retratos de creadoras: imagen real cuando existe; monograma como respaldo. */
+.creator-visual{position:relative;overflow:hidden;background:var(--vml-soft)}
+.creator-visual-card{height:190px;border-radius:20px 20px 0 0}
+.creator-visual-profile{aspect-ratio:4/5;border-radius:24px;box-shadow:var(--vml-shadow);border:1px solid var(--vml-line);background:#fff}
+.creator-photo{display:block;width:100%;height:100%;object-fit:cover;object-position:center}
+.creator-visual .creator-photo-fallback{width:100%;height:100%;display:none;place-items:center;margin:0!important;border-radius:inherit!important}
+.creator-visual.no-photo .creator-photo-fallback{display:grid}
+.creator-visual-card .creator-photo-fallback{min-height:190px}
+.creator-visual-profile .creator-photo-fallback{min-height:420px;font-size:4rem}
+
 .site-footer{margin-top:auto;background:linear-gradient(135deg,#102f29,#123d36)!important;color:#fff!important;padding:0!important;border-top:4px solid var(--vml-brand)}
 .vml-footer-inner{padding:38px 0 28px}
 .vml-footer-title{font-family:Georgia,"Times New Roman",serif;font-size:1.45rem;margin:0 0 6px}
@@ -50,4 +60,5 @@ img,svg,video,canvas{max-width:100%}
   .site-navbar .navbar-brand small{font-size:.66rem}.brand-seal{width:38px!important;height:38px!important;flex-basis:38px}
   .section-space{padding-block:52px}.route-line{grid-template-columns:1fr!important}
   .hero-title-v12{font-size:clamp(2.7rem,14vw,4.4rem)!important}
+  .creator-visual-profile .creator-photo-fallback{min-height:320px}
 }
