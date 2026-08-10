@@ -29,6 +29,12 @@ VML.load()
           </div>
         </div>`;
       aprende.parentNode.insertBefore(section, aprende);
+
+      const aprendeNo = aprende.querySelector(".chapter-no");
+      const trazabilidadNo = document.querySelector("#trazabilidad .chapter-no");
+      if (aprendeNo) aprendeNo.textContent = "05";
+      if (trazabilidadNo) trazabilidadNo.textContent = "06";
+
       VML.mountQuiz("#home-quiz", questions, {
         count: 1,
         eyebrow: "Pregunta aleatoria",
