@@ -95,6 +95,30 @@ function renderMediationNotice(mediation) {
     : "";
 }
 
+function renderEmbed(resource) {
+  if (!resource) {
+    return `<div class="border rounded-4 p-4 bg-light"><strong>Recurso educativo en preparación</strong><p class="small text-secondary mb-0 mt-2">Cuando exista un recurso H5P/Lumi validado, podrá integrarse en este espacio.</p></div>`;
+  }
+
+  const url = String(resource.embedUrl || "").trim();
+  const isSafeUrl = /^https:\/\//i.test(url);
+  const rawHeight = Number.parseInt(resource.embedHeight, 10);
+  const height = Number.isFinite(rawHeight) ? Math.max(400, Math.min(rawHeight, 1200)) : 620;
+  const format = resource.embedFormat || "H5P / Lumi";
+
+  if (!isSafeUrl) {
+    return `<div class="border rounded-4 p-4" style="background:var(--soft)">
+      <div class="eyebrow">Espacio preparado</div>
+      <h4 class="h5 mt-2">Integración ${VML.safe(format)}</h4>
+      <p class="small text-secondary mb-0">Registre una URL HTTPS en <code>EMBED_URL</code> de la Base Maestra para mostrar aquí la experiencia interactiva validada.</p>
+    </div>`;
+  }
+
+  return `<div class="ratio rounded-4 overflow-hidden border bg-white" style="--bs-aspect-ratio:${Math.min(100, Math.max(45, (height / 900) * 100))}%">
+    <iframe src="${VML.safe(url)}" title="${VML.safe(resource.title || "Recurso educativo interactivo")}" loading="lazy" allowfullscreen allow="fullscreen" style="border:0" sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-presentation"></iframe>
+  </div>`;
+}
+
 async function init() {
   const creatorId = new URLSearchParams(window.location.search).get("id");
   if (!creatorId) {
@@ -115,6 +139,9 @@ async function init() {
 
     const mediation = creator.mediation || (data.mediations || []).find(item => item.creatorId === creator.id) || null;
     const resource = (creator.resources || [])[0] || null;
+    const creatorQuestions = (creator.questions || []).length
+      ? creator.questions
+      : (data.questions || []).filter(item => !item.creatorId);
 
     document.title = `${creator.name} · Voces y Melodías Lojanas`;
     $("#creator-mode").textContent = `${VML.modeLabel()} · ${creator.discipline || creator.category || "Creadora"}`;
@@ -167,24 +194,27 @@ async function init() {
         </div>
       </section>
 
+      ${creatorQuestions.length ? `<section class="public-section bg-white"><div class="container-xxl"><div class="row g-5"><div class="col-lg-4"><div class="eyebrow">Interactúa</div><h2 class="public-section-title mt-2">Pon a prueba lo que descubriste</h2><p class="text-secondary">Una pregunta aleatoria relacionada con esta creadora o con el archivo.</p></div><div class="col-lg-8"><div id="creator-quiz"></div></div></div></div></section>` : ""}
+
       ${renderExperiences(mediation)}
       ${renderLegacy(mediation)}
 
       <section class="public-section${mediation ? " bg-white" : ""}">
         <div class="container-xxl">
           <div class="row g-5">
-            <div class="col-lg-7">
+            <div class="col-lg-5">
               <div class="eyebrow">Mira, escucha y lee</div>
               <h2 class="public-section-title mt-2">Materiales disponibles</h2>
               <p class="fs-5 lh-lg">${VML.safe(multimedia || "Los materiales visuales, sonoros o textuales se incorporarán cuando su fuente, pertinencia y condiciones de uso estén verificadas.")}</p>
               ${audience ? `<p class="small text-secondary"><strong>Dirigido a:</strong> ${VML.safe(audience)}</p>` : ""}
             </div>
-            <div class="col-lg-5">
+            <div class="col-lg-7">
               <div class="research-box">
                 <div class="eyebrow">Para aprender</div>
-                <h3 class="h3 mt-2">¿Quieres trabajar esta creadora en un contexto educativo?</h3>
-                <p>Las actividades didácticas se mantienen en una capa separada de la experiencia patrimonial.</p>
-                ${resource ? `<a class="btn btn-brand rounded-pill" href="${resourceHref(resource)}">Abrir recurso educativo</a>` : '<p class="small text-secondary mb-0">Recurso educativo todavía en preparación.</p>'}
+                <h3 class="h3 mt-2">Experiencia educativa interactiva</h3>
+                <p>Los recursos didácticos se presentan como una capa opcional y separada de la mediación patrimonial.</p>
+                ${renderEmbed(resource)}
+                <div class="mt-3">${resource ? `<a class="btn btn-brand rounded-pill" href="${resourceHref(resource)}">Abrir recurso completo</a>` : '<span class="small text-secondary">Recurso educativo todavía en preparación.</span>'}</div>
               </div>
             </div>
           </div>
@@ -205,6 +235,14 @@ async function init() {
           </div>
         </div>
       </section>`;
+
+    if (creatorQuestions.length) {
+      VML.mountQuiz("#creator-quiz", creatorQuestions, {
+        count: 1,
+        eyebrow: "Pregunta aleatoria",
+        title: `¿Qué recuerdas de ${creator.name}?`
+      });
+    }
   } catch (error) {
     console.error(error);
     $("#creator-public-title").textContent = "No fue posible cargar el perfil";
