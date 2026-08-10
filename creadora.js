@@ -8,6 +8,20 @@ function resourceHref(resource) {
   return VML.withMode(`recurso.html?id=${encodeURIComponent(resource.id)}`);
 }
 
+function validPhoto(url) {
+  return /^https:\/\//i.test(String(url || "").trim());
+}
+
+function creatorVisual(creator) {
+  const photo = String(creator.photoSource || "").trim();
+  const hasPhoto = validPhoto(photo);
+  return `
+    <div class="creator-visual creator-visual-profile${hasPhoto ? "" : " no-photo"}">
+      ${hasPhoto ? `<img class="creator-photo" src="${VML.safe(photo)}" alt="Retrato de ${VML.safe(creator.name)}" loading="eager" onerror="this.style.display='none';this.nextElementSibling.style.display='grid'">` : ""}
+      <div class="creator-monogram-large creator-photo-fallback"${hasPhoto ? "" : ' style="display:grid"'}>${VML.safe(creator.initials || "VM")}</div>
+    </div>`;
+}
+
 function splitFeaturedWorks(value) {
   return String(value || "")
     .split(/;|\n/)
@@ -153,19 +167,23 @@ async function init() {
     const question = mediation?.guideQuestion || null;
     const multimedia = mediation?.multimedia || null;
     const audience = mediation?.audience || null;
+    const mapHref = VML.withMode(`mapa.html?creator=${encodeURIComponent(creator.id)}`);
 
     $("#creator-public-content").innerHTML = `
       <section class="public-section">
         <div class="container-xxl">
           <div class="row g-5 align-items-start">
-            <div class="col-lg-4"><div class="creator-monogram-large">${VML.safe(creator.initials || "VM")}</div></div>
+            <div class="col-lg-4">
+              ${creatorVisual(creator)}
+              ${validPhoto(creator.photoSource) ? `<p class="small text-secondary mt-2 mb-0">Fuente de imagen registrada en la Base Maestra.</p>` : ""}
+            </div>
             <div class="col-lg-8">
               <div class="eyebrow">Conoce su historia</div>
               <h2 class="public-section-title mt-2">${VML.safe(creator.name)}</h2>
               <p class="fs-5 lh-lg">${VML.safe(biography)}</p>
               <div class="row g-3 mt-3">
                 <div class="col-md-4"><div class="info-box"><span>Nacimiento</span><strong>${VML.safe(creator.birth || "Por verificar")}</strong></div></div>
-                <div class="col-md-4"><div class="info-box"><span>Lugar</span><strong>${VML.safe(creator.place || "Por verificar")}</strong></div></div>
+                <div class="col-md-4"><div class="info-box"><span>Lugar</span><strong>${VML.safe(creator.place || "Por verificar")}</strong>${creator.place ? `<a class="d-block small mt-2" href="${mapHref}">Ver en mapa →</a>` : ""}</div></div>
                 <div class="col-md-4"><div class="info-box"><span>Disciplina</span><strong>${VML.safe(creator.discipline || creator.category || "Por clasificar")}</strong></div></div>
               </div>
               ${question ? `<div class="guide-question mt-4">${VML.safe(question)}</div>` : ""}
