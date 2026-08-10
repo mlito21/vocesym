@@ -1,6 +1,22 @@
 const $ = s => document.querySelector(s);
 let data = null;
 
+function validPhoto(url) {
+  return /^https:\/\//i.test(String(url || "").trim());
+}
+
+function creatorVisual(creator, variant = "card") {
+  const initials = VML.safe(creator.initials || "VM");
+  const photo = String(creator.photoSource || "").trim();
+  const hasPhoto = validPhoto(photo);
+  const visualClass = variant === "profile" ? "creator-visual-profile" : "creator-visual-card";
+  return `
+    <div class="creator-visual ${visualClass}${hasPhoto ? "" : " no-photo"}">
+      ${hasPhoto ? `<img class="creator-photo" src="${VML.safe(photo)}" alt="Retrato de ${VML.safe(creator.name)}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='grid'">` : ""}
+      <div class="monogram creator-photo-fallback"${hasPhoto ? "" : ' style="display:grid"'}>${initials}</div>
+    </div>`;
+}
+
 async function init() {
   try {
     data = await VML.load();
@@ -55,7 +71,7 @@ function render() {
   $("#creator-grid-v11").innerHTML = creators.map(c => `
     <div class="col-sm-6 col-lg-4 col-xl-3">
       <article class="creator-card-v11" data-id="${VML.safe(c.id)}" tabindex="0">
-        <div class="monogram">${VML.safe(c.initials || "VM")}</div>
+        ${creatorVisual(c, "card")}
         <div class="card-body-v11">
           <span class="tag">${VML.safe(c.discipline || c.category || "Por clasificar")}</span>
           <h3>${VML.safe(c.name)}</h3>
@@ -89,8 +105,9 @@ function openCreator(id) {
   $("#detail-content").innerHTML = `
     <div class="row g-5">
       <div class="col-lg-4">
-        <div class="monogram rounded-4">${VML.safe(creator.initials || "VM")}</div>
+        ${creatorVisual(creator, "profile")}
         <div class="mt-3"><span class="tag">${VML.safe(creator.discipline || creator.category || "")}</span></div>
+        ${validPhoto(creator.photoSource) ? `<p class="small text-secondary mt-2 mb-0">Imagen: ${VML.safe(creator.photoSource)}</p>` : ""}
       </div>
       <div class="col-lg-8">
         <div class="eyebrow">${VML.safe(creator.id)}</div>
@@ -98,7 +115,7 @@ function openCreator(id) {
         <p class="fs-5">${VML.safe(creator.bio || "Biografía pendiente de validación y redacción editorial.")}</p>
 
         <div class="d-flex gap-2 flex-wrap my-4">
-          <a class="btn btn-brand rounded-pill" href="creadora.html?id=${encodeURIComponent(creator.id)}">Conocer su vida y obra</a>
+          <a class="btn btn-brand rounded-pill" href="${VML.withMode(`creadora.html?id=${encodeURIComponent(creator.id)}`)}">Conocer su vida y obra</a>
           ${mainResource ? `<a class="btn btn-outline-brand rounded-pill" href="${resourceHref(mainResource)}">Aprender con su obra</a>` : ""}
         </div>
 
@@ -141,10 +158,10 @@ function openCreator(id) {
 }
 
 function resourceHref(resource) {
-  if (resource.id === "RE-001") return "laboratorio-matilde.html";
-  if (resource.id === "RE-047") return "laboratorio-blanca.html";
-  if (resource.id === "RE-058") return "laboratorio-emily.html";
-  return `recurso.html?id=${encodeURIComponent(resource.id)}`;
+  if (resource.id === "RE-001") return VML.withMode("laboratorio-matilde.html");
+  if (resource.id === "RE-047") return VML.withMode("laboratorio-blanca.html");
+  if (resource.id === "RE-058") return VML.withMode("laboratorio-emily.html");
+  return VML.withMode(`recurso.html?id=${encodeURIComponent(resource.id)}`);
 }
 
 ["search", "category", "sort"].forEach(id => {
