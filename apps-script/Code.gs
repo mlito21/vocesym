@@ -133,8 +133,8 @@ function getMedia_(mode) {
 
 function getResources_(mode) {
   return mode === 'preview'
-    ? readView_('14_PREVIEW_Recursos', 3, 15)
-    : readView_('10_WEB_Recursos', 3, 15);
+    ? readView_('14_PREVIEW_Recursos', 3, 18)
+    : readView_('10_WEB_Recursos', 3, 18);
 }
 
 function getRelations_(mode) {
@@ -224,7 +224,10 @@ function normalizeResource_(r) {
     assessment: r['INSTRUMENTO_EVALUACIÓN'],
     accessibility: r.ACCESIBILIDAD,
     technology: r['TECNOLOGÍA'],
-    projectObjective: r.OBJETIVO_PROYECTO
+    projectObjective: r.OBJETIVO_PROYECTO,
+    embedUrl: r.EMBED_URL,
+    embedFormat: r.EMBED_FORMATO,
+    embedHeight: r.EMBED_ALTURA
   };
 }
 
