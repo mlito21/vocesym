@@ -11,16 +11,17 @@ async function init(){
     const types=[...new Set(rs.map(r=>r.title).filter(Boolean))].sort();
     $("#resource-type").innerHTML='<option value="">Todos</option>'+types.map(t=>`<option>${VML.safe(t)}</option>`).join("");
     render();
+    mountDiscoveryQuiz();
   }catch(e){
     $("#resources-status").textContent="No fue posible cargar los recursos: "+e.message;
   }
 }
 
 function href(r){
-  if(r.id==="RE-001")return"laboratorio-matilde.html";
-  if(r.id==="RE-047")return"laboratorio-blanca.html";
-  if(r.id==="RE-058")return"laboratorio-emily.html";
-  return`recurso.html?id=${encodeURIComponent(r.id)}`;
+  if(r.id==="RE-001")return VML.withMode("laboratorio-matilde.html");
+  if(r.id==="RE-047")return VML.withMode("laboratorio-blanca.html");
+  if(r.id==="RE-058")return VML.withMode("laboratorio-emily.html");
+  return VML.withMode(`recurso.html?id=${encodeURIComponent(r.id)}`);
 }
 
 function filtered(){
@@ -51,6 +52,29 @@ function render(){
       <a class="btn ${f?"btn-brand":"btn-outline-brand"} rounded-pill mt-4" href="${href(r)}">${f?"Abrir experiencia":"Ver recurso"}</a>
     </article></div>`;
   }).join("")||'<div class="col-12"><div class="alert alert-light">No hay recursos disponibles con estos filtros en la vista actual.</div></div>';
+}
+
+function mountDiscoveryQuiz(){
+  const status=$("#resources-status");
+  if(!status||document.querySelector("#resources-discovery-quiz"))return;
+  const section=document.createElement("section");
+  section.id="resources-discovery-quiz";
+  section.className="mb-5";
+  section.innerHTML=`
+    <div class="row g-4 align-items-start">
+      <div class="col-lg-4">
+        <div class="eyebrow">Interacción general</div>
+        <h2 class="section-title fs-1 mt-2">Descubre jugando</h2>
+        <p class="text-secondary">Cinco preguntas aleatorias sobre creadoras, obras y conexiones. Esta experiencia no sustituye a los recursos educativos estructurados.</p>
+      </div>
+      <div class="col-lg-8"><div id="resources-quiz"></div></div>
+    </div>`;
+  status.insertAdjacentElement("afterend",section);
+  VML.mountQuiz("#resources-quiz",data.questions||[],{
+    count:5,
+    eyebrow:"Recorrido interactivo",
+    title:"Pon a prueba lo que has descubierto"
+  });
 }
 
 $("#resource-search").addEventListener("input",render);
