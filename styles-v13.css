@@ -16,9 +16,7 @@ img,svg,video,canvas{max-width:100%}
 .site-navbar .navbar-brand small{display:block;margin-top:3px;line-height:1.25}
 .brand-seal{width:44px!important;height:44px!important;flex:0 0 44px;font-size:.95rem;box-shadow:0 0 0 6px rgba(0,107,94,.07)}
 .site-navbar .btn{white-space:nowrap}
-.display-title,.section-title,.profile-title,.timeline-title,.connections-title,.lab-title,.poetry-title,.arr-title,.map-title,.map-title-v12,.portal-title,.hero-title-v12,.archive-title,.resources-title,.generic-title{
-  overflow-wrap:anywhere;word-break:normal;max-width:100%;
-}
+.display-title,.section-title,.profile-title,.timeline-title,.connections-title,.lab-title,.poetry-title,.arr-title,.map-title,.map-title-v12,.portal-title,.hero-title-v12,.archive-title,.resources-title,.generic-title{overflow-wrap:anywhere;word-break:normal;max-width:100%}
 .hero-section,.timeline-hero,.connections-hero,.lab-hero,.poetry-hero,.arr-hero,.map-hero,.map-hero-v12,.resources-hero,.archive-hero,.generic-hero,.hero-v12{overflow:hidden}
 .hero-title-v12{font-size:clamp(3.2rem,7vw,6.6rem)!important;max-width:1050px!important}
 .chapter-title{font-size:clamp(2.45rem,4.8vw,4.4rem)!important}
@@ -29,14 +27,14 @@ img,svg,video,canvas{max-width:100%}
 .api-status{display:flex;align-items:center;gap:8px;min-height:24px;color:var(--vml-muted)}
 .api-status::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--vml-brand);opacity:.55;flex:none}
 
-/* Retratos de creadoras: imagen real cuando existe; monograma como respaldo. */
-.creator-visual{position:relative;overflow:hidden;background:var(--vml-soft)}
-.creator-visual-card{height:190px;border-radius:20px 20px 0 0}
+/* Retratos. En tarjetas se conserva exactamente la altura histórica de 160px. */
+.creator-visual{position:relative;overflow:hidden;background:linear-gradient(135deg,var(--vml-soft),#dbeae5)}
+.creator-visual-card{height:160px;width:100%;border-radius:0}
 .creator-visual-profile{aspect-ratio:4/5;border-radius:24px;box-shadow:var(--vml-shadow);border:1px solid var(--vml-line);background:#fff}
 .creator-photo{display:block;width:100%;height:100%;object-fit:cover;object-position:center}
-.creator-visual .creator-photo-fallback{width:100%;height:100%;display:none;place-items:center;margin:0!important;border-radius:inherit!important}
+.creator-visual .creator-photo-fallback{width:100%;height:100%;display:none;place-items:center;margin:0!important;border-radius:0!important;background:linear-gradient(135deg,var(--soft),#dbeae5)}
 .creator-visual.no-photo .creator-photo-fallback{display:grid}
-.creator-visual-card .creator-photo-fallback{min-height:190px}
+.creator-visual-card .creator-photo-fallback{height:160px!important;min-height:160px!important;font-size:3.3rem!important}
 .creator-visual-profile .creator-photo-fallback{min-height:420px;font-size:4rem}
 
 .site-footer{margin-top:auto;background:linear-gradient(135deg,#102f29,#123d36)!important;color:#fff!important;padding:0!important;border-top:4px solid var(--vml-brand)}
