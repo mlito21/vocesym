@@ -101,13 +101,14 @@ function openCreator(id) {
   const resources = creator.resources || [];
   const works = creator.works || [];
   const mainResource = resources[0] || null;
+  const mapHref = VML.withMode(`mapa.html?creator=${encodeURIComponent(creator.id)}`);
 
   $("#detail-content").innerHTML = `
     <div class="row g-5">
       <div class="col-lg-4">
         ${creatorVisual(creator, "profile")}
         <div class="mt-3"><span class="tag">${VML.safe(creator.discipline || creator.category || "")}</span></div>
-        ${validPhoto(creator.photoSource) ? `<p class="small text-secondary mt-2 mb-0">Imagen: ${VML.safe(creator.photoSource)}</p>` : ""}
+        ${validPhoto(creator.photoSource) ? `<p class="small text-secondary mt-2 mb-0">Imagen registrada en el Archivo Digital. Los créditos y condiciones de uso se presentan en la ficha documental.</p>` : ""}
       </div>
       <div class="col-lg-8">
         <div class="eyebrow">${VML.safe(creator.id)}</div>
@@ -117,6 +118,7 @@ function openCreator(id) {
         <div class="d-flex gap-2 flex-wrap my-4">
           <a class="btn btn-brand rounded-pill" href="${VML.withMode(`creadora.html?id=${encodeURIComponent(creator.id)}`)}">Conocer su vida y obra</a>
           ${mainResource ? `<a class="btn btn-outline-brand rounded-pill" href="${resourceHref(mainResource)}">Aprender con su obra</a>` : ""}
+          ${creator.place ? `<a class="btn btn-outline-brand rounded-pill" href="${mapHref}">Ver ubicación</a>` : ""}
         </div>
 
         <div class="row g-3 my-3">
