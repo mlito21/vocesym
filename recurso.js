@@ -8,10 +8,37 @@ function renderEmbed(resource){
   const height=Number.isFinite(rawHeight)?Math.max(400,Math.min(rawHeight,1200)):620;
 
   if(!isSafe){
-    return `<div class="generic-box mt-4"><div class="eyebrow">Experiencia interactiva</div><h3 class="h3 mt-2">Espacio preparado para ${VML.safe(format)}</h3><p class="text-secondary mb-0">Cuando el recurso esté validado, registre su URL HTTPS en <code>EMBED_URL</code> y se mostrará aquí sin modificar el HTML.</p></div>`;
+    return `<div class="resource-stage"><div class="eyebrow">Experiencia interactiva</div><h2 class="h2 mt-2">Recurso en preparación</h2><p class="text-secondary mb-0">Cuando el recurso H5P/Lumi esté validado, su URL HTTPS se registrará en la Base Maestra y aparecerá aquí automáticamente.</p></div>`;
   }
 
-  return `<div class="generic-box mt-4"><div class="eyebrow">Experiencia interactiva</div><h3 class="h3 mt-2">${VML.safe(format)}</h3><div class="ratio rounded-4 overflow-hidden border mt-3" style="--bs-aspect-ratio:${Math.min(100,Math.max(45,(height/900)*100))}%"><iframe src="${VML.safe(url)}" title="${VML.safe(resource.title||"Recurso educativo interactivo")}" loading="lazy" allowfullscreen allow="fullscreen" style="border:0" sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-presentation"></iframe></div></div>`;
+  return `<div class="resource-stage"><div class="eyebrow">Experiencia interactiva</div><h2 class="h2 mt-2">Explora el recurso</h2><p class="text-secondary">Interactúa con la experiencia y vuelve después a la ficha de la creadora para seguir explorando su vida y obra.</p><div class="ratio rounded-4 overflow-hidden border mt-3" style="--bs-aspect-ratio:${Math.min(100,Math.max(45,(height/900)*100))}%"><iframe src="${VML.safe(url)}" title="${VML.safe(resource.title||"Recurso educativo interactivo")}" loading="lazy" allowfullscreen allow="fullscreen" style="border:0" sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-presentation"></iframe></div></div>`;
+}
+
+function renderTeacherInfo(r){
+  const steps=String(r.sequence||"").split(/→|>|;/).map(s=>s.trim()).filter(Boolean);
+  return `<div class="accordion teacher-panel mt-5" id="teacher-info">
+    <div class="accordion-item border rounded-4 overflow-hidden">
+      <h2 class="accordion-header"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#teacher-collapse" aria-expanded="false" aria-controls="teacher-collapse">Información pedagógica para docentes y mediadores</button></h2>
+      <div id="teacher-collapse" class="accordion-collapse collapse" data-bs-parent="#teacher-info">
+        <div class="accordion-body p-4">
+          <div class="teacher-grid">
+            <div class="teacher-item"><span>Nivel</span><strong>${VML.safe(r.level||"Por definir")}</strong></div>
+            <div class="teacher-item"><span>Áreas</span><strong>${VML.safe(r.areas||"Por definir")}</strong></div>
+            <div class="teacher-item"><span>Obra base</span><strong>${VML.safe(r.workBase||"Por definir")}</strong></div>
+            <div class="teacher-item"><span>Tecnología</span><strong>${VML.safe(r.technology||"Por definir")}</strong></div>
+          </div>
+          <h3 class="h4 mt-4">Objetivo de aprendizaje</h3><p>${VML.safe(r.objective||"Por definir")}</p>
+          ${steps.length?`<h3 class="h4 mt-4">Secuencia pedagógica</h3>${steps.map((s,i)=>`<div class="step"><span class="step-num">${i+1}</span><div><strong>${VML.safe(s)}</strong></div></div>`).join("")}`:""}
+          <h3 class="h4 mt-4">Actividad</h3><p>${VML.safe(r.activity||"Por definir")}</p>
+          <div class="teacher-grid mt-4">
+            <div class="teacher-item"><span>Evidencia</span><strong>${VML.safe(r.evidence||"Por definir")}</strong></div>
+            <div class="teacher-item"><span>Evaluación</span><strong>${VML.safe(r.assessment||"Por definir")}</strong></div>
+          </div>
+          <h3 class="h4 mt-4">Accesibilidad</h3><p class="mb-0">${VML.safe(r.accessibility||"Por definir")}</p>
+        </div>
+      </div>
+    </div>
+  </div>`;
 }
 
 async function init(){
@@ -27,20 +54,27 @@ async function init(){
     if(r.id==="RE-058"){location.replace(VML.withMode("laboratorio-emily.html"));return}
 
     const c=(data.creators||[]).find(x=>x.id===r.creatorId);
-    $("#resource-kind").textContent=r.title||"Recurso educativo";
-    $("#resource-title").textContent=r.creator||c?.name||"Recurso educativo";
-    $("#resource-creator").textContent=`${r.id} · diseño educativo generado desde la Base Maestra`;
+    $("#resource-kind").textContent=r.title||"Experiencia educativa";
+    $("#resource-title").textContent=c?.name||r.creator||"Recurso educativo";
+    $("#resource-creator").textContent=r.objective||"Explora una experiencia educativa vinculada con la vida y obra de esta creadora.";
     $("#generic-status").textContent=`${VML.modeLabel()} · recurso cargado desde Google Sheets`;
 
-    const steps=String(r.sequence||"Explorar → contextualizar → interpretar → crear").split(/→|>|;/).map(s=>s.trim()).filter(Boolean);
     $("#generic-content").innerHTML=`
-      <div class="row g-4">
-        <div class="col-lg-7"><div class="generic-box"><div class="eyebrow">Propósito</div><h2 class="h2 mt-2">Objetivo de aprendizaje</h2><p class="fs-5">${VML.safe(r.objective||"Objetivo pendiente de definición.")}</p><h3 class="h4 mt-4">Secuencia pedagógica</h3>${steps.map((s,i)=>`<div class="step"><span class="step-num">${i+1}</span><div><strong>${VML.safe(s)}</strong></div></div>`).join("")}<h3 class="h4 mt-4">Actividad propuesta</h3><p>${VML.safe(r.activity||"Actividad pendiente de diseño detallado.")}</p></div></div>
-        <div class="col-lg-5"><div class="generic-box mb-4"><div class="eyebrow">Contexto</div><p class="mt-3"><strong>Áreas:</strong> ${VML.safe(r.areas||"Por definir")}</p><p><strong>Nivel:</strong> ${VML.safe(r.level||"Por definir")}</p><p><strong>Obra base:</strong> ${VML.safe(r.workBase||"Por definir")}</p><p><strong>Tecnología:</strong> ${VML.safe(r.technology||"Por definir")}</p></div><div class="generic-box"><div class="eyebrow">Evaluación y accesibilidad</div><p class="mt-3"><strong>Evidencia:</strong> ${VML.safe(r.evidence||"Por definir")}</p><p><strong>Instrumento:</strong> ${VML.safe(r.assessment||"Por definir")}</p><p><strong>Accesibilidad:</strong> ${VML.safe(r.accessibility||"Por definir")}</p></div></div>
+      <div class="row g-5 align-items-start mb-5">
+        <div class="col-lg-8">
+          ${renderEmbed(r)}
+        </div>
+        <div class="col-lg-4">
+          <div class="generic-box">
+            <div class="eyebrow">Antes de empezar</div>
+            <h2 class="h3 mt-2">Qué vas a explorar</h2>
+            <p>${VML.safe(r.activity||"Conoce a la creadora, explora su obra y relaciona la experiencia con el patrimonio cultural lojano.")}</p>
+            ${c?`<a href="${VML.withMode(`creadora.html?id=${encodeURIComponent(c.id)}`)}" class="btn btn-outline-brand rounded-pill">Conocer a ${VML.safe(c.name)}</a>`:""}
+          </div>
+        </div>
       </div>
-      ${renderEmbed(r)}
-      <div class="alert alert-warning mt-4"><strong>Diseño base.</strong> La ficha pedagógica y la experiencia H5P/Lumi son capas distintas: el recurso embebido solo se muestra cuando su URL está registrada y validada.</div>
-      ${c?`<a href="${VML.withMode(`creadora.html?id=${encodeURIComponent(c.id)}`)}" class="btn btn-outline-brand rounded-pill">Volver a la creadora</a>`:""}`;
+      ${renderTeacherInfo(r)}
+      ${VML.isPreview()?'<div class="alert alert-warning mt-4"><strong>PREVIEW:</strong> este recurso puede ser todavía una demostración o estar en proceso de validación pedagógica y editorial.</div>':""}`;
   }catch(e){fail(e.message)}
 }
 
