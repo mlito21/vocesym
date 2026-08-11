@@ -41,6 +41,7 @@ function doGet(e) {
 function getSitePayload_(mode) {
   var creators = getCreators_(mode).items;
   var works = getWorks_(mode).items;
+  var media = getMedia_(mode).items;
   var resources = getResources_(mode).items;
   var relations = getRelations_(mode).items;
   var locations = getLocations_(mode).items;
@@ -48,9 +49,14 @@ function getSitePayload_(mode) {
   var questions = getQuestions_(mode).items;
 
   var byCreatorWorks = groupBy_(works, 'ID_CREADORA');
+  var byCreatorMedia = groupBy_(media, 'ID_CREADORA');
   var byCreatorResources = groupBy_(resources, 'ID_CREADORA');
   var byCreatorMediations = groupBy_(mediations, 'ID_CREADORA');
   var byCreatorQuestions = groupBy_(questions, 'ID_CREADORA');
+
+  var normalizedMedia = media.map(function(m) {
+    return normalizeMedia_(m);
+  });
 
   var normalizedResources = resources.map(function(r) {
     return normalizeResource_(r);
@@ -69,10 +75,14 @@ function getSitePayload_(mode) {
     generatedAt: new Date().toISOString(),
     relations: relations,
     locations: locations,
+    media: normalizedMedia,
     resources: normalizedResources,
     mediations: normalizedMediations,
     questions: normalizedQuestions,
     creators: creators.map(function(c) {
+      var creatorMedia = (byCreatorMedia[c.ID_CREADORA] || []).map(function(m) {
+        return normalizeMedia_(m);
+      });
       var creatorResources = (byCreatorResources[c.ID_CREADORA] || []).map(function(r) {
         return normalizeResource_(r);
       });
@@ -82,6 +92,15 @@ function getSitePayload_(mode) {
       var creatorQuestions = (byCreatorQuestions[c.ID_CREADORA] || []).map(function(q) {
         return normalizeQuestion_(q);
       });
+
+      var photoMedia = null;
+      for (var i = 0; i < creatorMedia.length; i++) {
+        var type = String(creatorMedia[i].type || '').toLowerCase();
+        if (type.indexOf('fotograf') !== -1 || type.indexOf('imagen') !== -1 || creatorMedia[i].url === c['FUENTE_FOTOGRAFÍA']) {
+          photoMedia = creatorMedia[i];
+          break;
+        }
+      }
 
       return {
         id: c.ID_CREADORA,
@@ -93,6 +112,8 @@ function getSitePayload_(mode) {
         bio: c['BIOGRAFÍA_VALIDADA'],
         source: c.FUENTE_PRINCIPAL,
         photoSource: c['FUENTE_FOTOGRAFÍA'],
+        photoMedia: photoMedia,
+        media: creatorMedia,
         initials: initials_(c.NOMBRE_COMPLETO),
         works: (byCreatorWorks[c.ID_CREADORA] || []).map(function(w) {
           return {
@@ -128,7 +149,9 @@ function getWorks_(mode) {
 }
 
 function getMedia_(mode) {
-  return readView_('09_WEB_Multimedia', 3, 8);
+  return mode === 'preview'
+    ? readView_('28_PREVIEW_Multimedia', 3, 10)
+    : readView_('09_WEB_Multimedia', 3, 8);
 }
 
 function getResources_(mode) {
@@ -205,6 +228,23 @@ function initials_(name) {
     .map(function(x) { return x[0]; })
     .join('')
     .toUpperCase();
+}
+
+function normalizeMedia_(m) {
+  if (!m) return null;
+  return {
+    id: m.ID_MEDIA,
+    creatorId: m.ID_CREADORA,
+    creator: m.CREADORA,
+    type: m.TIPO_RECURSO,
+    title: m['TÍTULO_DESCRIPCIÓN'],
+    url: m.URL_O_ARCHIVO,
+    source: m.FUENTE,
+    rightsHolder: m.TITULAR_DERECHOS || '',
+    license: m.LICENCIA_PERMISO || '',
+    quality: m.CALIDAD || '',
+    alt: m.TEXTO_ALTERNATIVO || m['TÍTULO_DESCRIPCIÓN'] || ''
+  };
 }
 
 function normalizeResource_(r) {
