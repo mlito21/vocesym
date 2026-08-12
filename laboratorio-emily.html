@@ -1,105 +1,11 @@
-<!doctype html>
-<html lang="es">
-<head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="description" content="Laboratorio del arreglo sobre Emily Katherine Ordóñez Celi">
-<title>Laboratorio del arreglo · Emily Katherine Ordóñez Celi</title>
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-<link rel="stylesheet" href="styles.css">
-<link rel="stylesheet" href="styles-v13.css">
-<style>
-.arr-hero{background:linear-gradient(135deg,#17362f,#0b6659);color:#fff;padding:72px 0 56px}
-.arr-title{font:700 clamp(3rem,6vw,5.8rem) Georgia,serif;line-height:1;letter-spacing:-.045em}
-.lab-progress{height:10px;background:rgba(255,255,255,.16)}.lab-progress .progress-bar{background:#fff}
-.station-nav{position:sticky;top:78px;z-index:10;background:rgba(246,243,236,.96);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
-.station-btn{border-radius:999px;border:1px solid var(--line);background:#fff;color:var(--ink);font-weight:750}.station-btn.active{background:var(--brand);color:#fff;border-color:var(--brand)}
-.station{display:none}.station.active{display:block}.station-card{background:#fff;border:1px solid var(--line);border-radius:24px;padding:26px;box-shadow:var(--shadow)}
-.score-placeholder{border:2px dashed #b9cbc5;border-radius:20px;padding:28px;background:var(--soft)}
-.compare-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}.compare-box{background:#f8f5ec;border:1px solid #e6dcc0;border-radius:18px;padding:20px}
-.choice-btn{display:block;width:100%;text-align:left;border:1px solid var(--line);background:#fff;border-radius:14px;padding:12px 14px;margin-bottom:10px}.choice-btn.selected{border-color:var(--brand);background:var(--soft)}
-.lab-textarea{min-height:150px}.evidence-card{background:var(--brand-dark);color:#fff;border-radius:24px;padding:28px}
-@media(max-width:767px){.compare-grid{grid-template-columns:1fr}}
-</style>
-</head>
-<body>
-<nav class="navbar navbar-expand-lg site-navbar sticky-top"><div class="container-xxl py-2"><a class="navbar-brand d-flex align-items-center gap-3" href="index.html"><span class="brand-seal">VM</span><span><strong class="d-block">Voces y Melodías Lojanas</strong><small>Laboratorio del arreglo</small></span></a><div class="ms-auto d-flex gap-2"><a class="btn btn-outline-brand rounded-pill" href="conexiones.html">Conexiones</a><a class="btn btn-outline-brand rounded-pill" href="archivo.html">Volver al archivo</a></div></div></nav>
-
-<header class="arr-hero"><div class="container-xxl"><div class="row g-5 align-items-end">
-<div class="col-lg-8"><div class="eyebrow text-white-50 mb-3">Recurso educativo piloto · Arreglistas</div><h1 class="arr-title">Emily Katherine Ordóñez Celi: transformar sin borrar la obra de origen.</h1><p class="lead mt-4 mb-0 text-white-50">Cinco estaciones para comparar, identificar transformaciones, justificar decisiones y diseñar una propuesta de arreglo.</p></div>
-<div class="col-lg-4"><div class="p-4 rounded-4" style="background:rgba(255,255,255,.1)"><small class="text-white-50">Progreso</small><div class="d-flex justify-content-between mt-2"><strong id="progress-label">Estación 1 de 5</strong><span id="progress-percent">20%</span></div><div class="progress lab-progress mt-3"><div class="progress-bar" id="progress-bar" style="width:20%"></div></div></div></div>
-</div></div></header>
-
-<div class="station-nav py-3"><div class="container-xxl d-flex gap-2 flex-wrap"><button class="btn station-btn active" data-station="1">1. Contexto</button><button class="btn station-btn" data-station="2">2. Compara</button><button class="btn station-btn" data-station="3">3. Identifica</button><button class="btn station-btn" data-station="4">4. Justifica</button><button class="btn station-btn" data-station="5">5. Diseña</button></div></div>
-
-<main class="section-space"><div class="container-xxl"><div id="lab-status" class="api-status mb-4">Conectando con la Base Maestra…</div>
-
-<section class="station active" data-panel="1">
-<div class="row g-4"><div class="col-lg-7"><div class="station-card h-100"><div class="eyebrow">Estación 1 · Contexto</div><h2 class="section-title fs-1">¿Qué hace una arreglista?</h2><div id="context-bio" class="fs-5 text-secondary"></div><div class="alert alert-warning mt-4 mb-0"><strong>Distinción clave:</strong> arreglar una obra no equivale a componerla desde cero. El laboratorio hace explícita la relación entre obra de origen y transformación posterior.</div></div></div>
-<div class="col-lg-5"><div class="station-card h-100"><div class="eyebrow">Obras vinculadas</div><div id="context-works" class="mt-3"></div></div></div></div>
-<div class="station-card mt-4"><h3 class="h5">Pregunta de activación</h3><p>¿Qué aspectos de una obra deberían conservarse para que siga siendo reconocible después de un arreglo?</p><textarea class="form-control lab-textarea" data-save="context-reflection" placeholder="Escribe tu respuesta…"></textarea><button class="btn btn-brand rounded-pill mt-3 next-station" data-next="2">Continuar</button></div>
-</section>
-
-<section class="station" data-panel="2">
-<div class="station-card"><div class="eyebrow">Estación 2 · Compara</div><h2 class="section-title fs-1">Obra de origen y versión arreglada</h2><p class="section-intro">La comparación debe atender elementos que pueden conservarse y otros que pueden transformarse.</p>
-<div class="compare-grid mt-4">
-<div class="compare-box"><span class="creator-badge">Obra de origen</span><h3 class="h3 mt-3">Loja en septiembre de flores</h3><p>Composición de Blanca Cano Palacio.</p><div class="score-placeholder mt-3"><strong>Partitura/audio original</strong><p class="mb-0 mt-2 text-secondary">Se incorporará cuando existan permisos y fuente autorizada.</p></div></div>
-<div class="compare-box"><span class="creator-badge">Versión arreglada</span><h3 class="h3 mt-3">Arreglo coral para voces femeninas</h3><p>Adaptación atribuida a Emily Katherine Ordóñez Celi.</p><div class="score-placeholder mt-3"><strong>Partitura/audio del arreglo</strong><p class="mb-0 mt-2 text-secondary">Se incorporará cuando existan permisos y fuente autorizada.</p></div></div>
-</div>
-<label class="form-label mt-4"><strong>¿Qué compararías primero?</strong></label>
-<textarea class="form-control lab-textarea" data-save="comparison" placeholder="Melodía, textura, registro, distribución de voces, armonización, forma…"></textarea>
-<button class="btn btn-brand rounded-pill mt-4 next-station" data-next="3">Continuar</button></div>
-</section>
-
-<section class="station" data-panel="3">
-<div class="station-card"><div class="eyebrow">Estación 3 · Identifica</div><h2 class="section-title fs-1">Reconoce tipos de transformación</h2><p class="section-intro">Selecciona las decisiones que pueden formar parte de un arreglo musical.</p>
-<div class="row g-3 mt-2">
-<div class="col-md-6"><button class="choice-btn" data-transform="registro">Modificar el registro para adaptarlo a nuevas voces o instrumentos.</button></div>
-<div class="col-md-6"><button class="choice-btn" data-transform="textura">Redistribuir la textura entre varias voces.</button></div>
-<div class="col-md-6"><button class="choice-btn" data-transform="armonizacion">Proponer una armonización compatible con la obra.</button></div>
-<div class="col-md-6"><button class="choice-btn" data-transform="timbre">Cambiar el timbre al trasladar la obra a otro conjunto.</button></div>
-</div>
-<textarea class="form-control lab-textarea mt-4" data-save="transform-reflection" placeholder="Explica qué transformación te parece más decisiva y por qué…"></textarea>
-<button class="btn btn-brand rounded-pill mt-4 next-station" data-next="4">Continuar</button></div>
-</section>
-
-<section class="station" data-panel="4">
-<div class="station-card"><div class="eyebrow">Estación 4 · Justifica</div><h2 class="section-title fs-1">Toda transformación requiere una razón</h2><p class="section-intro">Un arreglo no es una acumulación arbitraria de cambios. Cada decisión debe responder al nuevo contexto interpretativo.</p>
-<div class="source-box"><strong>Escenario:</strong><p class="mb-0 mt-2">Debes adaptar una obra originalmente pensada para otro formato a un coro femenino universitario con voces de distinto nivel técnico.</p></div>
-<label class="form-label mt-4"><strong>¿Qué tres decisiones tomarías primero y cómo las justificarías?</strong></label>
-<textarea class="form-control lab-textarea" data-save="justification" placeholder="Decisión 1… Decisión 2… Decisión 3…"></textarea>
-<button class="btn btn-brand rounded-pill mt-4 next-station" data-next="5">Continuar</button></div>
-</section>
-
-<section class="station" data-panel="5">
-<div class="row g-4"><div class="col-lg-8"><div class="station-card h-100"><div class="eyebrow">Estación 5 · Diseña</div><h2 class="section-title fs-1">Propón tu propio esquema de arreglo</h2><p>Elige un producto final:</p>
-<button class="choice-btn" data-create-choice="A"><strong>A.</strong> Esquema de arreglo coral indicando voces, textura y criterios de distribución.</button>
-<button class="choice-btn" data-create-choice="B"><strong>B.</strong> Comentario técnico sobre qué conservarías y qué transformarías de la obra de origen.</button>
-<button class="choice-btn" data-create-choice="C"><strong>C.</strong> Actividad didáctica para enseñar la diferencia entre composición y arreglo.</button>
-<textarea class="form-control lab-textarea mt-3" data-save="final-product" placeholder="Desarrolla tu propuesta…"></textarea></div></div>
-<div class="col-lg-4"><div class="evidence-card h-100"><div class="eyebrow text-white-50">Evidencia</div><h3 class="h2 mt-2">Qué se evalúa</h3><ul class="text-white-50"><li>Comprensión del rol de la arreglista</li><li>Identificación de transformaciones</li><li>Justificación técnica</li><li>Respeto a la obra de origen</li><li>Coherencia de la propuesta final</li></ul><button class="btn btn-light rounded-pill mt-3" id="complete-lab">Marcar como completado</button><div id="completion-message" class="mt-3"></div></div></div></div>
-</section>
-</div></main>
-
-<footer class="site-footer">
-  <div class="container-xxl vml-footer-inner">
-    <div class="row g-4 align-items-start">
-      <div class="col-lg-7">
-        <h2 class="vml-footer-title">Voces y Melodías Lojanas</h2>
-        <p class="vml-footer-copy">Archivo Digital Educativo para la investigación, sistematización, visibilización y mediación del patrimonio cultural femenino lojano.</p>
-      </div>
-      <div class="col-lg-5">
-        <nav class="vml-footer-nav" aria-label="Navegación de pie">
-          <a href="index.html">Inicio</a><a href="archivo.html">Creadoras</a><a href="recursos.html">Recursos</a>
-          <a href="linea-tiempo.html">Cronología</a><a href="mapa.html">Mapa</a><a href="conexiones.html">Conexiones</a>
-        </nav>
-      </div>
-    </div>
-  </div>
-  <div class="vml-footer-bottom">
-    <div class="container-xxl d-flex flex-wrap justify-content-between gap-2">
-      <span>Universidad Nacional de Loja</span><span>Prototipo académico · entorno PREVIEW</span>
-    </div>
-  </div>
-</footer>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script><script src="config.js"></script><script src="laboratorio-emily.js"></script>
-</body></html>
+<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="Laboratorio del arreglo coral sobre Emily Katherine Ordóñez Celi"><title>Laboratorio del arreglo coral · Emily Ordóñez</title><link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"><link rel="stylesheet" href="styles.css"><link rel="stylesheet" href="styles-v13.css"><link rel="stylesheet" href="laboratorios.css"></head><body>
+<nav class="navbar navbar-expand-lg site-navbar sticky-top"><div class="container-xxl py-2"><a class="navbar-brand d-flex align-items-center gap-3" href="index.html" data-vml-preserve-mode><span class="brand-seal">VM</span><span><strong class="d-block">Voces y Melodías Lojanas</strong><small>Laboratorio del arreglo coral</small></span></a><div class="ms-auto d-flex gap-2"><a class="btn btn-outline-brand rounded-pill" href="laboratorio-rocio.html" data-vml-preserve-mode>Adaptación para piano</a><a class="btn btn-outline-brand rounded-pill" href="archivo.html" data-vml-preserve-mode>Volver al archivo</a></div></div></nav>
+<header class="lab-hero"><div class="container-xxl"><div class="row g-5 align-items-end"><div class="col-lg-8"><div class="eyebrow text-white-50 mb-3">Recurso educativo piloto · Arreglo coral</div><h1 class="lab-title">Emily Ordóñez: transformar una obra para nuevas voces.</h1><p class="lead mt-4 mb-0 text-white-50">Compara cinco adaptaciones corales documentadas, identifica transformaciones y sustenta una propuesta propia.</p></div><div class="col-lg-4"><div class="p-4 rounded-4" style="background:rgba(255,255,255,.1)"><small class="text-white-50">Progreso</small><div class="d-flex justify-content-between mt-2"><strong id="progress-label">Estación 1 de 5</strong><span id="progress-percent">20%</span></div><div class="progress lab-progress mt-3" role="progressbar" aria-label="Progreso del laboratorio" aria-valuemin="0" aria-valuemax="100" aria-valuenow="20"><div class="progress-bar" id="progress-bar" style="width:20%"></div></div></div></div></div></div></header>
+<div class="station-nav py-3"><div class="container-xxl d-flex gap-2 flex-wrap" role="tablist" aria-label="Estaciones"><button class="btn station-btn active" data-station="1" role="tab" aria-selected="true">1. Contextualiza</button><button class="btn station-btn" data-station="2" role="tab" aria-selected="false">2. Compara</button><button class="btn station-btn" data-station="3" role="tab" aria-selected="false">3. Identifica</button><button class="btn station-btn" data-station="4" role="tab" aria-selected="false">4. Justifica</button><button class="btn station-btn" data-station="5" role="tab" aria-selected="false">5. Diseña</button></div></div>
+<main class="section-space"><div class="container-xxl"><div id="lab-status" class="api-status mb-4" aria-live="polite">Conectando con la Base Maestra…</div>
+<section class="station active" data-panel="1"><div class="row g-4"><div class="col-lg-7"><div class="station-card h-100"><div class="eyebrow">Estación 1 · Contextualiza</div><h2 class="section-title fs-1">¿Qué hace una arreglista?</h2><div id="context-bio" class="fs-5 text-secondary"></div><p class="rights-note mt-4 mb-0"><strong>Distinción:</strong> el arreglo transforma una obra preexistente; no borra su autoría ni equivale a componerla desde cero.</p></div></div><div class="col-lg-5"><div class="station-card h-100"><div class="eyebrow">Corpus documentado</div><div id="context-works" class="mt-3"></div></div></div></div><div class="station-card mt-4"><label class="form-label" for="context-reflection"><strong>¿Qué debería conservarse para que una obra siga siendo reconocible?</strong></label><textarea id="context-reflection" class="form-control lab-textarea" data-save="context-reflection" placeholder="Formula una hipótesis…"></textarea><button class="btn btn-brand rounded-pill mt-3 next-station" data-next="2">Continuar</button></div></section>
+<section class="station" data-panel="2" aria-hidden="true"><div class="station-card"><div class="eyebrow">Estación 2 · Compara</div><h2 class="section-title fs-1">Cinco obras, cinco adaptaciones</h2><p class="section-intro">Selecciona una pieza del corpus para delimitar tu comparación.</p><div id="arrangement-selector" class="work-selector my-4"></div><div class="compare-grid"><div class="compare-box"><span class="creator-badge">Obra de origen</span><h3 id="original-title" class="h3 mt-3"></h3><p>Composición atribuida en la Base Maestra a Blanca Cano Palacio.</p><div class="score-placeholder"><strong>Fuente sonora o partitura original</strong><p class="mb-0 mt-2 text-secondary">Pendiente de autorización y trazabilidad documental.</p></div></div><div class="compare-box"><span class="creator-badge">Adaptación coral</span><h3 id="arranged-title" class="h3 mt-3"></h3><p id="arranged-meta"></p><div class="score-placeholder"><strong>Fuente sonora o partitura del arreglo</strong><p class="mb-0 mt-2 text-secondary">Pendiente de autorización y trazabilidad documental.</p></div></div></div><label class="form-label mt-4" for="comparison"><strong>¿Qué evidencia compararías primero?</strong></label><textarea id="comparison" class="form-control lab-textarea" data-save="comparison" placeholder="Melodía, textura, registro, distribución vocal, armonización, forma…"></textarea><button class="btn btn-brand rounded-pill mt-4 next-station" data-next="3">Continuar</button></div></section>
+<section class="station" data-panel="3" aria-hidden="true"><div class="station-card"><div class="eyebrow">Estación 3 · Identifica</div><h2 class="section-title fs-1">Reconoce las transformaciones</h2><p>Trabajas con: <strong id="selected-work-station3"></strong></p><fieldset class="lab-fieldset"><legend>Selecciona las decisiones que investigarías</legend><div class="decision-grid mt-3"><button class="choice-btn" data-transform="registro" aria-pressed="false">Registro vocal</button><button class="choice-btn" data-transform="textura" aria-pressed="false">Distribución y textura</button><button class="choice-btn" data-transform="armonizacion" aria-pressed="false">Armonización</button><button class="choice-btn" data-transform="timbre" aria-pressed="false">Timbre del conjunto</button></div></fieldset><textarea class="form-control lab-textarea mt-4" data-save="transform-reflection" aria-label="Explicación de la transformación" placeholder="Explica qué transformación sería decisiva y qué evidencia necesitarías…"></textarea><button class="btn btn-brand rounded-pill mt-4 next-station" data-next="4">Continuar</button></div></section>
+<section class="station" data-panel="4" aria-hidden="true"><div class="station-card"><div class="eyebrow">Estación 4 · Justifica</div><h2 class="section-title fs-1">Sustenta cada decisión</h2><p>Escenario: adaptar <strong id="selected-work-station4"></strong> para un coro femenino universitario con niveles técnicos diversos.</p><label class="form-label mt-3" for="justification"><strong>Propón tres decisiones y vincula cada una con una evidencia verificable.</strong></label><textarea id="justification" class="form-control lab-textarea" data-save="justification" placeholder="Decisión → propósito → evidencia necesaria…"></textarea><button class="btn btn-brand rounded-pill mt-4 next-station" data-next="5">Continuar</button></div></section>
+<section class="station" data-panel="5" aria-hidden="true"><div class="row g-4"><div class="col-lg-8"><div class="station-card h-100"><div class="eyebrow">Estación 5 · Diseña</div><h2 class="section-title fs-1">Construye una evidencia observable</h2><fieldset class="lab-fieldset"><legend>Elige tu producto final</legend><div class="d-grid gap-2 mt-3"><button class="choice-btn" data-create-choice="A" aria-pressed="false"><strong>A.</strong> Esquema coral: voces, textura y distribución.</button><button class="choice-btn" data-create-choice="B" aria-pressed="false"><strong>B.</strong> Comentario técnico: conservar, transformar y justificar.</button><button class="choice-btn" data-create-choice="C" aria-pressed="false"><strong>C.</strong> Actividad para distinguir composición y arreglo.</button></div></fieldset><textarea class="form-control lab-textarea mt-3" data-save="final-product" aria-label="Producto final" placeholder="Desarrolla tu propuesta…"></textarea></div></div><div class="col-lg-4"><div class="evidence-card h-100"><div class="eyebrow text-white-50">Criterios</div><h3 class="h2 mt-2">Qué se observa</h3><ul class="text-white-50"><li>Rol de la arreglista</li><li>Transformaciones identificadas</li><li>Justificación basada en evidencia</li><li>Respeto a la obra de origen</li></ul><button class="btn btn-light rounded-pill mt-3" id="complete-lab">Marcar como completado</button><div id="completion-message" class="mt-3" aria-live="polite"></div></div></div></div></section>
+</div></main><footer class="site-footer"><div class="container-xxl vml-footer-inner"><h2 class="vml-footer-title">Voces y Melodías Lojanas</h2><p class="vml-footer-copy">Recurso piloto. Las respuestas se conservan únicamente en este navegador.</p></div><div class="vml-footer-bottom"><div class="container-xxl d-flex justify-content-between gap-2"><span>Universidad Nacional de Loja</span><span data-vml-mode-label>Entorno PREVIEW</span></div></div></footer><script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script><script src="config.js"></script><script src="vml-data.js"></script><script src="laboratorio-emily.js"></script></body></html>

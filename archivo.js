@@ -142,6 +142,7 @@ function openCreator(id) {
   const resources = creator.resources || [];
   const works = creator.works || [];
   const mainResource = resources[0] || null;
+  const learningHref = learningHrefForCreator(creator, mainResource);
   const mapHref = VML.withMode(`mapa.html?creator=${encodeURIComponent(creator.id)}`);
 
   $("#detail-content").innerHTML = `
@@ -158,7 +159,7 @@ function openCreator(id) {
 
         <div class="d-flex gap-2 flex-wrap my-4">
           <a class="btn btn-brand rounded-pill" href="${VML.withMode(`creadora.html?id=${encodeURIComponent(creator.id)}`)}">Conocer su vida y obra</a>
-          ${mainResource ? `<a class="btn btn-outline-brand rounded-pill" href="${resourceHref(mainResource)}">Aprender con su obra</a>` : ""}
+          ${learningHref ? `<a class="btn btn-outline-brand rounded-pill" href="${learningHref}">Aprender con su obra</a>` : ""}
           ${creator.place ? `<a class="btn btn-outline-brand rounded-pill" href="${mapHref}">Ver ubicación</a>` : ""}
         </div>
 
@@ -180,7 +181,9 @@ function openCreator(id) {
         </div>
 
         <h3 class="h4 mt-4">Para aprender</h3>
-        ${resources.length
+        ${learningHref
+          ? `<a class="resource-pill text-decoration-none text-dark" href="${learningHref}">${VML.safe(mainResource?.title || (creator.id === "CR-052" ? "Laboratorio de adaptación didáctica para piano" : "Laboratorio del arreglo coral"))}</a>`
+          : resources.length
           ? resources.map(resource => `
               <a class="resource-pill text-decoration-none text-dark" href="${resourceHref(resource)}">${VML.safe(resource.title || "Recurso educativo")}</a>
             `).join("")
@@ -205,6 +208,12 @@ function resourceHref(resource) {
   if (resource.id === "RE-047") return VML.withMode("laboratorio-blanca.html");
   if (resource.id === "RE-058") return VML.withMode("laboratorio-emily.html");
   return VML.withMode(`recurso.html?id=${encodeURIComponent(resource.id)}`);
+}
+
+function learningHrefForCreator(creator, resource) {
+  if (creator?.id === "CR-052") return VML.withMode("laboratorio-rocio.html");
+  if (creator?.id === "CR-058") return VML.withMode("laboratorio-emily.html");
+  return resource ? resourceHref(resource) : "";
 }
 
 ["search", "category", "sort"].forEach(id => {

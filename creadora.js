@@ -8,6 +8,12 @@ function resourceHref(resource) {
   return VML.withMode(`recurso.html?id=${encodeURIComponent(resource.id)}`);
 }
 
+function learningHrefForCreator(creator, resource) {
+  if (creator?.id === "CR-052") return VML.withMode("laboratorio-rocio.html");
+  if (creator?.id === "CR-058") return VML.withMode("laboratorio-emily.html");
+  return resource ? resourceHref(resource) : "";
+}
+
 function validPhoto(url) {
   return /^https:\/\//i.test(String(url || "").trim());
 }
@@ -153,6 +159,7 @@ async function init() {
 
     const mediation = creator.mediation || (data.mediations || []).find(item => item.creatorId === creator.id) || null;
     const resource = (creator.resources || [])[0] || null;
+    const learningHref = learningHrefForCreator(creator, resource);
     const creatorQuestions = (creator.questions || []).length
       ? creator.questions
       : (data.questions || []).filter(item => !item.creatorId);
@@ -232,7 +239,7 @@ async function init() {
                 <h3 class="h3 mt-2">Experiencia educativa interactiva</h3>
                 <p>Los recursos didácticos se presentan como una capa opcional y separada de la mediación patrimonial.</p>
                 ${renderEmbed(resource)}
-                <div class="mt-3">${resource ? `<a class="btn btn-brand rounded-pill" href="${resourceHref(resource)}">Abrir recurso completo</a>` : '<span class="small text-secondary">Recurso educativo todavía en preparación.</span>'}</div>
+                <div class="mt-3">${learningHref ? `<a class="btn btn-brand rounded-pill" href="${learningHref}">Abrir recurso completo</a>` : '<span class="small text-secondary">Recurso educativo todavía en preparación.</span>'}</div>
               </div>
             </div>
           </div>
