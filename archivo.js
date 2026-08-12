@@ -30,9 +30,8 @@ async function init() {
     data = await VML.load();
     const creators = data.creators || [];
 
-    $("#archive-status").textContent = data._isDemo
-      ? `Prototipo con datos de respaldo · ${creators.length} creadoras disponibles`
-      : `${VML.modeLabel()} · ${creators.length} creadoras disponibles`;
+    $("#archive-status").textContent =
+      `${VML.modeLabel()} · ${creators.length} creadoras disponibles`;
     $("#archive-status").classList.add("is-ready");
 
     renderPilotCorpus(creators);

@@ -91,6 +91,18 @@ VML.hideLoading = function (message) {
   setTimeout(() => { layer.style.opacity = "0"; setTimeout(() => { layer.hidden = true; }, 260); }, 350);
 };
 
+VML.prototypeData = {
+  mode: "demo",
+  notice: "Datos de respaldo para visualizar el prototipo cuando la conexión en vivo no está disponible.",
+  _isDemo: true,
+  resources: [], questions: [],
+  creators: [
+    {id:"CR-001",name:"Matilde Hidalgo Navarro",discipline:"Poeta",category:"Poetas",birth:"1887",place:"Loja, Ecuador",bio:"Poeta y referente histórica vinculada con Loja. Esta síntesis permite visualizar la ficha educativa mientras se completa la revisión editorial.",source:"Estrada Jenny (2015). Una mujer total. Matilde Hidalgo de Procel. Biografía y Poemario.",initials:"MH",works:[{id:"OB-0001",title:"Himno patrio celicano",type:"Poesía / himno",role:"Autoría literaria",status:"Preliminar"}]},
+    {id:"CR-047",name:"Blanca Cano Palacio",discipline:"Compositora",category:"Compositoras",birth:"1929",place:"Loja, Ecuador",bio:"Compositora lojana cuya trayectoria permite estudiar la relación entre creación musical, pedagogía y memoria cultural.",source:"Jaramillo Rogelio (2011). Loja cuna de artistas.",initials:"BC",works:[{id:"OB-0072",title:"Loja en septiembre de flores",type:"Pasacalle",genre:"Pasacalle",role:"Composición"},{id:"OB-0073",title:"Cecilia",type:"Pasillo",genre:"Pasillo",role:"Composición"}]},
+    {id:"CR-058",name:"Emily Katherine Ordóñez Celi",discipline:"Arreglista",category:"Arreglistas",birth:"2002",place:"Loja, Ecuador",bio:"Arreglista registrada en el corpus. Su trabajo permite explicar la transformación de una obra preexistente para voces femeninas.",source:"Emily Ordóñez (2024). Blanca Cano. Arreglos corales para voces femeninas.",initials:"EO",works:["Loja en septiembre de flores","Cecilia","Primaveral","La voz del maizal","Sobre el pajonal"].map((title,i)=>({id:["OB-0119","OB-0120","OB-0121","OB-0122","OB-0123"][i],title:title+" — adaptación coral",type:"Adaptación coral",role:"Arreglo"}))}
+  ]
+};
+
 VML.load = async function () {
   VML.showLoading();
   try {
@@ -98,18 +110,10 @@ VML.load = async function () {
     VML.hideLoading("Información actualizada");
     return data;
   } catch (error) {
-    try {
-      const response = await fetch(window.VML_CONFIG.DEMO_URL, { cache: "no-store" });
-      if (!response.ok) throw new Error("No se pudo abrir el respaldo local");
-      const demo = await response.json();
-      demo._isDemo = true;
-      demo._apiError = error.message;
-      VML.hideLoading("Prototipo listo");
-      return demo;
-    } catch (_) {
-      VML.hideLoading("No se pudo actualizar");
-      throw error;
-    }
+    const demo = JSON.parse(JSON.stringify(VML.prototypeData));
+    demo._apiError = error.message;
+    VML.hideLoading("Prototipo listo");
+    return demo;
   }
 };
 
