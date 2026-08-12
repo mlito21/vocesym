@@ -29,7 +29,7 @@ Según el control editorial de la Base Maestra:
 - 61 propuestas de recursos educativos.
 - 0 registros declarados publicables actualmente.
 
-Esto significa que GitHub Pages funciona todavía como **entorno académico PREVIEW**. No debe interpretarse como publicación definitiva del corpus.
+El sitio distingue dos alcances: un **catálogo público preliminar** con datos mínimos de identificación y un entorno académico PREVIEW con contenidos todavía en revisión. La inclusión en el catálogo no equivale a una ficha patrimonial verificada ni a autorización para publicar obras o multimedia.
 
 ## Modos de datos
 
@@ -49,7 +49,7 @@ Utiliza las vistas internas de revisión y permite trabajar con todo el corpus p
 ?mode=public
 ```
 
-Utiliza exclusivamente las vistas WEB. Estas vistas permanecen vacías hasta que los registros cumplan los criterios editoriales y legales.
+Utiliza exclusivamente las vistas WEB. `07_WEB_Creadoras` expone un índice preliminar con identificador, nombre, categoría y disciplina. Las biografías, obras, fuentes, imágenes, multimedia y recursos solo deben incorporarse cuando cumplan los criterios editoriales y legales.
 
 Nunca se debe marcar un registro como publicable únicamente para probar la interfaz.
 
@@ -102,4 +102,4 @@ Véase `PRODUCTION_READINESS.md` para el flujo completo.
 
 ## Prioridad inmediata
 
-Validar completamente el flujo con un primer lote de perfiles antes de escalar la publicación pública al corpus completo. Los laboratorios existentes sirven como pruebas funcionales de mediación, no como justificación para publicar datos todavía no verificados.
+Completar por lotes las fichas patrimoniales, obras, fuentes, derechos y recursos antes de ampliar el contenido disponible públicamente. Los laboratorios existentes son prototipos funcionales de mediación; no convierten automáticamente a sus perfiles o materiales en contenido verificado y publicable.
