@@ -53,6 +53,25 @@ function splitFeaturedWorks(value) {
     .filter(Boolean);
 }
 
+function renderMedia(creator) {
+  const media = creator.media || [];
+  if (!media.length) {
+    return '<div class="alert alert-light">No hay materiales multimedia publicados para esta creadora.</div>';
+  }
+
+  return media.map(item => {
+    const url = String(item.url || "").trim();
+    const safeUrl = /^https:\/\//i.test(url);
+    return `<article class="border rounded-4 p-4 mb-3 bg-white">
+      <div class="eyebrow">${VML.safe(item.type || "Material")}</div>
+      <h3 class="h5 mt-2">${VML.safe(item.title || "Material multimedia")}</h3>
+      ${item.alt ? `<p class="small text-secondary">${VML.safe(item.alt)}</p>` : ""}
+      ${safeUrl ? `<a class="btn btn-outline-brand rounded-pill" href="${VML.safe(url)}">Abrir material</a>` : ""}
+      ${item.source ? `<p class="small text-secondary mt-3 mb-0"><strong>Fuente:</strong> ${VML.safe(item.source)}</p>` : ""}
+    </article>`;
+  }).join("");
+}
+
 function renderWorks(creator, mediation) {
   const works = creator.works || [];
   const featuredNames = new Set(splitFeaturedWorks(mediation?.featuredWorks).map(x => x.toLowerCase()));
@@ -256,7 +275,8 @@ async function init() {
             <div class="col-lg-5">
               <div class="eyebrow">Mira, escucha y lee</div>
               <h2 class="public-section-title mt-2">Materiales disponibles</h2>
-              <p class="fs-5 lh-lg">${VML.safe(multimedia || "Los materiales visuales, sonoros o textuales se incorporarán cuando su fuente, pertinencia y condiciones de uso estén verificadas.")}</p>
+              <p class="fs-5 lh-lg">${VML.safe(multimedia || "Los materiales visuales, sonoros o textuales se incorporan cuando su fuente, pertinencia y condiciones de uso están verificadas.")}</p>
+              ${renderMedia(creator)}
               ${audience ? `<p class="small text-secondary"><strong>Dirigido a:</strong> ${VML.safe(audience)}</p>` : ""}
             </div>
             <div class="col-lg-7">
