@@ -38,15 +38,33 @@
 
 <header class="archive-hero">
   <div class="container-xxl">
-    <div class="eyebrow text-white-50">Descubre · corpus documental</div>
+    <div class="eyebrow text-white-50">Descubre · mujeres creadoras de Loja</div>
     <h1 class="archive-title mt-3">Archivo de creadoras</h1>
-    <p class="lead text-white-50 mt-3 col-lg-8">Consulta los perfiles disponibles en la vista de datos activa. El archivo se actualiza automáticamente desde la Base Maestra y respeta la separación entre revisión interna y publicación WEB.</p>
+    <p class="lead text-white-50 mt-3 col-lg-8">Conoce las trayectorias, obras y aportes de poetas, compositoras y arreglistas. Puedes buscar por nombre o disciplina, abrir una ficha biográfica y continuar hacia mapas, conexiones y recursos educativos.</p>
   </div>
 </header>
 
 <main class="section-space">
 <div class="container-xxl">
   <div id="archive-status" class="api-status mb-4">Conectando con la Base Maestra…</div>
+
+  <section id="pilot-corpus" class="pilot-corpus mb-5" aria-labelledby="pilot-corpus-title" hidden>
+    <div class="pilot-corpus-head">
+      <div>
+        <div class="eyebrow">Corpus piloto · estado metodológico</div>
+        <h2 id="pilot-corpus-title" class="h1 mt-2 mb-2">Ocho casos definitivos y una vacante documental</h2>
+        <p class="text-secondary mb-0">La selección conserva el equilibrio previsto sin presentar como validado un tercer caso de arreglista que todavía no alcanza el umbral documental.</p>
+      </div>
+      <div class="pilot-corpus-actions" aria-label="Controles del corpus piloto">
+        <button id="show-pilot" type="button" class="btn btn-brand rounded-pill">Ver los 8 casos</button>
+        <button id="show-all" type="button" class="btn btn-outline-brand rounded-pill" hidden>Ver todo el archivo</button>
+      </div>
+    </div>
+    <div id="pilot-corpus-groups" class="row g-3 mt-2"></div>
+    <div class="pilot-method-note mt-3">
+      <strong>Decisión de investigación:</strong> la vacante se mantiene visible como límite del corpus; no se reemplaza por un perfil con evidencia insuficiente.
+    </div>
+  </section>
 
   <div class="search-shell mb-5">
     <div class="row g-3">
@@ -67,7 +85,7 @@
         </select>
       </div>
     </div>
-    <div class="small text-secondary mt-3"><strong id="result-count">0</strong> creadoras mostradas.</div>
+    <div class="small text-secondary mt-3" aria-live="polite"><strong id="result-count">0</strong> creadoras mostradas.<span id="result-scope"></span></div>
   </div>
 
   <div id="creator-grid-v11" class="row g-4"></div>
@@ -103,8 +121,8 @@
   </div>
 </footer>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-<script src="config.js"></script>
-<script src="vml-data.js"></script>
-<script src="archivo.js"></script>
+<script src="config.js?v=15"></script>
+<script src="vml-data.js?v=15"></script>
+<script src="archivo.js?v=15"></script>
 </body>
 </html>

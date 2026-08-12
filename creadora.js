@@ -1,11 +1,31 @@
 const $ = selector => document.querySelector(selector);
 
 function resourceHref(resource) {
-  if (!resource) return "recursos.html";
-  if (resource.id === "RE-001") return "laboratorio-matilde.html";
-  if (resource.id === "RE-047") return "laboratorio-blanca.html";
-  if (resource.id === "RE-058") return "laboratorio-emily.html";
-  return `recurso.html?id=${encodeURIComponent(resource.id)}`;
+  if (!resource) return VML.withMode("recursos.html");
+  if (resource.id === "RE-001") return VML.withMode("laboratorio-matilde.html");
+  if (resource.id === "RE-047") return VML.withMode("laboratorio-blanca.html");
+  if (resource.id === "RE-058") return VML.withMode("laboratorio-emily.html");
+  return VML.withMode(`recurso.html?id=${encodeURIComponent(resource.id)}`);
+}
+
+function learningHrefForCreator(creator, resource) {
+  if (creator?.id === "CR-052") return VML.withMode("laboratorio-rocio.html");
+  if (creator?.id === "CR-058") return VML.withMode("laboratorio-emily.html");
+  return resource ? resourceHref(resource) : "";
+}
+
+function validPhoto(url) {
+  return /^https:\/\//i.test(String(url || "").trim());
+}
+
+function creatorVisual(creator) {
+  const photo = String(creator.photoSource || "").trim();
+  const hasPhoto = validPhoto(photo);
+  return `
+    <div class="creator-visual creator-visual-profile${hasPhoto ? "" : " no-photo"}">
+      ${hasPhoto ? `<img class="creator-photo" src="${VML.safe(photo)}" alt="Retrato de ${VML.safe(creator.name)}" loading="eager" onerror="this.style.display='none';this.nextElementSibling.style.display='grid'">` : ""}
+      <div class="creator-monogram-large creator-photo-fallback"${hasPhoto ? "" : ' style="display:grid"'}>${VML.safe(creator.initials || "VM")}</div>
+    </div>`;
 }
 
 function splitFeaturedWorks(value) {
@@ -43,7 +63,8 @@ function renderWorks(creator, mediation) {
 }
 
 function renderExperiences(mediation) {
-  const items = [mediation?.experience1, mediation?.experience2, mediation?.experience3].filter(Boolean);
+  if (!mediation) return "";
+  const items = [mediation.experience1, mediation.experience2, mediation.experience3].filter(Boolean);
   if (!items.length) return "";
 
   return `
@@ -63,6 +84,59 @@ function renderExperiences(mediation) {
         </div>
       </div>
     </section>`;
+}
+
+function renderLegacy(mediation) {
+  if (!mediation?.legacy) return "";
+  return `
+    <section class="public-section">
+      <div class="container-xxl">
+        <div class="legacy-band">
+          <div class="row g-4 align-items-center">
+            <div class="col-lg-8">
+              <div class="eyebrow text-white-50">Explora su legado</div>
+              <h2 class="h1 mt-2">Más allá de una lista de obras</h2>
+              <p class="text-white-50 fs-5 mb-0">${VML.safe(mediation.legacy)}</p>
+            </div>
+            <div class="col-lg-4 d-flex gap-2 flex-wrap justify-content-lg-end">
+              <a class="btn btn-light rounded-pill" href="${VML.withMode("linea-tiempo.html")}">Ver cronología</a>
+              <a class="btn btn-light rounded-pill" href="${VML.withMode("conexiones.html")}">Ver conexiones</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>`;
+}
+
+function renderMediationNotice(mediation) {
+  if (mediation) return "";
+  return VML.isPreview()
+    ? `<div class="alert alert-info mt-4 mb-0"><strong>Mediación patrimonial en preparación:</strong> esta ficha ya reúne datos biográficos y obras del archivo, pero todavía no dispone de una narrativa curatorial específica para público general.</div>`
+    : "";
+}
+
+function renderEmbed(resource) {
+  if (!resource) {
+    return `<div class="border rounded-4 p-4 bg-light"><strong>Recurso educativo en preparación</strong><p class="small text-secondary mb-0 mt-2">Cuando exista un recurso H5P/Lumi validado, podrá integrarse en este espacio.</p></div>`;
+  }
+
+  const url = String(resource.embedUrl || "").trim();
+  const isSafeUrl = /^https:\/\//i.test(url);
+  const rawHeight = Number.parseInt(resource.embedHeight, 10);
+  const height = Number.isFinite(rawHeight) ? Math.max(400, Math.min(rawHeight, 1200)) : 620;
+  const format = resource.embedFormat || "H5P / Lumi";
+
+  if (!isSafeUrl) {
+    return `<div class="border rounded-4 p-4" style="background:var(--soft)">
+      <div class="eyebrow">Espacio preparado</div>
+      <h4 class="h5 mt-2">Integración ${VML.safe(format)}</h4>
+      <p class="small text-secondary mb-0">Registre una URL HTTPS en <code>EMBED_URL</code> de la Base Maestra para mostrar aquí la experiencia interactiva validada.</p>
+    </div>`;
+  }
+
+  return `<div class="ratio rounded-4 overflow-hidden border bg-white" style="--bs-aspect-ratio:${Math.min(100, Math.max(45, (height / 900) * 100))}%">
+    <iframe src="${VML.safe(url)}" title="${VML.safe(resource.title || "Recurso educativo interactivo")}" loading="lazy" allowfullscreen allow="fullscreen" style="border:0" sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-presentation"></iframe>
+  </div>`;
 }
 
 async function init() {
@@ -85,39 +159,48 @@ async function init() {
 
     const mediation = creator.mediation || (data.mediations || []).find(item => item.creatorId === creator.id) || null;
     const resource = (creator.resources || [])[0] || null;
+    const learningHref = learningHrefForCreator(creator, resource);
+    const creatorQuestions = (creator.questions || []).length
+      ? creator.questions
+      : (data.questions || []).filter(item => !item.creatorId);
 
     document.title = `${creator.name} · Voces y Melodías Lojanas`;
     $("#creator-mode").textContent = `${VML.modeLabel()} · ${creator.discipline || creator.category || "Creadora"}`;
     $("#creator-public-title").textContent = mediation?.title || creator.name;
-    $("#creator-hook").textContent = mediation?.hook || `Conoce la trayectoria y las obras documentadas de ${creator.name}.`;
+    $("#creator-hook").textContent = mediation?.hook || `Conoce los datos biográficos y las obras documentadas actualmente para ${creator.name}.`;
 
     const biography = mediation?.biography || creator.bio || "La síntesis biográfica de esta creadora se encuentra todavía en preparación editorial.";
-    const contribution = mediation?.contribution || "El aporte patrimonial de esta creadora está en proceso de investigación y redacción curatorial. El archivo conserva sus obras y fuentes disponibles sin completar los vacíos mediante inferencias.";
-    const question = mediation?.guideQuestion || `¿Qué podemos conocer de ${creator.name} a partir de las obras y fuentes que conserva el archivo?`;
-    const legacy = mediation?.legacy || "Su legado se presenta como parte de un proceso de recuperación documental en curso.";
-    const audience = mediation?.audience || "Público general y comunidad educativa.";
-    const multimedia = mediation?.multimedia || "Los materiales visuales, sonoros o textuales se incorporarán únicamente cuando su fuente y condiciones de uso estén verificadas.";
+    const contribution = mediation?.contribution || null;
+    const question = mediation?.guideQuestion || null;
+    const multimedia = mediation?.multimedia || null;
+    const audience = mediation?.audience || null;
+    const mapHref = VML.withMode(`mapa.html?creator=${encodeURIComponent(creator.id)}`);
 
     $("#creator-public-content").innerHTML = `
       <section class="public-section">
         <div class="container-xxl">
           <div class="row g-5 align-items-start">
-            <div class="col-lg-4"><div class="creator-monogram-large">${VML.safe(creator.initials || "VM")}</div></div>
+            <div class="col-lg-4">
+              ${creatorVisual(creator)}
+              ${validPhoto(creator.photoSource) ? `<p class="small text-secondary mt-2 mb-0">Fuente de imagen registrada en la Base Maestra.</p>` : ""}
+            </div>
             <div class="col-lg-8">
               <div class="eyebrow">Conoce su historia</div>
               <h2 class="public-section-title mt-2">${VML.safe(creator.name)}</h2>
               <p class="fs-5 lh-lg">${VML.safe(biography)}</p>
               <div class="row g-3 mt-3">
                 <div class="col-md-4"><div class="info-box"><span>Nacimiento</span><strong>${VML.safe(creator.birth || "Por verificar")}</strong></div></div>
-                <div class="col-md-4"><div class="info-box"><span>Lugar</span><strong>${VML.safe(creator.place || "Por verificar")}</strong></div></div>
+                <div class="col-md-4"><div class="info-box"><span>Lugar</span><strong>${VML.safe(creator.place || "Por verificar")}</strong>${creator.place ? `<a class="d-block small mt-2" href="${mapHref}">Ver en mapa →</a>` : ""}</div></div>
                 <div class="col-md-4"><div class="info-box"><span>Disciplina</span><strong>${VML.safe(creator.discipline || creator.category || "Por clasificar")}</strong></div></div>
               </div>
-              <div class="guide-question mt-4">${VML.safe(question)}</div>
+              ${question ? `<div class="guide-question mt-4">${VML.safe(question)}</div>` : ""}
+              ${renderMediationNotice(mediation)}
             </div>
           </div>
         </div>
       </section>
 
+      ${contribution ? `
       <section class="public-section bg-white">
         <div class="container-xxl">
           <div class="row g-5">
@@ -125,9 +208,9 @@ async function init() {
             <div class="col-lg-8"><p class="fs-5 lh-lg mb-0">${VML.safe(contribution)}</p></div>
           </div>
         </div>
-      </section>
+      </section>` : ""}
 
-      <section class="public-section">
+      <section class="public-section${contribution ? "" : " bg-white"}">
         <div class="container-xxl">
           <div class="eyebrow">Descubre su obra</div>
           <h2 class="public-section-title mt-2">Obras documentadas</h2>
@@ -136,34 +219,27 @@ async function init() {
         </div>
       </section>
 
+      ${creatorQuestions.length ? `<section class="public-section bg-white"><div class="container-xxl"><div class="row g-5"><div class="col-lg-4"><div class="eyebrow">Interactúa</div><h2 class="public-section-title mt-2">Pon a prueba lo que descubriste</h2><p class="text-secondary">Una pregunta aleatoria relacionada con esta creadora o con el archivo.</p></div><div class="col-lg-8"><div id="creator-quiz"></div></div></div></div></section>` : ""}
+
       ${renderExperiences(mediation)}
+      ${renderLegacy(mediation)}
 
-      <section class="public-section">
-        <div class="container-xxl">
-          <div class="legacy-band">
-            <div class="row g-4 align-items-center">
-              <div class="col-lg-8"><div class="eyebrow text-white-50">Explora su legado</div><h2 class="h1 mt-2">Más allá de una lista de obras</h2><p class="text-white-50 fs-5 mb-0">${VML.safe(legacy)}</p></div>
-              <div class="col-lg-4 d-flex gap-2 flex-wrap justify-content-lg-end"><a class="btn btn-light rounded-pill" href="linea-tiempo.html">Ver cronología</a><a class="btn btn-light rounded-pill" href="conexiones.html">Ver conexiones</a></div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section class="public-section bg-white">
+      <section class="public-section${mediation ? " bg-white" : ""}">
         <div class="container-xxl">
           <div class="row g-5">
-            <div class="col-lg-7">
+            <div class="col-lg-5">
               <div class="eyebrow">Mira, escucha y lee</div>
               <h2 class="public-section-title mt-2">Materiales disponibles</h2>
-              <p class="fs-5 lh-lg">${VML.safe(multimedia)}</p>
-              <p class="small text-secondary"><strong>Dirigido a:</strong> ${VML.safe(audience)}</p>
+              <p class="fs-5 lh-lg">${VML.safe(multimedia || "Los materiales visuales, sonoros o textuales se incorporarán cuando su fuente, pertinencia y condiciones de uso estén verificadas.")}</p>
+              ${audience ? `<p class="small text-secondary"><strong>Dirigido a:</strong> ${VML.safe(audience)}</p>` : ""}
             </div>
-            <div class="col-lg-5">
+            <div class="col-lg-7">
               <div class="research-box">
                 <div class="eyebrow">Para aprender</div>
-                <h3 class="h3 mt-2">¿Quieres trabajar esta creadora en un contexto educativo?</h3>
-                <p>Las actividades didácticas se mantienen en una capa separada de la experiencia patrimonial.</p>
-                ${resource ? `<a class="btn btn-brand rounded-pill" href="${resourceHref(resource)}">Abrir recurso educativo</a>` : '<p class="small text-secondary mb-0">Recurso educativo todavía en preparación.</p>'}
+                <h3 class="h3 mt-2">Experiencia educativa interactiva</h3>
+                <p>Los recursos didácticos se presentan como una capa opcional y separada de la mediación patrimonial.</p>
+                ${renderEmbed(resource)}
+                <div class="mt-3">${learningHref ? `<a class="btn btn-brand rounded-pill" href="${learningHref}">Abrir recurso completo</a>` : '<span class="small text-secondary">Recurso educativo todavía en preparación.</span>'}</div>
               </div>
             </div>
           </div>
@@ -184,6 +260,14 @@ async function init() {
           </div>
         </div>
       </section>`;
+
+    if (creatorQuestions.length) {
+      VML.mountQuiz("#creator-quiz", creatorQuestions, {
+        count: 1,
+        eyebrow: "Pregunta aleatoria",
+        title: `¿Qué recuerdas de ${creator.name}?`
+      });
+    }
   } catch (error) {
     console.error(error);
     $("#creator-public-title").textContent = "No fue posible cargar el perfil";

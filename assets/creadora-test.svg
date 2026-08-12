@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="1000" viewBox="0 0 800 1000" role="img" aria-labelledby="title desc">
+<title id="title">Retrato demostrativo de creadora TEST</title>
+<desc id="desc">Ilustración genérica utilizada exclusivamente para comprobar la visualización de fotografías en el prototipo Voces y Melodías Lojanas.</desc>
+<rect width="800" height="1000" fill="#e8f1ee"/>
+<circle cx="400" cy="335" r="155" fill="#c4d8d2"/>
+<path d="M155 890c18-214 116-330 245-330s227 116 245 330" fill="#9bbdb4"/>
+<circle cx="400" cy="325" r="105" fill="#f6f3ec"/>
+<path d="M294 319c10-88 48-133 108-133 66 0 105 50 107 139-32-31-74-48-126-48-36 0-66 14-89 42z" fill="#17362f"/>
+<circle cx="365" cy="330" r="7" fill="#17362f"/><circle cx="435" cy="330" r="7" fill="#17362f"/>
+<path d="M365 386c23 18 47 18 70 0" fill="none" stroke="#17362f" stroke-width="7" stroke-linecap="round"/>
+<rect x="92" y="72" width="186" height="58" rx="29" fill="#006b5e"/>
+<text x="185" y="110" text-anchor="middle" font-family="Arial,sans-serif" font-size="25" font-weight="700" fill="white">CREADORA TEST</text>
+<text x="400" y="930" text-anchor="middle" font-family="Georgia,serif" font-size="42" font-weight="700" fill="#17362f">Elena Suárez Andrade</text>
+<text x="400" y="970" text-anchor="middle" font-family="Arial,sans-serif" font-size="22" fill="#65766f">Imagen ficticia · solo demostración técnica</text>
+</svg>

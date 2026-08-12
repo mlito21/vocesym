@@ -18,10 +18,11 @@ function jsonp(baseUrl,mode="preview",timeout=12000){
 function cleanTitle(s){return (s||"").replace(/^["']|["']$/g,"").replace(/\.$/,"").trim()}
 async function init(){
  try{
-  const data=await jsonp(window.VML_CONFIG.API_URL,window.VML_CONFIG.API_MODE||"preview");
+  const data=await VML.load();
   creator=(data.creators||[]).find(c=>c.id==="CR-047");
   if(!creator)throw new Error("No se encontró CR-047");
-  $("#lab-status").textContent="Modo vista previa · información cargada desde Google Sheets";
+  $("#lab-status").textContent=VML.modeLabel()+" · información cargada desde Google Sheets";
+  $("#lab-status").classList.add("is-ready");
   renderData();restore();
  }catch(e){$("#lab-status").textContent="No fue posible cargar la información: "+e.message}
 }

@@ -19,6 +19,8 @@ function doGet(e) {
     payload = getLocations_(mode);
   } else if (action === 'mediations') {
     payload = getMediations_(mode);
+  } else if (action === 'questions') {
+    payload = getQuestions_(mode);
   } else {
     payload = getSitePayload_(mode);
   }
@@ -39,14 +41,22 @@ function doGet(e) {
 function getSitePayload_(mode) {
   var creators = getCreators_(mode).items;
   var works = getWorks_(mode).items;
+  var media = getMedia_(mode).items;
   var resources = getResources_(mode).items;
   var relations = getRelations_(mode).items;
   var locations = getLocations_(mode).items;
   var mediations = getMediations_(mode).items;
+  var questions = getQuestions_(mode).items;
 
   var byCreatorWorks = groupBy_(works, 'ID_CREADORA');
+  var byCreatorMedia = groupBy_(media, 'ID_CREADORA');
   var byCreatorResources = groupBy_(resources, 'ID_CREADORA');
   var byCreatorMediations = groupBy_(mediations, 'ID_CREADORA');
+  var byCreatorQuestions = groupBy_(questions, 'ID_CREADORA');
+
+  var normalizedMedia = media.map(function(m) {
+    return normalizeMedia_(m);
+  });
 
   var normalizedResources = resources.map(function(r) {
     return normalizeResource_(r);
@@ -56,20 +66,41 @@ function getSitePayload_(mode) {
     return normalizeMediation_(m);
   });
 
+  var normalizedQuestions = questions.map(function(q) {
+    return normalizeQuestion_(q);
+  });
+
   return {
     mode: mode === 'preview' ? 'preview' : 'live',
     generatedAt: new Date().toISOString(),
     relations: relations,
     locations: locations,
+    media: normalizedMedia,
     resources: normalizedResources,
     mediations: normalizedMediations,
+    questions: normalizedQuestions,
     creators: creators.map(function(c) {
+      var creatorMedia = (byCreatorMedia[c.ID_CREADORA] || []).map(function(m) {
+        return normalizeMedia_(m);
+      });
       var creatorResources = (byCreatorResources[c.ID_CREADORA] || []).map(function(r) {
         return normalizeResource_(r);
       });
       var creatorMediations = (byCreatorMediations[c.ID_CREADORA] || []).map(function(m) {
         return normalizeMediation_(m);
       });
+      var creatorQuestions = (byCreatorQuestions[c.ID_CREADORA] || []).map(function(q) {
+        return normalizeQuestion_(q);
+      });
+
+      var photoMedia = null;
+      for (var i = 0; i < creatorMedia.length; i++) {
+        var type = String(creatorMedia[i].type || '').toLowerCase();
+        if (type.indexOf('fotograf') !== -1 || type.indexOf('imagen') !== -1 || creatorMedia[i].url === c['FUENTE_FOTOGRAFÍA']) {
+          photoMedia = creatorMedia[i];
+          break;
+        }
+      }
 
       return {
         id: c.ID_CREADORA,
@@ -81,6 +112,8 @@ function getSitePayload_(mode) {
         bio: c['BIOGRAFÍA_VALIDADA'],
         source: c.FUENTE_PRINCIPAL,
         photoSource: c['FUENTE_FOTOGRAFÍA'],
+        photoMedia: photoMedia,
+        media: creatorMedia,
         initials: initials_(c.NOMBRE_COMPLETO),
         works: (byCreatorWorks[c.ID_CREADORA] || []).map(function(w) {
           return {
@@ -96,7 +129,8 @@ function getSitePayload_(mode) {
         resources: creatorResources,
         learning: creatorResources.length ? creatorResources[0] : null,
         mediations: creatorMediations,
-        mediation: creatorMediations.length ? creatorMediations[0] : null
+        mediation: creatorMediations.length ? creatorMediations[0] : null,
+        questions: creatorQuestions
       };
     })
   };
@@ -115,13 +149,15 @@ function getWorks_(mode) {
 }
 
 function getMedia_(mode) {
-  return readView_('09_WEB_Multimedia', 3, 8);
+  return mode === 'preview'
+    ? readView_('28_PREVIEW_Multimedia', 3, 10)
+    : readView_('09_WEB_Multimedia', 3, 8);
 }
 
 function getResources_(mode) {
   return mode === 'preview'
-    ? readView_('14_PREVIEW_Recursos', 3, 15)
-    : readView_('10_WEB_Recursos', 3, 15);
+    ? readView_('14_PREVIEW_Recursos', 3, 18)
+    : readView_('10_WEB_Recursos', 3, 18);
 }
 
 function getRelations_(mode) {
@@ -140,6 +176,12 @@ function getMediations_(mode) {
   return mode === 'preview'
     ? readView_('22_PREVIEW_Mediacion', 3, 18)
     : readView_('23_WEB_Mediacion', 3, 18);
+}
+
+function getQuestions_(mode) {
+  return mode === 'preview'
+    ? readView_('25_PREVIEW_Preguntas', 3, 16)
+    : readView_('26_WEB_Preguntas', 3, 16);
 }
 
 function readView_(sheetName, headerRow, width) {
@@ -171,6 +213,7 @@ function readView_(sheetName, headerRow, width) {
 function groupBy_(arr, key) {
   return arr.reduce(function(m, x) {
     var groupKey = x[key];
+    if (!groupKey) return m;
     if (!m[groupKey]) m[groupKey] = [];
     m[groupKey].push(x);
     return m;
@@ -185,6 +228,23 @@ function initials_(name) {
     .map(function(x) { return x[0]; })
     .join('')
     .toUpperCase();
+}
+
+function normalizeMedia_(m) {
+  if (!m) return null;
+  return {
+    id: m.ID_MEDIA,
+    creatorId: m.ID_CREADORA,
+    creator: m.CREADORA,
+    type: m.TIPO_RECURSO,
+    title: m['TÍTULO_DESCRIPCIÓN'],
+    url: m.URL_O_ARCHIVO,
+    source: m.FUENTE,
+    rightsHolder: m.TITULAR_DERECHOS || '',
+    license: m.LICENCIA_PERMISO || '',
+    quality: m.CALIDAD || '',
+    alt: m.TEXTO_ALTERNATIVO || m['TÍTULO_DESCRIPCIÓN'] || ''
+  };
 }
 
 function normalizeResource_(r) {
@@ -204,7 +264,10 @@ function normalizeResource_(r) {
     assessment: r['INSTRUMENTO_EVALUACIÓN'],
     accessibility: r.ACCESIBILIDAD,
     technology: r['TECNOLOGÍA'],
-    projectObjective: r.OBJETIVO_PROYECTO
+    projectObjective: r.OBJETIVO_PROYECTO,
+    embedUrl: r.EMBED_URL,
+    embedFormat: r.EMBED_FORMATO,
+    embedHeight: r.EMBED_ALTURA
   };
 }
 
@@ -229,6 +292,25 @@ function normalizeMediation_(m) {
     accessibility: m.ACCESIBILIDAD,
     verificationStatus: m['ESTADO_VERIFICACIÓN'],
     publishable: m.PUBLICABLE_WEB
+  };
+}
+
+function normalizeQuestion_(q) {
+  if (!q) return null;
+  return {
+    id: q.ID_PREGUNTA,
+    type: q.TIPO,
+    question: q.PREGUNTA,
+    options: [q.OPCION_A, q.OPCION_B, q.OPCION_C, q.OPCION_D].filter(function(v) { return Boolean(v); }),
+    answer: q.RESPUESTA_CORRECTA,
+    feedback: q.RETROALIMENTACION,
+    creatorId: q.ID_CREADORA,
+    workId: q.ID_OBRA,
+    difficulty: q.DIFICULTAD,
+    source: q.FUENTE,
+    destination: q.ENLACE_DESTINO,
+    verificationStatus: q['ESTADO_VERIFICACIÓN'],
+    publishable: q.PUBLICABLE_WEB
   };
 }
 

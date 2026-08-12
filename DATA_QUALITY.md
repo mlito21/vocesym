@@ -6,13 +6,74 @@ Este documento traduce el estado real de la Base Maestra en decisiones de produc
 
 Un recurso educativo puede estar técnicamente desarrollado y, sin embargo, su perfil documental no estar listo para publicación. **Desarrollo web ≠ validación científica/editorial**.
 
+Del mismo modo, una creadora puede tener una ficha básica en PREVIEW sin disponer todavía de una **mediación patrimonial pública**. La narrativa destinada a ciudadanía solo debe redactarse cuando existan datos biográficos y obras suficientemente sustentados.
+
 ## Primer lote de revisión
 
 | ID | Creadora | Estado actual | Fortalezas | Vacíos para producción | Prioridad |
 |---|---|---|---|---|---|
-| CR-047 | Blanca Cano Palacio | En revisión · No publicable | Lugar y fechas documentadas; biografía desarrollada; fuentes UNL, bibliográfica e institucional; varias obras documentadas; laboratorio sonoro | Revisión académica final; derechos/autorización de fotografía; revisión final de obras y fuentes; aprobación editorial | Alta |
-| CR-001 | Matilde Hidalgo Navarro | Preliminar · No publicable | Año de nacimiento; fuente bibliográfica principal; laboratorio de poesía | Lugar pendiente; biografía validada ausente; fotografía pendiente de autorización; obras y atribuciones requieren revisión; aprobación editorial | Media-alta |
-| CR-058 | Emily Katherine Ordóñez Celi | Preliminar · No publicable | Fuente vinculada con trabajo sobre arreglos de Blanca Cano; archivo personal para fotografía; laboratorio del arreglo | Lugar pendiente; biografía validada ausente; derechos de fotografía; revisión documental de arreglos y rol; aprobación editorial | Media-alta |
+| CR-047 | Blanca Cano Palacio | En revisión · No publicable | Lugar y fechas documentadas; biografía desarrollada; fuentes UNL, bibliográfica e institucional; varias obras documentadas; mediación patrimonial MP-047; laboratorio sonoro | Revisión académica final; derechos/autorización de fotografía; revisión final de obras y fuentes; aprobación editorial | Alta |
+| CR-001 | Matilde Hidalgo Navarro | Preliminar · No publicable | Año de nacimiento; fuente bibliográfica principal; laboratorio de poesía | Lugar pendiente; biografía validada ausente; fotografía pendiente de autorización; obras y atribuciones requieren revisión; mediación patrimonial específica aún no debe redactarse como definitiva | Media-alta |
+| CR-058 | Emily Katherine Ordóñez Celi | Preliminar · No publicable | Fuente vinculada con trabajo sobre arreglos de Blanca Cano; archivo personal para fotografía; laboratorio del arreglo | Lugar pendiente; biografía validada ausente; derechos de fotografía; revisión documental de arreglos y rol; mediación patrimonial específica aún no debe redactarse como definitiva | Media-alta |
+
+## Estado de mediación patrimonial del lote piloto
+
+### MP-047 · Blanca Cano Palacio
+
+Ya existe una mediación patrimonial en `21_Mediacion_Patrimonial` y su vista PREVIEW. Está dirigida a público general y organiza:
+
+- título y gancho de entrada;
+- pregunta guía;
+- síntesis biográfica;
+- aporte patrimonial;
+- obras destacadas;
+- tres experiencias de exploración;
+- materiales/multimedia condicionados a derechos;
+- legado;
+- público y accesibilidad.
+
+Se mantiene en **En revisión / No publicable**.
+
+### CR-001 · Matilde Hidalgo Navarro
+
+No debe generarse todavía una mediación patrimonial definitiva. La ficha actual presenta:
+
+- `AÑO_NACIMIENTO = 1887`;
+- `LUGAR_NACIMIENTO = Pendiente de verificación`;
+- `BIOGRAFÍA_VALIDADA` vacía;
+- `ESTADO_BIOGRAFÍA = Pendiente`;
+- `ESTADO_VERIFICACIÓN = Preliminar`;
+- `PUBLICABLE_WEB = No`.
+
+Antes de redactar `MP-001` se requiere:
+
+- [ ] verificar lugar de nacimiento;
+- [ ] construir y revisar síntesis biográfica a partir de fuentes trazables;
+- [ ] revisar obras y atribuciones;
+- [ ] resolver fuente y derechos de fotografía;
+- [ ] definir con evidencia su aporte específico al patrimonio literario lojano;
+- [ ] pasar la ficha a estado En revisión antes de redactar la mediación pública final.
+
+### CR-058 · Emily Katherine Ordóñez Celi
+
+Tampoco debe generarse todavía una mediación patrimonial definitiva. La ficha actual presenta:
+
+- `AÑO_NACIMIENTO = 2002`;
+- `LUGAR_NACIMIENTO = Pendiente de verificación`;
+- `BIOGRAFÍA_VALIDADA` vacía;
+- `ESTADO_BIOGRAFÍA = Pendiente`;
+- `ESTADO_VERIFICACIÓN = Preliminar`;
+- `PUBLICABLE_WEB = No`.
+
+Antes de redactar `MP-058` se requiere:
+
+- [ ] verificar lugar de nacimiento;
+- [ ] elaborar síntesis biográfica sustentada;
+- [ ] precisar su trayectoria y contexto formativo/profesional con fuentes autorizadas;
+- [ ] revisar la relación entre sus arreglos y las obras de Blanca Cano;
+- [ ] resolver derechos de fotografía procedente del archivo personal;
+- [ ] definir su aporte patrimonial sin reducir su perfil únicamente al trabajo de titulación;
+- [ ] pasar la ficha a estado En revisión antes de redactar la mediación pública final.
 
 ## Candidata más próxima a producción
 
@@ -23,6 +84,7 @@ Un recurso educativo puede estar técnicamente desarrollado y, sin embargo, su p
 - biografía extensa en estado "En revisión";
 - referencias bibliográficas, trabajo de titulación UNL y fuente institucional municipal;
 - conjunto de obras identificadas;
+- mediación patrimonial MP-047;
 - recurso educativo avanzado.
 
 Sin embargo, `PUBLICABLE_WEB` continúa en **No**, por lo que no debe pasar a la vista WEB hasta completar los controles pendientes.
@@ -38,6 +100,7 @@ Sin embargo, `PUBLICABLE_WEB` continúa en **No**, por lo que no debe pasar a la
 - [x] Año de fallecimiento: 1982.
 - [x] Biografía desarrollada.
 - [x] Fuentes principales identificadas y trazables.
+- [x] Mediación patrimonial PREVIEW desarrollada.
 - [ ] Revisión académica final de la biografía.
 - [ ] Fuente fotográfica definitiva seleccionada.
 - [ ] Derechos/autorización de fotografía resueltos.
@@ -111,8 +174,9 @@ Estos campos deben priorizarse antes de intentar ampliar el sitio público.
 8. `FUENTE_FOTOGRAFÍA`
 9. `DERECHOS_FOTOGRAFÍA`
 10. `ESTADO_VERIFICACIÓN`
-11. revisión del recurso en `05_Recursos_educativos`
-12. `PUBLICABLE_WEB`
+11. mediación patrimonial en `21_Mediacion_Patrimonial`
+12. revisión del recurso en `05_Recursos_educativos`
+13. `PUBLICABLE_WEB`
 
 ## Estados recomendados
 
