@@ -60,10 +60,32 @@ VML.fetchJson = async function (baseUrl, params = {}, timeout) {
   }
 };
 
-VML.mode = () => window.VML_CONFIG?.API_MODE || "preview";
+VML.mode = () => window.VML_CONFIG?.API_MODE || "public";
 VML.isPreview = () => VML.mode() === "preview";
 VML.isPublic = () => VML.mode() === "public";
-VML.modeLabel = () => VML.isPreview() ? "PREVIEW · corpus en investigación" : "WEB · contenido publicado";
+VML.modeLabel = () => VML.isPreview() ? "PREVIEW · corpus en investigación" : "Versión pública preliminar";
+
+VML.publicResources = [
+  {id:"RE-001",creatorId:"CR-001",title:"Laboratorio de lectura y memoria",areas:"Lengua y Literatura · patrimonio cultural",level:"Bachillerato y educación superior",objective:"Analizar cómo la documentación y el contexto sostienen una lectura patrimonial responsable.",prototype:true},
+  {id:"RE-047",creatorId:"CR-047",title:"Laboratorio de escucha y composición",areas:"Educación Musical · patrimonio cultural",level:"Bachillerato y educación superior",objective:"Reconocer decisiones compositivas mediante escucha guiada y análisis contextual.",prototype:true},
+  {id:"RE-052",creatorId:"CR-052",title:"Laboratorio de adaptación didáctica para piano",areas:"Educación Musical · didáctica instrumental",level:"Formación musical inicial y superior",objective:"Distinguir arreglo, adaptación y transcripción para diseñar una mediación pianística.",prototype:true},
+  {id:"RE-058",creatorId:"CR-058",title:"Laboratorio del arreglo coral",areas:"Educación Musical · producción musical",level:"Bachillerato y educación superior",objective:"Identificar y justificar transformaciones de una obra para un nuevo conjunto vocal.",prototype:true}
+];
+
+VML.publicQuestions = [
+  {question:"¿Qué diferencia un catálogo preliminar de una ficha patrimonial completa?",options:["El catálogo identifica el registro; la ficha incorpora información verificada y fuentes","El catálogo contiene necesariamente todas las obras","No existe ninguna diferencia"],answer:"El catálogo identifica el registro; la ficha incorpora información verificada y fuentes",feedback:"El índice público permite localizar creadoras sin presentar como concluidos datos que aún están en revisión.",destination:"archivo.html"},
+  {question:"¿Por qué el archivo distingue composición y arreglo?",options:["Porque son roles creativos diferentes y deben conservar su atribución","Porque el arreglo elimina la autoría de origen","Solo por motivos de diseño"],answer:"Porque son roles creativos diferentes y deben conservar su atribución",feedback:"La trazabilidad de autorías y transformaciones forma parte del rigor patrimonial.",destination:"conexiones.html"},
+  {question:"¿Qué debe acompañar a un audio, una imagen o una partitura antes de publicarse?",options:["Fuente y condiciones de uso","Únicamente un título atractivo","Ninguna información adicional"],answer:"Fuente y condiciones de uso",feedback:"La publicación responsable exige procedencia, atribución y derechos o licencias claros.",destination:"proyecto.html"}
+];
+
+VML.prototypeResourceIds = new Set(VML.publicResources.map(resource => resource.id));
+VML.resourceHref = function (resourceOrId) {
+  const id = typeof resourceOrId === "string" ? resourceOrId : resourceOrId?.id;
+  if (!id) return VML.withMode("recursos.html");
+  return VML.prototypeResourceIds.has(id)
+    ? VML.withMode(`laboratorio.html?id=${encodeURIComponent(id)}`)
+    : VML.withMode(`recurso.html?id=${encodeURIComponent(id)}`);
+};
 
 VML.ensureLoadingUI = function () {
   if (document.querySelector("#vml-loading-layer")) return;
@@ -114,18 +136,6 @@ VML.hideLoading = function (message) {
   setTimeout(() => { layer.style.opacity = "0"; setTimeout(() => { layer.hidden = true; }, 260); }, 350);
 };
 
-VML.prototypeData = {
-  mode: "demo",
-  notice: "Datos de respaldo para visualizar el prototipo cuando la conexión en vivo no está disponible.",
-  _isDemo: true,
-  resources: [], questions: [],
-  creators: [
-    {id:"CR-001",name:"Matilde Hidalgo Navarro",discipline:"Poeta",category:"Poetas",birth:"1887",place:"Loja, Ecuador",bio:"Poeta y referente histórica vinculada con Loja. Esta síntesis permite visualizar la ficha educativa mientras se completa la revisión editorial.",source:"Estrada Jenny (2015). Una mujer total. Matilde Hidalgo de Procel. Biografía y Poemario.",initials:"MH",works:[{id:"OB-0001",title:"Himno patrio celicano",type:"Poesía / himno",role:"Autoría literaria",status:"Preliminar"}]},
-    {id:"CR-047",name:"Blanca Cano Palacio",discipline:"Compositora",category:"Compositoras",birth:"1929",place:"Loja, Ecuador",bio:"Compositora lojana cuya trayectoria permite estudiar la relación entre creación musical, pedagogía y memoria cultural.",source:"Jaramillo Rogelio (2011). Loja cuna de artistas.",initials:"BC",works:[{id:"OB-0072",title:"Loja en septiembre de flores",type:"Pasacalle",genre:"Pasacalle",role:"Composición"},{id:"OB-0073",title:"Cecilia",type:"Pasillo",genre:"Pasillo",role:"Composición"}]},
-    {id:"CR-058",name:"Emily Katherine Ordóñez Celi",discipline:"Arreglista",category:"Arreglistas",birth:"2002",place:"Loja, Ecuador",bio:"Arreglista registrada en el corpus. Su trabajo permite explicar la transformación de una obra preexistente para voces femeninas.",source:"Emily Ordóñez (2024). Blanca Cano. Arreglos corales para voces femeninas.",initials:"EO",works:["Loja en septiembre de flores","Cecilia","Primaveral","La voz del maizal","Sobre el pajonal"].map((title,i)=>({id:["OB-0119","OB-0120","OB-0121","OB-0122","OB-0123"][i],title:title+" — adaptación coral",type:"Adaptación coral",role:"Arreglo"}))}
-  ]
-};
-
 VML.load = async function () {
   VML.showLoading();
   try {
@@ -147,6 +157,12 @@ VML.load = async function () {
     const data = VML.isPublic() && Array.isArray(response?.items)
       ? {
           mode: "public",
+          generatedAt: new Date().toISOString(),
+          resources: VML.publicResources,
+          questions: VML.publicQuestions,
+          relations: [],
+          locations: [],
+          mediations: [],
           creators: response.items.map(item => {
             const name = String(item.NOMBRE_COMPLETO || "").trim();
             return {
@@ -166,10 +182,8 @@ VML.load = async function () {
       VML.hideLoading("No fue posible actualizar el catálogo");
       throw error;
     }
-    const demo = JSON.parse(JSON.stringify(VML.prototypeData));
-    demo._apiError = error.message;
-    VML.hideLoading("Prototipo listo");
-    return demo;
+    VML.hideLoading("No fue posible consultar la vista institucional");
+    throw error;
   }
 };
 
@@ -183,12 +197,7 @@ VML.safe = s => String(s || "").replace(/[&<>"']/g, m => ({
 }[m]));
 
 VML.withMode = function (url) {
-  if (!url || /^(https?:|mailto:|tel:|#)/i.test(url)) return url;
-  const parts = String(url).split("#");
-  const baseAndQuery = parts[0];
-  const hash = parts[1] ? "#" + parts[1] : "";
-  const separator = baseAndQuery.includes("?") ? "&" : "?";
-  return `${baseAndQuery}${separator}mode=${encodeURIComponent(VML.mode())}${hash}`;
+  return url;
 };
 
 VML.applyEnvironment = function () {

@@ -1,6 +1,8 @@
 (function(){
   const safe=s=>String(s||"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]));
-  document.querySelectorAll('[data-prototype-media]').forEach((box,index)=>{
+  function mount(root=document){
+  root.querySelectorAll('[data-prototype-media]:not([data-prototype-mounted])').forEach((box,index)=>{
+    box.dataset.prototypeMounted='true';
     const title=box.dataset.title||"Muestra patrimonial";
     const kind=box.dataset.kind||"audio y partitura";
     const bars=Array.from({length:42},(_,i)=>`<span style="--h:${22+((i*29+index*11)%63)}%"></span>`).join('');
@@ -9,7 +11,8 @@
     const play=box.querySelector('.prototype-play'),time=box.querySelector('.prototype-time'),track=box.querySelector('.prototype-track span');let timer=null,seconds=0;
     play.addEventListener('click',()=>{if(timer){clearInterval(timer);timer=null;play.textContent='▶';return}play.textContent='Ⅱ';timer=setInterval(()=>{seconds=(seconds+1)%39;time.textContent=`0:${String(seconds).padStart(2,'0')} / 0:38`;track.style.width=(seconds/38*100)+'%';if(seconds===0){clearInterval(timer);timer=null;play.textContent='▶'}},250)});
   });
-  document.querySelectorAll('[data-check-activity]').forEach((activity,index)=>{
+  root.querySelectorAll('[data-check-activity]:not([data-check-mounted])').forEach((activity,index)=>{
+    activity.dataset.checkMounted='true';
     const correct=activity.dataset.correct;
     const feedback=activity.querySelector('[data-check-feedback]');
     activity.querySelectorAll('[data-option]').forEach(button=>button.addEventListener('click',()=>{
@@ -19,4 +22,7 @@
       localStorage.setItem(`vml-check-${location.pathname}-${index}`,ok?'1':'0');
     }));
   });
+  }
+  window.VMLPrototype={mount};
+  mount();
 })();

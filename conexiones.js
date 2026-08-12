@@ -6,13 +6,17 @@ async function init() {
     const data = await VML.load();
     relations = data.relations || [];
 
-    $("#connection-status").textContent = `${VML.modeLabel()} · ${relations.length} relaciones cargadas desde la Base Maestra`;
+    $("#connection-status").textContent = relations.length
+      ? `${VML.modeLabel()} · ${relations.length} relaciones cargadas desde la Base Maestra`
+      : `${VML.modeLabel()} · relaciones documentales en preparación`;
     renderList();
 
     if (relations.length) {
       selectRelation(0);
     } else {
-      $("#network-flow").innerHTML = '<div class="alert alert-light mb-0">No existen relaciones disponibles en esta vista.</div>';
+      $("#network-flow").innerHTML = VML.isPublic()
+        ? '<div class="alert alert-light mb-0"><strong>Explorador en preparación.</strong> Las conexiones entre creadoras, obras y arreglos se publicarán con su fuente y estado de verificación. No se generan vínculos por semejanza o inferencia.</div>'
+        : '<div class="alert alert-light mb-0">No existen relaciones disponibles en esta vista.</div>';
       $("#relation-detail").innerHTML = '';
     }
   } catch (e) {

@@ -187,16 +187,12 @@ function openCreator(id) {
 }
 
 function resourceHref(resource) {
-  if (resource.id === "RE-001") return VML.withMode("laboratorio-matilde.html");
-  if (resource.id === "RE-047") return VML.withMode("laboratorio-blanca.html");
-  if (resource.id === "RE-058") return VML.withMode("laboratorio-emily.html");
-  return VML.withMode(`recurso.html?id=${encodeURIComponent(resource.id)}`);
+  return VML.resourceHref(resource);
 }
 
 function learningHrefForCreator(creator, resource) {
-  if (creator?.id === "CR-052") return VML.withMode("laboratorio-rocio.html");
-  if (creator?.id === "CR-058") return VML.withMode("laboratorio-emily.html");
-  return resource ? resourceHref(resource) : "";
+  const linked = resource || VML.publicResources.find(item => item.creatorId === creator?.id);
+  return linked ? resourceHref(linked) : "";
 }
 
 ["search", "category", "sort"].forEach(id => {

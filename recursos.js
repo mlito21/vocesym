@@ -1,6 +1,6 @@
 const $=s=>document.querySelector(s);
 let data=null;
-const specificExperiences=new Set(["RE-001","RE-047","RE-058"]);
+const specificExperiences=new Set(["RE-001","RE-047","RE-052","RE-058"]);
 
 function hasEmbed(r){
   return /^https:\/\//i.test(String(r.embedUrl||"").trim());
@@ -26,10 +26,7 @@ async function init(){
 }
 
 function href(r){
-  if(r.id==="RE-001")return VML.withMode("laboratorio-matilde.html");
-  if(r.id==="RE-047")return VML.withMode("laboratorio-blanca.html");
-  if(r.id==="RE-058")return VML.withMode("laboratorio-emily.html");
-  return VML.withMode(`recurso.html?id=${encodeURIComponent(r.id)}`);
+  return VML.resourceHref(r);
 }
 
 function filtered(){
@@ -46,7 +43,7 @@ function filtered(){
 
 function stateLabel(r){
   if(hasEmbed(r)) return {label:"Interactivo disponible",available:true};
-  if(specificExperiences.has(r.id)) return {label:"Experiencia específica",available:true};
+  if(specificExperiences.has(r.id)) return {label:"Prototipo funcional",available:true};
   return {label:"En preparación",available:false};
 }
 

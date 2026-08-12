@@ -6,11 +6,13 @@ VML.load()
     const works = creators.reduce((total, creator) => total + (creator.works || []).length, 0);
 
     document.querySelector("#portal-live-status").textContent =
-      `${VML.modeLabel()} · ${creators.length} creadoras · ${works} obras · ${resources.length} recursos educativos`;
+      VML.isPublic()
+        ? `${VML.modeLabel()} · ${creators.length} creadoras registradas · ${resources.length} laboratorios educativos`
+        : `${VML.modeLabel()} · ${creators.length} creadoras · ${works} obras · ${resources.length} recursos educativos`;
     document.querySelector("#portal-live-status").classList.add("is-ready");
 
     document.querySelector("#stat-creators-v12").textContent = creators.length;
-    document.querySelector("#stat-works-v12").textContent = works;
+    document.querySelector("#stat-works-v12").textContent = VML.isPublic() ? resources.length : works;
     document.querySelector("#stat-resources-v12").textContent = resources.length;
 
     const aprende = document.querySelector("#aprende");

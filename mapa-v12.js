@@ -17,7 +17,9 @@ async function init(){
     $("#pending-count").textContent=pending.length;
     $("#coverage-percent").textContent=pct+"%";
     $("#coverage-fill").style.width=pct+"%";
-    $("#map-status").textContent=`${VML.modeLabel(dataset)} · ${locations.length} registro(s) geográfico(s) · ${pending.length} creadora(s) sin localización georreferenciada en la vista actual`;
+    $("#map-status").textContent=locations.length
+      ? `${VML.modeLabel(dataset)} · ${locations.length} registro(s) geográfico(s) · ${pending.length} creadora(s) sin localización georreferenciada en la vista actual`
+      : `${VML.modeLabel(dataset)} · cartografía documental en preparación`;
     renderLocations();
     renderPending(pending);
     renderInterpretation(locatedIds.size,pending.length);
@@ -28,7 +30,10 @@ async function init(){
 }
 
 function renderLocations(){
-  $("#location-list").innerHTML=locations.length?locations.map((l,i)=>`<article class="location-item ${i===0?"active":""}" data-index="${i}"><strong>${VML.safe(l.LUGAR||"Lugar")}</strong><div class="small text-secondary mt-1">${VML.safe(l.NOMBRE_CREADORA||"")} · ${VML.safe(l.TIPO_RELACIÓN||"")}</div><div class="small mt-1"><strong>Precisión:</strong> ${VML.safe(l.PRECISIÓN||"Por definir")}</div></article>`).join(""):'<div class="alert alert-light">No hay lugares georreferenciados disponibles en la vista actual.</div>';
+  const emptyMessage=VML.isPublic()
+    ? '<div class="alert alert-light"><strong>Mapa en preparación.</strong> Las ubicaciones se incorporarán con su nivel de precisión y fuente; no se deducen coordenadas a partir de datos incompletos.</div>'
+    : '<div class="alert alert-light">No hay lugares georreferenciados disponibles en la vista actual.</div>';
+  $("#location-list").innerHTML=locations.length?locations.map((l,i)=>`<article class="location-item ${i===0?"active":""}" data-index="${i}"><strong>${VML.safe(l.LUGAR||"Lugar")}</strong><div class="small text-secondary mt-1">${VML.safe(l.NOMBRE_CREADORA||"")} · ${VML.safe(l.TIPO_RELACIÓN||"")}</div><div class="small mt-1"><strong>Precisión:</strong> ${VML.safe(l.PRECISIÓN||"Por definir")}</div></article>`).join(""):emptyMessage;
   locations.forEach((l,i)=>{
     const m=L.marker([n(l.LATITUD),n(l.LONGITUD)]).addTo(map).bindPopup(`<strong>${VML.safe(l.LUGAR||"Lugar")}</strong><br>${VML.safe(l.NOMBRE_CREADORA||"")}<br><small>${VML.safe(l.TIPO_RELACIÓN||"")} · precisión: ${VML.safe(l.PRECISIÓN||"")}</small>`);
     m.on("click",()=>selectLocation(i,false));markers.push(m);
@@ -48,14 +53,20 @@ function focusRequestedCreator(){
 }
 
 function renderPending(pending){
-  $("#pending-list").innerHTML=pending.length?pending.map(c=>`<div class="pending-name"><strong>${VML.safe(c.name)}</strong><br><span class="text-secondary">${VML.safe(c.discipline||c.category||"")}</span></div>`).join(""):'<div class="small text-secondary">No existen perfiles pendientes en la vista actual.</div>';
+  const visible=VML.isPublic()?pending.slice(0,12):pending;
+  const remainder=pending.length-visible.length;
+  $("#pending-list").innerHTML=pending.length
+    ? visible.map(c=>`<div class="pending-name"><strong>${VML.safe(c.name)}</strong><br><span class="text-secondary">${VML.safe(c.discipline||c.category||"")}</span></div>`).join("")+(remainder?`<p class="small text-secondary mt-3 mb-0">Y ${remainder} perfiles adicionales pendientes de georreferenciación documental.</p>`:"")
+    : '<div class="small text-secondary">No existen perfiles pendientes en la vista actual.</div>';
 }
 
 function renderInterpretation(located,pending){
   const el=$("#map-interpretation");
   if(!el)return;
   if(!creators.length){el.innerHTML='<strong>Interpretación:</strong> la vista actual no contiene creadoras publicadas, por lo que todavía no existen puntos que representar.';return;}
-  el.innerHTML=`<strong>Interpretación:</strong> la vista actual contiene ${creators.length} creadora(s); ${located} cuentan con localización georreferenciada y ${pending} permanecen sin coordenadas verificadas. La ausencia de un marcador no se completa por inferencia: se conserva como una necesidad de investigación documental.`;
+  el.innerHTML=VML.isPublic()&&!located
+    ? `<strong>Interpretación:</strong> el catálogo público contiene ${creators.length} creadoras, pero sus localizaciones documentales aún no están publicadas. Esta ausencia se muestra como trabajo pendiente y no como una ubicación supuesta.`
+    : `<strong>Interpretación:</strong> la vista actual contiene ${creators.length} creadora(s); ${located} cuentan con localización georreferenciada y ${pending} permanecen sin coordenadas verificadas. La ausencia de un marcador no se completa por inferencia: se conserva como una necesidad de investigación documental.`;
 }
 
 function selectLocation(i,popup=true){

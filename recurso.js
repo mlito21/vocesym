@@ -49,9 +49,7 @@ async function init(){
     const r=(data.resources||[]).find(x=>x.id===id);
     if(!r){fail("No se encontró el recurso "+id);return}
 
-    if(r.id==="RE-001"){location.replace(VML.withMode("laboratorio-matilde.html"));return}
-    if(r.id==="RE-047"){location.replace(VML.withMode("laboratorio-blanca.html"));return}
-    if(r.id==="RE-058"){location.replace(VML.withMode("laboratorio-emily.html"));return}
+    if(VML.prototypeResourceIds.has(r.id)){location.replace(VML.resourceHref(r));return}
 
     const c=(data.creators||[]).find(x=>x.id===r.creatorId);
     $("#resource-kind").textContent=r.title||"Experiencia educativa";

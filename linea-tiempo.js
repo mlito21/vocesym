@@ -12,7 +12,9 @@ async function init(){
     creators=dataset.creators||[];
     buildEvents();
     populateCreators();
-    $("#timeline-status").textContent=`${VML.modeLabel(dataset)} · ${events.length} eventos fechados generados desde la Base Maestra`;
+    $("#timeline-status").textContent=events.length
+      ? `${VML.modeLabel(dataset)} · ${events.length} eventos fechados generados desde la Base Maestra`
+      : `${VML.modeLabel(dataset)} · cronología documental en preparación`;
     render();
   }catch(e){
     $("#timeline-status").textContent="No fue posible cargar la cronología: "+e.message;
@@ -52,9 +54,12 @@ function filtered(){
 
 function render(){
   const list=filtered();
+  const emptyMessage=VML.isPublic()
+    ? '<div class="alert alert-light"><strong>Cronología en preparación.</strong> Las fechas biográficas y de obra se publicarán cuando hayan sido verificadas. El proyecto no completa hitos por inferencia.</div>'
+    : '<div class="alert alert-light">No existen eventos con estos filtros en la vista actual.</div>';
   $("#timeline-events").innerHTML=list.length?list.map(e=>`<div class="timeline-event">
     <div class="event-card" data-index="${events.indexOf(e)}"><span class="event-type">${VML.safe(e.type)}</span><div class="event-title">${VML.safe(e.title)}</div><div class="event-meta">${VML.safe(e.creator)}<br>${VML.safe(e.subtitle)}</div></div>
-    <div class="event-year">${e.year}</div><div class="event-empty"></div></div>`).join(""):'<div class="alert alert-light">No existen eventos con estos filtros en la vista actual.</div>';
+    <div class="event-year">${e.year}</div><div class="event-empty"></div></div>`).join(""):emptyMessage;
   document.querySelectorAll(".event-card").forEach(x=>x.addEventListener("click",()=>showDetail(Number(x.dataset.index))));
 }
 

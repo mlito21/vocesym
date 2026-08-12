@@ -1,17 +1,12 @@
 const $ = selector => document.querySelector(selector);
 
 function resourceHref(resource) {
-  if (!resource) return VML.withMode("recursos.html");
-  if (resource.id === "RE-001") return VML.withMode("laboratorio-matilde.html");
-  if (resource.id === "RE-047") return VML.withMode("laboratorio-blanca.html");
-  if (resource.id === "RE-058") return VML.withMode("laboratorio-emily.html");
-  return VML.withMode(`recurso.html?id=${encodeURIComponent(resource.id)}`);
+  return VML.resourceHref(resource);
 }
 
 function learningHrefForCreator(creator, resource) {
-  if (creator?.id === "CR-052") return VML.withMode("laboratorio-rocio.html");
-  if (creator?.id === "CR-058") return VML.withMode("laboratorio-emily.html");
-  return resource ? resourceHref(resource) : "";
+  const linked = resource || VML.publicResources.find(item => item.creatorId === creator?.id);
+  return linked ? resourceHref(linked) : "";
 }
 
 function validPhoto(url) {
@@ -112,7 +107,7 @@ function renderMediationNotice(mediation) {
   if (mediation) return "";
   return VML.isPreview()
     ? `<div class="alert alert-info mt-4 mb-0"><strong>Mediación patrimonial en preparación:</strong> esta ficha ya reúne datos biográficos y obras del archivo, pero todavía no dispone de una narrativa curatorial específica para público general.</div>`
-    : "";
+    : `<div class="alert alert-info mt-4 mb-0"><strong>Ficha pública preliminar:</strong> la identidad y disciplina proceden del catálogo; la biografía, las obras, las fuentes y los materiales se incorporarán después de la revisión documental y de derechos.</div>`;
 }
 
 function renderEmbed(resource) {
@@ -158,7 +153,7 @@ async function init() {
     }
 
     const mediation = creator.mediation || (data.mediations || []).find(item => item.creatorId === creator.id) || null;
-    const resource = (creator.resources || [])[0] || null;
+    const resource = (creator.resources || [])[0] || (data.resources || []).find(item => item.creatorId === creator.id) || null;
     const learningHref = learningHrefForCreator(creator, resource);
     const creatorQuestions = (creator.questions || []).length
       ? creator.questions
