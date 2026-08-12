@@ -154,67 +154,185 @@ VML.hideLoading = function (message) {
   setTimeout(() => { layer.style.opacity = "0"; setTimeout(() => { layer.hidden = true; }, 260); }, 350);
 };
 
-VML.load = async function () {
-  VML.showLoading();
+VML.pick = function (row, ...keys) {
+  for (const key of keys) {
+    const value = row?.[key];
+    if (value !== undefined && value !== null && String(value).trim() !== "") return String(value).trim();
+  }
+  return "";
+};
+
+VML.loadPublicAction = async function (action) {
+  const params = { action };
   try {
-    const params = VML.isPublic() ? { action: "creators" } : { mode: VML.mode() };
-    let response;
-    if (VML.isPublic()) {
-      try {
-        response = await VML.fetchJson(window.VML_CONFIG.API_URL, params, window.VML_CONFIG.JSONP_TIMEOUT_MS);
-      } catch (fetchError) {
-        try {
-          response = await VML.jsonp(window.VML_CONFIG.API_URL, params, window.VML_CONFIG.JSONP_TIMEOUT_MS);
-        } catch (jsonpError) {
-          throw new Error(`No se pudo consultar la API pública (${fetchError.message}; ${jsonpError.message})`);
-        }
-      }
-    } else {
-      response = await VML.jsonp(window.VML_CONFIG.API_URL, params, window.VML_CONFIG.JSONP_TIMEOUT_MS);
+    return await VML.fetchJson(window.VML_CONFIG.API_URL, params, window.VML_CONFIG.JSONP_TIMEOUT_MS);
+  } catch (fetchError) {
+    try {
+      return await VML.jsonp(window.VML_CONFIG.API_URL, params, window.VML_CONFIG.JSONP_TIMEOUT_MS);
+    } catch (jsonpError) {
+      throw new Error(`No se pudo cargar ${action} (${fetchError.message}; ${jsonpError.message})`);
     }
-    const data = VML.isPublic() && Array.isArray(response?.items)
-      ? {
-          mode: "public",
-          generatedAt: new Date().toISOString(),
-          resources: VML.publicResources,
-          questions: VML.publicQuestions,
-          relations: [],
-          locations: [],
-          mediations: [],
-          creators: response.items.map(item => {
-            const name = String(item.NOMBRE_COMPLETO || "").trim();
-            return {
-              id: String(item.ID_CREADORA || "").trim(),
-              name,
-              category: String(item["CATEGORÍA"] || "").trim(),
-              discipline: String(item.DISCIPLINA || "").trim(),
-              birth: String(item["AÑO_NACIMIENTO"] || "").trim(),
-              place: String(item.LUGAR_NACIMIENTO || "").trim(),
-              bio: String(item["BIOGRAFÍA_VALIDADA"] || "").trim(),
-              source: String(item.FUENTE_PRINCIPAL || "").trim(),
-              photoSource: String(item["FUENTE_FOTOGRAFÍA"] || "").trim(),
-              publishable: String(item.PUBLICABLE_WEB || "").trim(),
-              initials: name.split(/\s+/).filter(Boolean).slice(0, 2).map(part => part[0]).join(""),
-              works: [],
-              resources: [],
-              mediations: [],
-              questions: []
-            };
-          }).filter(creator => creator.id && creator.name)
-        }
-      : response;
-    VML.hideLoading("Información actualizada");
-    return data;
-  } catch (error) {
-    if (VML.isPublic()) {
-      VML.hideLoading("No fue posible actualizar el catálogo");
-      throw error;
-    }
-    VML.hideLoading("No fue posible consultar la vista institucional");
-    throw error;
   }
 };
 
+VML.load = async function () {
+  VML.showLoading();
+  try {
+    let data;
+    if (VML.isPublic()) {
+      const actions = ["creators", "works", "media", "resources", "relations", "locations", "mediations", "questions"];
+      const [creatorResponse, workResponse, mediaResponse, resourceResponse, relationResponse, locationResponse, mediationResponse, questionResponse] =
+        await Promise.all(actions.map(action => VML.loadPublicAction(action)));
+
+      const rows = response => Array.isArray(response?.items) ? response.items : [];
+      const creators = rows(creatorResponse).map(item => {
+        const name = VML.pick(item, "NOMBRE_COMPLETO", "name");
+        return {
+          id: VML.pick(item, "ID_CREADORA", "id"),
+          name,
+          category: VML.pick(item, "CATEGORÍA", "category"),
+          discipline: VML.pick(item, "DISCIPLINA", "discipline"),
+          birth: VML.pick(item, "AÑO_NACIMIENTO", "birth"),
+          place: VML.pick(item, "LUGAR_NACIMIENTO", "place"),
+          bio: VML.pick(item, "BIOGRAFÍA_VALIDADA", "bio"),
+          source: VML.pick(item, "FUENTE_PRINCIPAL", "source"),
+          photoSource: VML.pick(item, "FUENTE_FOTOGRAFÍA", "photoSource"),
+          publishable: VML.pick(item, "PUBLICABLE_WEB", "publishable"),
+          initials: name.split(/\s+/).filter(Boolean).slice(0, 2).map(part => part[0]).join("").toUpperCase(),
+          works: [],
+          media: [],
+          resources: [],
+          mediations: [],
+          questions: []
+        };
+      }).filter(creator => creator.id && creator.name);
+
+      const works = rows(workResponse).map(item => ({
+        id: VML.pick(item, "ID_OBRA", "id"),
+        creatorId: VML.pick(item, "ID_CREADORA", "creatorId"),
+        creator: VML.pick(item, "CREADORA", "creator"),
+        title: VML.pick(item, "OBRA_NORMALIZADA", "title"),
+        type: VML.pick(item, "TIPO", "type"),
+        role: VML.pick(item, "ROL_CREADORA", "role"),
+        year: VML.pick(item, "AÑO_OBRA", "year"),
+        genre: VML.pick(item, "GÉNERO", "genre"),
+        source: VML.pick(item, "FUENTE", "source"),
+        digitalFile: VML.pick(item, "ARCHIVO_DIGITAL", "digitalFile")
+      }));
+
+      const media = rows(mediaResponse).map(item => ({
+        id: VML.pick(item, "ID_MEDIA", "id"),
+        creatorId: VML.pick(item, "ID_CREADORA", "creatorId"),
+        creator: VML.pick(item, "CREADORA", "creator"),
+        type: VML.pick(item, "TIPO_RECURSO", "type"),
+        title: VML.pick(item, "TÍTULO_DESCRIPCIÓN", "title"),
+        url: VML.pick(item, "URL_O_ARCHIVO", "url"),
+        source: VML.pick(item, "FUENTE", "source"),
+        alt: VML.pick(item, "TEXTO_ALTERNATIVO", "alt")
+      }));
+
+      const resources = rows(resourceResponse).map(item => ({
+        id: VML.pick(item, "ID_RECURSO", "id"),
+        creatorId: VML.pick(item, "ID_CREADORA", "creatorId"),
+        creator: VML.pick(item, "CREADORA", "creator"),
+        title: VML.pick(item, "TIPO_RECURSO", "title"),
+        sequence: VML.pick(item, "SECUENCIA_PEDAGÓGICA", "sequence"),
+        areas: VML.pick(item, "ÁREAS_SUGERIDAS", "areas"),
+        level: VML.pick(item, "NIVEL_EDUCATIVO", "level"),
+        workBase: VML.pick(item, "OBRA_BASE", "workBase"),
+        objective: VML.pick(item, "OBJETIVO_APRENDIZAJE", "objective"),
+        activity: VML.pick(item, "ACTIVIDAD_INTERACTIVA", "activity"),
+        evidence: VML.pick(item, "EVIDENCIA", "evidence"),
+        assessment: VML.pick(item, "INSTRUMENTO_EVALUACIÓN", "assessment"),
+        accessibility: VML.pick(item, "ACCESIBILIDAD", "accessibility"),
+        technology: VML.pick(item, "TECNOLOGÍA", "technology"),
+        projectObjective: VML.pick(item, "OBJETIVO_PROYECTO", "projectObjective"),
+        embedUrl: VML.pick(item, "EMBED_URL", "embedUrl"),
+        embedFormat: VML.pick(item, "EMBED_FORMATO", "embedFormat"),
+        embedHeight: VML.pick(item, "EMBED_ALTURA", "embedHeight")
+      }));
+
+      const mediations = rows(mediationResponse).map(item => ({
+        id: VML.pick(item, "ID_MEDIACION", "id"),
+        creatorId: VML.pick(item, "ID_CREADORA", "creatorId"),
+        creator: VML.pick(item, "CREADORA", "creator"),
+        title: VML.pick(item, "TITULO_PUBLICO", "title"),
+        hook: VML.pick(item, "GANCHO", "hook"),
+        guideQuestion: VML.pick(item, "PREGUNTA_GUIA", "guideQuestion"),
+        biography: VML.pick(item, "SINTESIS_BIOGRAFICA", "biography"),
+        contribution: VML.pick(item, "APORTE_PATRIMONIAL", "contribution"),
+        featuredWorks: VML.pick(item, "OBRAS_DESTACADAS", "featuredWorks"),
+        experience1: VML.pick(item, "EXPERIENCIA_1", "experience1"),
+        experience2: VML.pick(item, "EXPERIENCIA_2", "experience2"),
+        experience3: VML.pick(item, "EXPERIENCIA_3", "experience3"),
+        multimedia: VML.pick(item, "MULTIMEDIA", "multimedia"),
+        legacy: VML.pick(item, "LEGADO", "legacy"),
+        audience: VML.pick(item, "PUBLICO", "audience"),
+        accessibility: VML.pick(item, "ACCESIBILIDAD", "accessibility"),
+        verificationStatus: VML.pick(item, "ESTADO_VERIFICACIÓN", "verificationStatus"),
+        publishable: VML.pick(item, "PUBLICABLE_WEB", "publishable")
+      }));
+
+      const questions = rows(questionResponse).map(item => ({
+        id: VML.pick(item, "ID_PREGUNTA", "id"),
+        type: VML.pick(item, "TIPO", "type"),
+        question: VML.pick(item, "PREGUNTA", "question"),
+        options: ["OPCION_A", "OPCION_B", "OPCION_C", "OPCION_D"].map(key => VML.pick(item, key)).filter(Boolean),
+        answer: VML.pick(item, "RESPUESTA_CORRECTA", "answer"),
+        feedback: VML.pick(item, "RETROALIMENTACION", "feedback"),
+        creatorId: VML.pick(item, "ID_CREADORA", "creatorId"),
+        workId: VML.pick(item, "ID_OBRA", "workId"),
+        difficulty: VML.pick(item, "DIFICULTAD", "difficulty"),
+        source: VML.pick(item, "FUENTE", "source"),
+        destination: VML.pick(item, "ENLACE_DESTINO", "destination")
+      })).filter(item => item.question && item.answer && item.options.length >= 2);
+
+      const group = (items, key) => items.reduce((acc, item) => {
+        const id = item[key];
+        if (!id) return acc;
+        (acc[id] ||= []).push(item);
+        return acc;
+      }, {});
+
+      const worksByCreator = group(works, "creatorId");
+      const mediaByCreator = group(media, "creatorId");
+      const resourcesByCreator = group(resources, "creatorId");
+      const mediationsByCreator = group(mediations, "creatorId");
+      const questionsByCreator = group(questions, "creatorId");
+
+      creators.forEach(creator => {
+        creator.works = worksByCreator[creator.id] || [];
+        creator.media = mediaByCreator[creator.id] || [];
+        creator.resources = resourcesByCreator[creator.id] || [];
+        creator.mediations = mediationsByCreator[creator.id] || [];
+        creator.mediation = creator.mediations[0] || null;
+        creator.questions = questionsByCreator[creator.id] || [];
+        creator.learning = creator.resources[0] || null;
+      });
+
+      data = {
+        mode: "public",
+        generatedAt: new Date().toISOString(),
+        creators,
+        works,
+        media,
+        resources,
+        relations: rows(relationResponse),
+        locations: rows(locationResponse),
+        mediations,
+        questions
+      };
+    } else {
+      data = await VML.jsonp(window.VML_CONFIG.API_URL, { mode: VML.mode() }, window.VML_CONFIG.JSONP_TIMEOUT_MS);
+    }
+
+    VML.hideLoading("Información actualizada");
+    return data;
+  } catch (error) {
+    VML.hideLoading(VML.isPublic() ? "No fue posible actualizar el catálogo" : "No fue posible consultar la vista institucional");
+    throw error;
+  }
+};
 VML.clean = s => String(s || "").replace(/^["']|["']$/g, "").replace(/\.$/, "").trim();
 VML.safe = s => String(s || "").replace(/[&<>"']/g, m => ({
   "&": "&amp;",
