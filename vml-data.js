@@ -37,6 +37,29 @@ VML.jsonp = function (baseUrl, params = {}, timeout) {
   });
 };
 
+VML.fetchJson = async function (baseUrl, params = {}, timeout) {
+  const wait = timeout || window.VML_CONFIG?.JSONP_TIMEOUT_MS || 15000;
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), wait);
+  const query = new URLSearchParams(params);
+  const url = baseUrl + (baseUrl.includes("?") ? "&" : "?") + query.toString();
+
+  try {
+    const response = await fetch(url, {
+      method: "GET",
+      mode: "cors",
+      cache: "no-store",
+      credentials: "omit",
+      headers: { Accept: "application/json" },
+      signal: controller.signal
+    });
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    return await response.json();
+  } finally {
+    clearTimeout(timer);
+  }
+};
+
 VML.mode = () => window.VML_CONFIG?.API_MODE || "preview";
 VML.isPreview = () => VML.mode() === "preview";
 VML.isPublic = () => VML.mode() === "public";
@@ -107,7 +130,20 @@ VML.load = async function () {
   VML.showLoading();
   try {
     const params = VML.isPublic() ? { action: "creators" } : { mode: VML.mode() };
-    const response = await VML.jsonp(window.VML_CONFIG.API_URL, params, window.VML_CONFIG.JSONP_TIMEOUT_MS);
+    let response;
+    if (VML.isPublic()) {
+      try {
+        response = await VML.fetchJson(window.VML_CONFIG.API_URL, params, window.VML_CONFIG.JSONP_TIMEOUT_MS);
+      } catch (fetchError) {
+        try {
+          response = await VML.jsonp(window.VML_CONFIG.API_URL, params, window.VML_CONFIG.JSONP_TIMEOUT_MS);
+        } catch (jsonpError) {
+          throw new Error(`No se pudo consultar la API pública (${fetchError.message}; ${jsonpError.message})`);
+        }
+      }
+    } else {
+      response = await VML.jsonp(window.VML_CONFIG.API_URL, params, window.VML_CONFIG.JSONP_TIMEOUT_MS);
+    }
     const data = VML.isPublic() && Array.isArray(response?.items)
       ? {
           mode: "public",
