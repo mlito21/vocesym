@@ -98,8 +98,18 @@ VML.load = async function () {
     VML.hideLoading("Información actualizada");
     return data;
   } catch (error) {
-    VML.hideLoading("No se pudo actualizar");
-    throw error;
+    try {
+      const response = await fetch(window.VML_CONFIG.DEMO_URL, { cache: "no-store" });
+      if (!response.ok) throw new Error("No se pudo abrir el respaldo local");
+      const demo = await response.json();
+      demo._isDemo = true;
+      demo._apiError = error.message;
+      VML.hideLoading("Prototipo listo");
+      return demo;
+    } catch (_) {
+      VML.hideLoading("No se pudo actualizar");
+      throw error;
+    }
   }
 };
 

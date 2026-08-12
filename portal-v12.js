@@ -5,8 +5,9 @@ VML.load()
     const questions = data.questions || [];
     const works = creators.reduce((total, creator) => total + (creator.works || []).length, 0);
 
-    document.querySelector("#portal-live-status").textContent =
-      `${VML.modeLabel()} · ${creators.length} creadoras · ${works} obras · ${resources.length} recursos educativos`;
+    document.querySelector("#portal-live-status").textContent = data._isDemo
+      ? `Prototipo con datos de respaldo · ${creators.length} creadoras · ${works} obras · ${resources.length} recursos`
+      : `${VML.modeLabel()} · ${creators.length} creadoras · ${works} obras · ${resources.length} recursos educativos`;
     document.querySelector("#portal-live-status").classList.add("is-ready");
 
     document.querySelector("#stat-creators-v12").textContent = creators.length;
