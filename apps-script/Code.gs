@@ -2,27 +2,26 @@ const SPREADSHEET_ID = '1B2fUMsHDJFPPpoH06UICs-Fm8AbUIA0UjEnU6MXqWjE';
 
 function doGet(e) {
   var action = (e && e.parameter && e.parameter.action) || 'site';
-  var mode = (e && e.parameter && e.parameter.mode) || 'public';
 
   var payload;
   if (action === 'creators') {
-    payload = getCreators_(mode);
+    payload = getCreators_();
   } else if (action === 'works') {
-    payload = getWorks_(mode);
+    payload = getWorks_();
   } else if (action === 'media') {
-    payload = getMedia_(mode);
+    payload = getMedia_();
   } else if (action === 'resources') {
-    payload = getResources_(mode);
+    payload = getResources_();
   } else if (action === 'relations') {
-    payload = getRelations_(mode);
+    payload = getRelations_();
   } else if (action === 'locations') {
-    payload = getLocations_(mode);
+    payload = getLocations_();
   } else if (action === 'mediations') {
-    payload = getMediations_(mode);
+    payload = getMediations_();
   } else if (action === 'questions') {
-    payload = getQuestions_(mode);
+    payload = getQuestions_();
   } else {
-    payload = getSitePayload_(mode);
+    payload = getSitePayload_();
   }
 
   var callback = e && e.parameter && e.parameter.callback;
@@ -38,15 +37,15 @@ function doGet(e) {
     .setMimeType(ContentService.MimeType.JSON);
 }
 
-function getSitePayload_(mode) {
-  var creators = getCreators_(mode).items;
-  var works = getWorks_(mode).items;
-  var media = getMedia_(mode).items;
-  var resources = getResources_(mode).items;
-  var relations = getRelations_(mode).items;
-  var locations = getLocations_(mode).items;
-  var mediations = getMediations_(mode).items;
-  var questions = getQuestions_(mode).items;
+function getSitePayload_() {
+  var creators = getCreators_().items;
+  var works = getWorks_().items;
+  var media = getMedia_().items;
+  var resources = getResources_().items;
+  var relations = getRelations_().items;
+  var locations = getLocations_().items;
+  var mediations = getMediations_().items;
+  var questions = getQuestions_().items;
 
   var byCreatorWorks = groupBy_(works, 'ID_CREADORA');
   var byCreatorMedia = groupBy_(media, 'ID_CREADORA');
@@ -71,7 +70,7 @@ function getSitePayload_(mode) {
   });
 
   return {
-    mode: mode === 'preview' ? 'preview' : 'live',
+    mode: 'live',
     generatedAt: new Date().toISOString(),
     relations: relations,
     locations: locations,
@@ -137,52 +136,36 @@ function getSitePayload_(mode) {
   };
 }
 
-function getCreators_(mode) {
-  return mode === 'preview'
-    ? readView_('12_PREVIEW_Creadoras', 3, 10)
-    : readView_('07_WEB_Creadoras', 3, 10);
+function getCreators_() {
+  return readView_('07_WEB_Creadoras', 3, 10);
 }
 
-function getWorks_(mode) {
-  return mode === 'preview'
-    ? readView_('13_PREVIEW_Obras', 3, 13)
-    : readView_('08_WEB_Obras', 3, 13);
+function getWorks_() {
+  return readView_('08_WEB_Obras', 3, 13);
 }
 
-function getMedia_(mode) {
-  return mode === 'preview'
-    ? readView_('28_PREVIEW_Multimedia', 3, 10)
-    : readView_('09_WEB_Multimedia', 3, 8);
+function getMedia_() {
+  return readView_('09_WEB_Multimedia', 3, 8);
 }
 
-function getResources_(mode) {
-  return mode === 'preview'
-    ? readView_('14_PREVIEW_Recursos', 3, 18)
-    : readView_('10_WEB_Recursos', 3, 18);
+function getResources_() {
+  return readView_('10_WEB_Recursos', 3, 18);
 }
 
-function getRelations_(mode) {
-  return mode === 'preview'
-    ? readView_('16_PREVIEW_Relaciones', 3, 14)
-    : readView_('17_WEB_Relaciones', 3, 14);
+function getRelations_() {
+  return readView_('17_WEB_Relaciones', 3, 14);
 }
 
-function getLocations_(mode) {
-  return mode === 'preview'
-    ? readView_('19_PREVIEW_Lugares', 3, 13)
-    : readView_('20_WEB_Lugares', 3, 13);
+function getLocations_() {
+  return readView_('20_WEB_Lugares', 3, 13);
 }
 
-function getMediations_(mode) {
-  return mode === 'preview'
-    ? readView_('22_PREVIEW_Mediacion', 3, 18)
-    : readView_('23_WEB_Mediacion', 3, 18);
+function getMediations_() {
+  return readView_('23_WEB_Mediacion', 3, 18);
 }
 
-function getQuestions_(mode) {
-  return mode === 'preview'
-    ? readView_('25_PREVIEW_Preguntas', 3, 16)
-    : readView_('26_WEB_Preguntas', 3, 16);
+function getQuestions_() {
+  return readView_('26_WEB_Preguntas', 3, 16);
 }
 
 function readView_(sheetName, headerRow, width) {
