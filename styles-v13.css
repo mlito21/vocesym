@@ -26,6 +26,20 @@ img,svg,video,canvas{max-width:100%}
 #creator-grid-v11{min-height:120px}
 .api-status{display:flex;align-items:center;gap:8px;min-height:24px;color:var(--vml-muted)}
 .api-status::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--vml-brand);opacity:.55;flex:none}
+.pilot-corpus{background:#fff;border:1px solid var(--vml-line);border-radius:28px;padding:clamp(24px,4vw,42px);box-shadow:var(--vml-shadow)}
+.pilot-corpus-head{display:flex;justify-content:space-between;gap:28px;align-items:flex-start}
+.pilot-corpus-head > div:first-child{max-width:830px}
+.pilot-corpus-actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end;flex:none}
+.pilot-group-card{height:100%;border:1px solid var(--vml-line);border-radius:20px;padding:22px;background:linear-gradient(160deg,#fff,var(--vml-soft))}
+.pilot-group-count{font:700 2.2rem/1 Georgia,"Times New Roman",serif;color:var(--vml-brand);margin-bottom:10px}
+.pilot-profile-list{list-style:none;margin:0;padding:0;display:grid;gap:9px}
+.pilot-profile-list li{display:flex;justify-content:space-between;gap:12px;align-items:center;padding-top:9px;border-top:1px solid rgba(23,54,47,.11)}
+.pilot-profile-list a{color:var(--vml-ink);font-weight:700;text-decoration:none}
+.pilot-profile-list a:hover{text-decoration:underline;color:var(--vml-brand)}
+.pilot-profile-list span{font-size:.68rem;text-transform:uppercase;letter-spacing:.06em;color:var(--vml-muted);text-align:right}
+.pilot-profile-list .pilot-vacancy{border:1px dashed #b48a42;border-radius:12px;padding:11px;background:#fff8e8;color:#70531f}
+.pilot-method-note{border-left:4px solid var(--vml-brand);background:var(--vml-soft);border-radius:0 14px 14px 0;padding:14px 16px;color:var(--vml-muted)}
+.tag-pilot{background:#fff2ce!important;color:#755614!important;border:1px solid #ead59f}
 
 /* Retratos. En tarjetas se conserva exactamente la altura histórica de 160px. */
 .creator-visual{position:relative;overflow:hidden;background:linear-gradient(135deg,var(--vml-soft),#dbeae5)}
@@ -52,6 +66,7 @@ img,svg,video,canvas{max-width:100%}
   .chapter{padding-block:62px!important}.chapter-no{font-size:3.8rem!important}
   .route-line{grid-template-columns:1fr 1fr!important}
   .vml-footer-nav{justify-content:flex-start;margin-top:22px}
+  .pilot-corpus-head{display:block}.pilot-corpus-actions{justify-content:flex-start;margin-top:20px}
 }
 @media(max-width:575px){
   .site-navbar .navbar-brand{max-width:72vw}.site-navbar .navbar-brand strong{font-size:.9rem}

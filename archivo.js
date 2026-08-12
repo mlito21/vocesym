@@ -1,5 +1,13 @@
 const $ = s => document.querySelector(s);
 let data = null;
+let pilotOnly = false;
+
+const PILOT_GROUPS = [
+  { label: "Poetas", expected: 3, ids: ["CR-001", "CR-016", "CR-026"] },
+  { label: "Compositoras", expected: 3, ids: ["CR-047", "CR-046", "CR-051"] },
+  { label: "Arreglistas", expected: 3, ids: ["CR-052", "CR-058"], vacancy: true }
+];
+const PILOT_IDS = new Set(PILOT_GROUPS.flatMap(group => group.ids));
 
 function validPhoto(url) {
   return /^https:\/\//i.test(String(url || "").trim());
@@ -25,11 +33,39 @@ async function init() {
     $("#archive-status").textContent =
       `${VML.modeLabel()} · ${creators.length} creadoras cargadas desde la Base Maestra`;
 
+    renderPilotCorpus(creators);
     populateFilters(creators);
     render();
   } catch (e) {
     $("#archive-status").textContent = "No fue posible cargar el archivo: " + e.message;
   }
+}
+
+function renderPilotCorpus(creators) {
+  const section = $("#pilot-corpus");
+  if (!VML.isPreview()) {
+    section.hidden = true;
+    return;
+  }
+
+  const byId = new Map(creators.map(creator => [creator.id, creator]));
+  $("#pilot-corpus-groups").innerHTML = PILOT_GROUPS.map(group => {
+    const profiles = group.ids.map(id => byId.get(id)).filter(Boolean);
+    return `
+      <div class="col-lg-4">
+        <article class="pilot-group-card">
+          <div class="pilot-group-count">${profiles.length}/${group.expected}</div>
+          <h3 class="h4 mb-3">${VML.safe(group.label)}</h3>
+          <ul class="pilot-profile-list">
+            ${profiles.map(creator => `
+              <li><a href="${VML.withMode(`creadora.html?id=${encodeURIComponent(creator.id)}`)}">${VML.safe(creator.name)}</a><span>Definitiva</span></li>
+            `).join("")}
+            ${group.vacancy ? '<li class="pilot-vacancy"><strong>Vacante documental</strong><span>Evidencia insuficiente</span></li>' : ""}
+          </ul>
+        </article>
+      </div>`;
+  }).join("");
+  section.hidden = false;
 }
 
 function populateFilters(creators) {
@@ -56,6 +92,7 @@ function filtered() {
     );
   }
 
+  if (pilotOnly) creators = creators.filter(c => PILOT_IDS.has(c.id));
   if (category) creators = creators.filter(c => (c.category || c.discipline) === category);
   if (sort === "name") creators.sort((a, b) => (a.name || "").localeCompare(b.name || ""));
   if (sort === "works") creators.sort((a, b) => (b.works || []).length - (a.works || []).length);
@@ -67,13 +104,17 @@ function filtered() {
 function render() {
   const creators = filtered();
   $("#result-count").textContent = creators.length;
+  $("#result-scope").textContent = pilotOnly ? " · corpus piloto definitivo" : "";
 
   $("#creator-grid-v11").innerHTML = creators.map(c => `
     <div class="col-sm-6 col-lg-4 col-xl-3">
       <article class="creator-card-v11" data-id="${VML.safe(c.id)}" tabindex="0">
         ${creatorVisual(c, "card")}
         <div class="card-body-v11">
-          <span class="tag">${VML.safe(c.discipline || c.category || "Por clasificar")}</span>
+          <div class="d-flex gap-2 flex-wrap align-items-center">
+            <span class="tag">${VML.safe(c.discipline || c.category || "Por clasificar")}</span>
+            ${VML.isPreview() && PILOT_IDS.has(c.id) ? '<span class="tag tag-pilot">Corpus piloto</span>' : ""}
+          </div>
           <h3>${VML.safe(c.name)}</h3>
           <div class="small text-secondary">${VML.safe(c.birth || "Fecha por verificar")} · ${(c.works || []).length} obra(s)</div>
           <div class="small mt-2">${c.mediation ? "Experiencia patrimonial disponible" : "Ficha patrimonial en preparación"}</div>
@@ -172,6 +213,23 @@ function resourceHref(resource) {
 
 $("#close-detail").addEventListener("click", () => {
   $("#creator-detail").hidden = true;
+});
+
+$("#show-pilot").addEventListener("click", () => {
+  pilotOnly = true;
+  $("#search").value = "";
+  $("#category").value = "";
+  $("#show-pilot").hidden = true;
+  $("#show-all").hidden = false;
+  render();
+  $("#creator-grid-v11").scrollIntoView({ behavior: "smooth", block: "start" });
+});
+
+$("#show-all").addEventListener("click", () => {
+  pilotOnly = false;
+  $("#show-all").hidden = true;
+  $("#show-pilot").hidden = false;
+  render();
 });
 
 init();
