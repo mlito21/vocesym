@@ -52,12 +52,13 @@ function render(){
   $("#resource-count").textContent=rs.length;
   $("#resources-grid").innerHTML=rs.map(r=>{
     const state=stateLabel(r);
+    const creator=(data.creators||[]).find(item=>item.id===r.creatorId);
     return`<div class="col-md-6 col-xl-4"><article class="resource-card ${state.available?"available":""}">
       <div class="d-flex justify-content-between gap-2 align-items-start">
         <div class="resource-type">${VML.safe(r.title||"Recurso educativo")}</div>
         <span class="completeness ${state.available?"available":""}">${state.label}</span>
       </div>
-      <h3 class="h3 mt-3">${VML.safe(r.creator||"Creadora")}</h3>
+      <h3 class="h3 mt-3">${VML.safe(creator?.name||r.creator||"Creadora")}</h3>
       <p class="text-secondary">${VML.safe(r.objective||"La experiencia educativa se encuentra todavía en preparación.")}</p>
       <div class="small"><strong>Áreas:</strong> ${VML.safe(r.areas||"Por definir")}<br><strong>Nivel:</strong> ${VML.safe(r.level||"Por definir")}</div>
       <div class="resource-action"><a class="btn ${state.available?"btn-brand":"btn-outline-brand"} rounded-pill" href="${href(r)}">${state.available?"Abrir experiencia":"Ver ficha del recurso"}</a></div>
