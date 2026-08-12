@@ -31,7 +31,8 @@ async function init() {
     const creators = data.creators || [];
 
     $("#archive-status").textContent =
-      `${VML.modeLabel()} · ${creators.length} creadoras cargadas desde la Base Maestra`;
+      `${VML.modeLabel()} · ${creators.length} creadoras disponibles`;
+    $("#archive-status").classList.add("is-ready");
 
     renderPilotCorpus(creators);
     populateFilters(creators);

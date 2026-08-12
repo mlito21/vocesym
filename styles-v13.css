@@ -24,8 +24,10 @@ img,svg,video,canvas{max-width:100%}
 .story-card,.station-card,.coverage-card,.resource-card,.path-card,.explorer-card,.creator-card-v11,.drawer,.generic-box,.network-shell,.timeline-controls{box-shadow:var(--vml-shadow)}
 .search-shell{background:#fff;border:1px solid var(--vml-line);border-radius:22px;padding:20px;box-shadow:var(--vml-shadow)}
 #creator-grid-v11{min-height:120px}
-.api-status{display:flex;align-items:center;gap:8px;min-height:24px;color:var(--vml-muted)}
-.api-status::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--vml-brand);opacity:.55;flex:none}
+.api-status{display:flex;align-items:center;gap:10px;min-height:24px;color:var(--vml-muted)}
+.api-status::before{content:"";width:15px;height:15px;border-radius:50%;border:2px solid rgba(0,107,94,.18);border-top-color:var(--vml-brand);flex:none;animation:vml-spin .8s linear infinite}
+.api-status.is-ready::before{width:9px;height:9px;border:0;background:var(--vml-brand);animation:none}
+@keyframes vml-spin{to{transform:rotate(360deg)}}
 .pilot-corpus{background:#fff;border:1px solid var(--vml-line);border-radius:28px;padding:clamp(24px,4vw,42px);box-shadow:var(--vml-shadow)}
 .pilot-corpus-head{display:flex;justify-content:space-between;gap:28px;align-items:flex-start}
 .pilot-corpus-head > div:first-child{max-width:830px}

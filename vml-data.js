@@ -42,11 +42,66 @@ VML.isPreview = () => VML.mode() === "preview";
 VML.isPublic = () => VML.mode() === "public";
 VML.modeLabel = () => VML.isPreview() ? "PREVIEW · corpus en investigación" : "WEB · contenido publicado";
 
-VML.load = () => VML.jsonp(
-  window.VML_CONFIG.API_URL,
-  { mode: VML.mode() },
-  window.VML_CONFIG.JSONP_TIMEOUT_MS
-);
+VML.ensureLoadingUI = function () {
+  if (document.querySelector("#vml-loading-layer")) return;
+  const style = document.createElement("style");
+  style.textContent = `
+    .vml-loading-layer{position:fixed;inset:0;z-index:2000;background:rgba(246,243,236,.94);backdrop-filter:blur(7px);display:grid;place-items:center;transition:opacity .25s}
+    .vml-loading-layer[hidden]{display:none}.vml-loading-card{width:min(520px,calc(100vw - 36px));background:#fff;border:1px solid #dce5e0;border-radius:26px;padding:28px;box-shadow:0 24px 70px rgba(23,54,47,.18)}
+    .vml-loading-brand{display:flex;align-items:center;gap:14px}.vml-loading-seal{width:48px;height:48px;border-radius:50%;display:grid;place-items:center;background:#006b5e;color:#fff;font-weight:850}
+    .vml-loading-title{font:700 1.35rem Georgia,serif;color:#17362f}.vml-loading-copy{color:#65766f;font-size:.92rem;margin-top:3px}
+    .vml-loading-track{height:10px;background:#e8f1ee;border-radius:99px;overflow:hidden;margin-top:22px}.vml-loading-bar{height:100%;width:8%;background:linear-gradient(90deg,#006b5e,#55a98d);border-radius:inherit;transition:width .35s ease}
+    .vml-loading-meta{display:flex;justify-content:space-between;gap:12px;margin-top:10px;font-size:.78rem;color:#65766f}
+  `;
+  document.head.appendChild(style);
+  const layer = document.createElement("div");
+  layer.id = "vml-loading-layer";
+  layer.className = "vml-loading-layer";
+  layer.setAttribute("role", "status");
+  layer.setAttribute("aria-live", "polite");
+  layer.innerHTML = `<div class="vml-loading-card"><div class="vml-loading-brand"><span class="vml-loading-seal">VM</span><div><div class="vml-loading-title">Cargando el archivo cultural</div><div class="vml-loading-copy" data-loading-copy>Conectando con la Base Maestra…</div></div></div><div class="vml-loading-track"><div class="vml-loading-bar" data-loading-bar></div></div><div class="vml-loading-meta"><span data-loading-step>Preparando consulta</span><strong data-loading-percent>8%</strong></div></div>`;
+  document.body.appendChild(layer);
+};
+
+VML.showLoading = function () {
+  VML.ensureLoadingUI();
+  const layer = document.querySelector("#vml-loading-layer");
+  const bar = layer.querySelector("[data-loading-bar]");
+  const percent = layer.querySelector("[data-loading-percent]");
+  const step = layer.querySelector("[data-loading-step]");
+  const copy = layer.querySelector("[data-loading-copy]");
+  layer.hidden = false;
+  layer.style.opacity = "1";
+  copy.textContent = "Conectando con la hoja de cálculo del proyecto…";
+  const stages = [[12,"Preparando consulta"],[38,"Leyendo creadoras y obras"],[67,"Relacionando fuentes y recursos"],[86,"Construyendo la vista"]];
+  let i = 0;
+  const apply = () => { const [value,label] = stages[Math.min(i,stages.length-1)]; bar.style.width=value+"%";percent.textContent=value+"%";step.textContent=label;i++; };
+  apply();
+  clearInterval(VML._loadingTimer);
+  VML._loadingTimer = setInterval(apply, 520);
+};
+
+VML.hideLoading = function (message) {
+  const layer = document.querySelector("#vml-loading-layer");
+  if (!layer) return;
+  clearInterval(VML._loadingTimer);
+  layer.querySelector("[data-loading-bar]").style.width = "100%";
+  layer.querySelector("[data-loading-percent]").textContent = "100%";
+  layer.querySelector("[data-loading-step]").textContent = message || "Archivo listo";
+  setTimeout(() => { layer.style.opacity = "0"; setTimeout(() => { layer.hidden = true; }, 260); }, 350);
+};
+
+VML.load = async function () {
+  VML.showLoading();
+  try {
+    const data = await VML.jsonp(window.VML_CONFIG.API_URL, { mode: VML.mode() }, window.VML_CONFIG.JSONP_TIMEOUT_MS);
+    VML.hideLoading("Información actualizada");
+    return data;
+  } catch (error) {
+    VML.hideLoading("No se pudo actualizar");
+    throw error;
+  }
+};
 
 VML.clean = s => String(s || "").replace(/^["']|["']$/g, "").replace(/\.$/, "").trim();
 VML.safe = s => String(s || "").replace(/[&<>"']/g, m => ({

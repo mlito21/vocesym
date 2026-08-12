@@ -7,6 +7,7 @@ VML.load()
 
     document.querySelector("#portal-live-status").textContent =
       `${VML.modeLabel()} · ${creators.length} creadoras · ${works} obras · ${resources.length} recursos educativos`;
+    document.querySelector("#portal-live-status").classList.add("is-ready");
 
     document.querySelector("#stat-creators-v12").textContent = creators.length;
     document.querySelector("#stat-works-v12").textContent = works;
@@ -20,20 +21,15 @@ VML.load()
       section.innerHTML = `
         <div class="container-xxl">
           <div class="row g-5 align-items-start">
-            <div class="col-lg-3"><div class="chapter-no">04</div><div class="eyebrow mt-3">Interactúa</div></div>
+            <div class="col-lg-3"><div class="chapter-no">✓</div><div class="eyebrow mt-3">Comprueba</div></div>
             <div class="col-lg-9">
-              <h2 class="chapter-title">Descubre jugando.</h2>
-              <p class="section-intro mt-4">Una pregunta cambia en cada visita y te invita a seguir explorando creadoras, obras y conexiones del archivo.</p>
+              <h2 class="chapter-title">Comprueba lo que descubriste.</h2>
+              <p class="section-intro mt-4">Una actividad autocorregible ofrece retroalimentación inmediata y conduce a la ficha que sustenta la respuesta.</p>
               <div id="home-quiz" class="mt-4"></div>
             </div>
           </div>
         </div>`;
-      aprende.parentNode.insertBefore(section, aprende);
-
-      const aprendeNo = aprende.querySelector(".chapter-no");
-      const trazabilidadNo = document.querySelector("#trazabilidad .chapter-no");
-      if (aprendeNo) aprendeNo.textContent = "05";
-      if (trazabilidadNo) trazabilidadNo.textContent = "06";
+      aprende.parentNode.insertBefore(section, aprende.nextSibling);
 
       VML.mountQuiz("#home-quiz", questions, {
         count: 1,
