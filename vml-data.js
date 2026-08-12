@@ -180,9 +180,12 @@ VML.load = async function () {
   try {
     let data;
     if (VML.isPublic()) {
-      const actions = ["creators", "works", "media", "resources", "relations", "locations", "mediations", "questions"];
-      const [creatorResponse, workResponse, mediaResponse, resourceResponse, relationResponse, locationResponse, mediationResponse, questionResponse] =
-        await Promise.all(actions.map(action => VML.loadPublicAction(action)));
+      // Apps Script y el navegador limitan las conexiones simultáneas al mismo
+      // origen. Dos tandas evitan que la última vista expire en la cola.
+      const [creatorResponse, workResponse, mediaResponse, resourceResponse] =
+        await Promise.all(["creators", "works", "media", "resources"].map(action => VML.loadPublicAction(action)));
+      const [relationResponse, locationResponse, mediationResponse, questionResponse] =
+        await Promise.all(["relations", "locations", "mediations", "questions"].map(action => VML.loadPublicAction(action)));
 
       const rows = response => Array.isArray(response?.items) ? response.items : [];
       const creators = rows(creatorResponse).map(item => {
