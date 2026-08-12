@@ -15,7 +15,7 @@ La Base Maestra registra actualmente:
 - 61 propuestas de recursos educativos.
 - 0 registros publicables según el control editorial vigente.
 
-Por tanto, el sitio publicado en GitHub Pages debe considerarse por ahora un **entorno PREVIEW académico**, no una publicación definitiva del corpus.
+Por tanto, el portal combina un **catálogo público preliminar** de identificación y un entorno PREVIEW académico. El catálogo no debe interpretarse como publicación definitiva de biografías, obras, fuentes o multimedia.
 
 ## Dos entornos lógicos
 
@@ -58,7 +58,7 @@ Configuración web futura:
 API_MODE: "public"
 ```
 
-Las vistas WEB solo deben recibir registros que cumplan los controles editoriales.
+La vista `07_WEB_Creadoras` puede exponer únicamente identificador, nombre, categoría y disciplina como índice preliminar. Las vistas WEB de biografías, obras, fuentes, multimedia y recursos solo deben recibir contenido que cumpla los controles editoriales.
 
 ## Criterios mínimos para promover una creadora a producción
 
@@ -110,4 +110,4 @@ La lógica de navegación debe conservar cinco niveles:
 
 ## Próximo hito de producción
 
-No es publicar las 61 creadoras de inmediato. El siguiente hito es conseguir que el primer lote piloto atraviese completamente el flujo editorial y aparezca correctamente en las vistas WEB. Una vez validado el proceso, se escala por lotes.
+El índice preliminar ya permite localizar las 61 creadoras sin presentar como verificadas sus fichas. El siguiente hito es conseguir que el primer lote de fichas patrimoniales atraviese completamente el flujo editorial y aparezca correctamente en las vistas WEB. Una vez validado el proceso, se escala por lotes.
