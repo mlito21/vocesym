@@ -81,7 +81,9 @@ function render() {
           </div>
           <h3>${VML.safe(c.name)}</h3>
           ${VML.isPublic()
-            ? '<div class="small text-secondary">Corpus preliminar</div><div class="small mt-2">Ficha patrimonial en investigación</div>'
+            ? VML.isCreatorPublished(c)
+              ? `<div class="small text-secondary">Ficha pública disponible</div><div class="small mt-2">${VML.safe(c.birth || "Datos biográficos publicados")}</div>`
+              : '<div class="small text-secondary">Corpus preliminar</div><div class="small mt-2">Ficha patrimonial en preparación</div>'
             : `<div class="small text-secondary">${VML.safe(c.birth || "Fecha por verificar")} · ${(c.works || []).length} obra(s)</div><div class="small mt-2">${c.mediation ? "Experiencia patrimonial disponible" : "Ficha patrimonial en preparación"}</div>`}
         </div>
       </article>
@@ -104,7 +106,7 @@ function openCreator(id) {
   const creator = (data.creators || []).find(c => c.id === id);
   if (!creator) return;
 
-  if (VML.isPublic()) {
+  if (VML.isPublic() && !VML.isCreatorPublished(creator)) {
     $("#detail-content").innerHTML = `
       <div class="row g-5 align-items-start">
         <div class="col-lg-4">${creatorVisual(creator, "profile")}</div>

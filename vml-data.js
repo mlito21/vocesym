@@ -65,6 +65,24 @@ VML.isPreview = () => VML.mode() === "preview";
 VML.isPublic = () => VML.mode() === "public";
 VML.modeLabel = () => VML.isPreview() ? "PREVIEW · corpus en investigación" : "Versión pública preliminar";
 
+VML.isYes = function (value) {
+  return String(value || "")
+    .trim()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase() === "si";
+};
+
+VML.isCreatorPublished = function (creator) {
+  if (!VML.isPublic()) return true;
+  const explicitStatus = String(creator?.publishable || "").trim();
+  if (explicitStatus) return VML.isYes(explicitStatus);
+
+  // Compatibilidad con implementaciones anteriores de Apps Script: la vista
+  // WEB solo entrega estos campos cuando PUBLICABLE_WEB está en Sí.
+  return Boolean(creator?.bio || creator?.birth || creator?.place || creator?.source);
+};
+
 VML.publicResources = [
   {id:"RE-001",creatorId:"CR-001",title:"Laboratorio de lectura y memoria",areas:"Lengua y Literatura · patrimonio cultural",level:"Bachillerato y educación superior",objective:"Analizar cómo la documentación y el contexto sostienen una lectura patrimonial responsable.",prototype:true},
   {id:"RE-047",creatorId:"CR-047",title:"Laboratorio de escucha y composición",areas:"Educación Musical · patrimonio cultural",level:"Bachillerato y educación superior",objective:"Reconocer decisiones compositivas mediante escucha guiada y análisis contextual.",prototype:true},
@@ -170,7 +188,17 @@ VML.load = async function () {
               name,
               category: String(item["CATEGORÍA"] || "").trim(),
               discipline: String(item.DISCIPLINA || "").trim(),
-              initials: name.split(/\s+/).filter(Boolean).slice(0, 2).map(part => part[0]).join("")
+              birth: String(item["AÑO_NACIMIENTO"] || "").trim(),
+              place: String(item.LUGAR_NACIMIENTO || "").trim(),
+              bio: String(item["BIOGRAFÍA_VALIDADA"] || "").trim(),
+              source: String(item.FUENTE_PRINCIPAL || "").trim(),
+              photoSource: String(item["FUENTE_FOTOGRAFÍA"] || "").trim(),
+              publishable: String(item.PUBLICABLE_WEB || "").trim(),
+              initials: name.split(/\s+/).filter(Boolean).slice(0, 2).map(part => part[0]).join(""),
+              works: [],
+              resources: [],
+              mediations: [],
+              questions: []
             };
           }).filter(creator => creator.id && creator.name)
         }

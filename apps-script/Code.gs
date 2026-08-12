@@ -112,6 +112,7 @@ function getSitePayload_(mode) {
         bio: c['BIOGRAFÍA_VALIDADA'],
         source: c.FUENTE_PRINCIPAL,
         photoSource: c['FUENTE_FOTOGRAFÍA'],
+        publishable: c.PUBLICABLE_WEB,
         photoMedia: photoMedia,
         media: creatorMedia,
         initials: initials_(c.NOMBRE_COMPLETO),

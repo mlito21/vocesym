@@ -23,6 +23,29 @@ function creatorVisual(creator) {
     </div>`;
 }
 
+function renderPreliminaryCreator(creator) {
+  document.title = `${creator.name} · Voces y Melodías Lojanas`;
+  $("#creator-mode").textContent = `Corpus preliminar · ${creator.discipline || creator.category || "Creadora"}`;
+  $("#creator-public-title").textContent = creator.name;
+  $("#creator-hook").textContent = "Registro incluido en el corpus de investigación.";
+  $("#creator-public-content").innerHTML = `
+    <section class="public-section">
+      <div class="container-xxl">
+        <div class="row g-5 align-items-start">
+          <div class="col-lg-4">${creatorVisual(creator)}</div>
+          <div class="col-lg-8">
+            <span class="tag">${VML.safe(creator.discipline || creator.category || "Creadora")}</span>
+            <h2 class="public-section-title mt-3">${VML.safe(creator.name)}</h2>
+            <div class="public-record-note mt-4">
+              <strong>Ficha patrimonial en preparación</strong>
+              <p class="mb-0 mt-2">La creadora forma parte del archivo, pero su ficha completa todavía no ha sido aprobada para publicación. Cuando <code>PUBLICABLE_WEB</code> cambie a <strong>Sí</strong>, esta página mostrará automáticamente los datos públicos disponibles.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>`;
+}
+
 function splitFeaturedWorks(value) {
   return String(value || "")
     .split(/;|\n/)
@@ -149,6 +172,11 @@ async function init() {
       $("#creator-hook").textContent = VML.isPublic()
         ? "Esta creadora todavía no forma parte del catálogo público verificado."
         : "No se encontró este identificador en la vista actual.";
+      return;
+    }
+
+    if (VML.isPublic() && !VML.isCreatorPublished(creator)) {
+      renderPreliminaryCreator(creator);
       return;
     }
 
