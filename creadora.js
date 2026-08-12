@@ -183,9 +183,12 @@ async function init() {
     const mediation = creator.mediation || (data.mediations || []).find(item => item.creatorId === creator.id) || null;
     const resource = (creator.resources || [])[0] || (data.resources || []).find(item => item.creatorId === creator.id) || null;
     const learningHref = learningHrefForCreator(creator, resource);
-    const creatorQuestions = (creator.questions || []).length
-      ? creator.questions
-      : (data.questions || []).filter(item => !item.creatorId);
+    // Una ficha individual solo puede evaluar contenidos vinculados
+    // explícitamente con esa creadora. Las preguntas generales del archivo
+    // pertenecen a espacios metodológicos y nunca se usan como sustituto.
+    const creatorQuestions = (creator.questions || []).filter(item =>
+      String(item.creatorId || "").trim() === creator.id
+    );
 
     document.title = `${creator.name} · Voces y Melodías Lojanas`;
     $("#creator-mode").textContent = `${VML.modeLabel()} · ${creator.discipline || creator.category || "Creadora"}`;
@@ -242,7 +245,7 @@ async function init() {
         </div>
       </section>
 
-      ${creatorQuestions.length ? `<section class="public-section bg-white"><div class="container-xxl"><div class="row g-5"><div class="col-lg-4"><div class="eyebrow">Interactúa</div><h2 class="public-section-title mt-2">Pon a prueba lo que descubriste</h2><p class="text-secondary">Una pregunta aleatoria relacionada con esta creadora o con el archivo.</p></div><div class="col-lg-8"><div id="creator-quiz"></div></div></div></div></section>` : ""}
+      ${creatorQuestions.length ? `<section class="public-section bg-white"><div class="container-xxl"><div class="row g-5"><div class="col-lg-4"><div class="eyebrow">Interactúa</div><h2 class="public-section-title mt-2">Pon a prueba lo que descubriste</h2><p class="text-secondary">Una pregunta vinculada y verificada sobre esta creadora, su trayectoria o sus obras.</p></div><div class="col-lg-8"><div id="creator-quiz"></div></div></div></div></section>` : ""}
 
       ${renderExperiences(mediation)}
       ${renderLegacy(mediation)}
