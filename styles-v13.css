@@ -27,6 +27,8 @@ img,svg,video,canvas{max-width:100%}
 .api-status{display:flex;align-items:center;gap:10px;min-height:24px;color:var(--vml-muted)}
 .api-status::before{content:"";width:15px;height:15px;border-radius:50%;border:2px solid rgba(0,107,94,.18);border-top-color:var(--vml-brand);flex:none;animation:vml-spin .8s linear infinite}
 .api-status.is-ready::before{width:9px;height:9px;border:0;background:var(--vml-brand);animation:none}
+.api-status.is-error::before{width:9px;height:9px;border:0;background:#a85e58;animation:none}
+.public-record-note{padding:20px 22px;border:1px solid var(--vml-line);border-left:4px solid var(--vml-brand);border-radius:16px;background:var(--vml-soft);color:var(--vml-ink)}
 @keyframes vml-spin{to{transform:rotate(360deg)}}
 .pilot-corpus{background:#fff;border:1px solid var(--vml-line);border-radius:28px;padding:clamp(24px,4vw,42px);box-shadow:var(--vml-shadow)}
 .pilot-corpus-head{display:flex;justify-content:space-between;gap:28px;align-items:flex-start}

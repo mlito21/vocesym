@@ -106,10 +106,30 @@ VML.prototypeData = {
 VML.load = async function () {
   VML.showLoading();
   try {
-    const data = await VML.jsonp(window.VML_CONFIG.API_URL, { mode: VML.mode() }, window.VML_CONFIG.JSONP_TIMEOUT_MS);
+    const params = VML.isPublic() ? { action: "creators" } : { mode: VML.mode() };
+    const response = await VML.jsonp(window.VML_CONFIG.API_URL, params, window.VML_CONFIG.JSONP_TIMEOUT_MS);
+    const data = VML.isPublic() && Array.isArray(response?.items)
+      ? {
+          mode: "public",
+          creators: response.items.map(item => {
+            const name = String(item.NOMBRE_COMPLETO || "").trim();
+            return {
+              id: String(item.ID_CREADORA || "").trim(),
+              name,
+              category: String(item["CATEGORÍA"] || "").trim(),
+              discipline: String(item.DISCIPLINA || "").trim(),
+              initials: name.split(/\s+/).filter(Boolean).slice(0, 2).map(part => part[0]).join("")
+            };
+          }).filter(creator => creator.id && creator.name)
+        }
+      : response;
     VML.hideLoading("Información actualizada");
     return data;
   } catch (error) {
+    if (VML.isPublic()) {
+      VML.hideLoading("No fue posible actualizar el catálogo");
+      throw error;
+    }
     const demo = JSON.parse(JSON.stringify(VML.prototypeData));
     demo._apiError = error.message;
     VML.hideLoading("Prototipo listo");

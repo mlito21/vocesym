@@ -30,8 +30,9 @@ async function init() {
     data = await VML.load();
     const creators = data.creators || [];
 
-    $("#archive-status").textContent =
-      `${VML.modeLabel()} · ${creators.length} creadoras disponibles`;
+    $("#archive-status").textContent = VML.isPublic()
+      ? "Catálogo público preliminar · 61 creadoras registradas"
+      : `${VML.modeLabel()} · ${creators.length} creadoras disponibles`;
     $("#archive-status").classList.add("is-ready");
 
     renderPilotCorpus(creators);
@@ -39,6 +40,7 @@ async function init() {
     render();
   } catch (e) {
     $("#archive-status").textContent = "No fue posible cargar el archivo: " + e.message;
+    $("#archive-status").classList.add("is-error");
   }
 }
 
@@ -113,12 +115,13 @@ function render() {
         ${creatorVisual(c, "card")}
         <div class="card-body-v11">
           <div class="d-flex gap-2 flex-wrap align-items-center">
-            <span class="tag">${VML.safe(c.discipline || c.category || "Por clasificar")}</span>
+            <span class="tag">${VML.safe(c.discipline || c.category || (VML.isPreview() ? "Por clasificar" : "Categoría en revisión"))}</span>
             ${VML.isPreview() && PILOT_IDS.has(c.id) ? '<span class="tag tag-pilot">Corpus piloto</span>' : ""}
           </div>
           <h3>${VML.safe(c.name)}</h3>
-          <div class="small text-secondary">${VML.safe(c.birth || "Fecha por verificar")} · ${(c.works || []).length} obra(s)</div>
-          <div class="small mt-2">${c.mediation ? "Experiencia patrimonial disponible" : "Ficha patrimonial en preparación"}</div>
+          ${VML.isPublic()
+            ? '<div class="small text-secondary">Corpus preliminar</div><div class="small mt-2">Ficha patrimonial en investigación</div>'
+            : `<div class="small text-secondary">${VML.safe(c.birth || "Fecha por verificar")} · ${(c.works || []).length} obra(s)</div><div class="small mt-2">${c.mediation ? "Experiencia patrimonial disponible" : "Ficha patrimonial en preparación"}</div>`}
         </div>
       </article>
     </div>
@@ -139,6 +142,24 @@ function render() {
 function openCreator(id) {
   const creator = (data.creators || []).find(c => c.id === id);
   if (!creator) return;
+
+  if (VML.isPublic()) {
+    $("#detail-content").innerHTML = `
+      <div class="row g-5 align-items-start">
+        <div class="col-lg-4">${creatorVisual(creator, "profile")}</div>
+        <div class="col-lg-8">
+          <span class="tag">${VML.safe(creator.discipline || creator.category || "Categoría en revisión")}</span>
+          <h2 class="section-title fs-1 mt-3">${VML.safe(creator.name)}</h2>
+          <div class="public-record-note mt-4">
+            <strong>Corpus preliminar</strong>
+            <p class="mb-0 mt-2">Este registro documenta su inclusión en el corpus de investigación de Voces y Melodías Lojanas. La biografía, las obras, las fuentes y los recursos educativos se publicarán progresivamente después de su verificación documental y editorial.</p>
+          </div>
+        </div>
+      </div>`;
+    $("#creator-detail").hidden = false;
+    $("#creator-detail").scrollIntoView({ behavior: "smooth" });
+    return;
+  }
 
   const resources = creator.resources || [];
   const works = creator.works || [];
