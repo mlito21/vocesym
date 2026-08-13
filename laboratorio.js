@@ -46,7 +46,7 @@
   const check = (question, correct, options) => `<div class="check-activity mt-4" data-check-activity data-correct="${correct}"><h3 class="h4">Comprueba tu comprensión</h3><p>${question}</p><div class="check-options">${options.map((option, index) => `<button class="check-option" data-option="${String.fromCharCode(65 + index)}">${option}</button>`).join("")}</div><div class="check-feedback" data-check-feedback hidden></div></div>`;
   const finalCard = (prompt, criteria) => `<div class="row g-4"><div class="col-lg-8"><h2 class="section-title fs-1">Producto final</h2><p>${prompt}</p><textarea id="final-product" class="form-control lab-textarea" data-save="final-product" placeholder="Desarrolla aquí tu propuesta…"></textarea><div id="word-count" class="source-note mt-2" aria-live="polite"></div></div><div class="col-lg-4"><div class="evidence-card"><div class="eyebrow text-white-50">Criterios</div><ul class="text-white-50 mt-3">${criteria.map(x => `<li>${x}</li>`).join("")}</ul><button class="btn btn-light rounded-pill" id="complete-lab">Marcar como completado</button><div id="completion-message" class="mt-3" aria-live="polite"></div></div></div></div>`;
 
-  const context = () => station(1, lab.tabs[0], `<h2 class="section-title fs-1">¿Qué sabemos y qué permanece en investigación?</h2><div class="row g-4"><div class="col-lg-7"><div id="context-bio" class="fs-5 text-secondary"><p>Consultando el catálogo…</p></div></div><div class="col-lg-5"><div class="source-box"><strong>Obras vinculadas</strong><div id="context-works" class="mt-2"><p>Consultando registros…</p></div></div></div></div>${check("¿Cómo debe presentarse un dato que todavía no tiene una fuente verificable?", "C", ["Como hecho confirmado", "Se oculta sin explicación", "Como dato pendiente de verificación"])}${next(1)}`);
+  const context = () => station(1, lab.tabs[0], `<h2 class="section-title fs-1">¿Qué sabemos y qué permanece en investigación?</h2><div class="row g-4"><div class="col-lg-7"><div id="context-bio" class="fs-5 text-secondary"><p>Consultando el catálogo…</p></div></div><div class="col-lg-5"><div class="source-box"><strong>Obras vinculadas</strong><div id="context-works" class="mt-2"><p>Consultando registros…</p></div></div></div></div><div id="context-quiz" class="mt-4" aria-live="polite"><p class="text-secondary mb-0">Consultando la actividad de esta creadora…</p></div>${next(1)}`);
 
   const templates = {
     poetry: () => context() +
@@ -103,6 +103,19 @@
     $("#context-bio").innerHTML = `<p><strong>${VML.safe(profile.name || "Creadora del catálogo")}</strong> · ${VML.safe(profile.discipline || profile.category || lab.discipline)}.</p><p>${VML.safe(profile.bio || "La ficha pública identifica el registro; la ampliación biográfica permanece sujeta a revisión documental y editorial.")}</p>${profile.source ? `<p class="source-note"><strong>Fuente:</strong> ${VML.safe(profile.source)}</p>` : ""}`;
     const works = profile.works || [];
     $("#context-works").innerHTML = works.length ? works.slice(0, 6).map(work => `<div class="border-bottom py-2"><strong>${VML.safe(VML.clean(work.title))}</strong><br><small>${VML.safe(work.genre || work.type || "Registro preliminar")}</small></div>`).join("") : `<p>${VML.safe(resource?.objective || "Las obras y materiales se incorporarán cuando hayan sido verificados y autorizados.")}</p>`;
+    const creatorQuestions = (profile.questions || []).filter(question =>
+      String(question.creatorId || "").trim() === lab.creatorId
+    );
+    const quiz = $("#context-quiz");
+    if (creatorQuestions.length) {
+      VML.mountQuiz(quiz, creatorQuestions, {
+        count: 1,
+        eyebrow: "Comprueba tu comprensión",
+        title: `¿Qué descubriste sobre ${profile.name}?`
+      });
+    } else {
+      quiz.innerHTML = `<div class="source-box"><strong>Actividad en preparación</strong><p class="mb-0 mt-2">Todavía no hay una pregunta publicada y vinculada con ${VML.safe(profile.name)}. No se mostrará una pregunta general ni perteneciente a otra creadora.</p></div>`;
+    }
     $("#lab-status").textContent = `${VML.modeLabel()} · ${resource?.prototype ? "materiales simulados identificados" : "recurso educativo"}`;
     $("#lab-status").classList.add("is-ready");
   }
