@@ -4,34 +4,10 @@
   const requestedId = new URLSearchParams(location.search).get("id") || "RE-001";
 
   const LABS = {
-    "RE-001": {
-      creatorId: "CR-001", discipline: "Poesía",
-      nav: "Laboratorio de lectura y memoria",
-      title: "Leer, interpretar y contrastar la memoria escrita.",
-      lead: "Cinco estaciones para contextualizar, examinar, interpretar, verificar y crear sin confundir lectura literaria con afirmaciones no documentadas.",
-      tabs: ["Contexto", "Lee / Examina", "Interpreta", "Contrasta", "Crea"], kind: "poetry"
-    },
-    "RE-047": {
-      creatorId: "CR-047", discipline: "Composición",
-      nav: "Laboratorio de escucha y composición",
-      title: "Escuchar el patrimonio musical de Loja.",
-      lead: "Cinco estaciones para contextualizar, escuchar, reconocer, comparar y crear a partir de una obra musical.",
-      tabs: ["Contexto", "Escucha", "Descubre", "Compara", "Crea"], kind: "composition"
-    },
-    "RE-052": {
-      creatorId: "CR-052", discipline: "Adaptación didáctica",
-      nav: "Laboratorio de adaptación para piano",
-      title: "Adaptar una obra para aprender piano.",
-      lead: "Cinco estaciones para distinguir operaciones musicales y diseñar una adaptación coherente con el nivel de aprendizaje.",
-      tabs: ["Contexto", "Distingue", "Decide", "Diseña", "Justifica"], kind: "piano"
-    },
-    "RE-058": {
-      creatorId: "CR-058", discipline: "Arreglo coral",
-      nav: "Laboratorio del arreglo coral",
-      title: "Transformar una obra para nuevas voces.",
-      lead: "Cinco estaciones para comparar versiones, identificar transformaciones y sustentar una propuesta de arreglo.",
-      tabs: ["Contextualiza", "Compara", "Identifica", "Justifica", "Diseña"], kind: "choral"
-    }
+    "RE-001": { creatorId: "CR-001", discipline: "Poesía", nav: "Laboratorio de lectura y memoria", title: "Leer, interpretar y contrastar la memoria escrita.", lead: "Cinco estaciones para contextualizar, examinar, interpretar, verificar y crear a partir de los registros documentados de la creadora.", tabs: ["Contexto", "Lee / Examina", "Interpreta", "Contrasta", "Crea"], kind: "poetry" },
+    "RE-047": { creatorId: "CR-047", discipline: "Composición", nav: "Laboratorio de escucha y composición", title: "Escuchar el patrimonio musical de Loja.", lead: "Cinco estaciones para contextualizar, examinar, reconocer, comparar y crear a partir de las obras documentadas de la compositora.", tabs: ["Contexto", "Escucha / Examina", "Interpreta", "Contrasta", "Crea"], kind: "composition" },
+    "RE-052": { creatorId: "CR-052", discipline: "Adaptación didáctica", nav: "Laboratorio de adaptación para piano", title: "Adaptar una obra para aprender piano.", lead: "Cinco estaciones para examinar una obra documentada y justificar decisiones de adaptación según un nivel de aprendizaje.", tabs: ["Contexto", "Examina", "Decide", "Contrasta", "Justifica"], kind: "piano" },
+    "RE-058": { creatorId: "CR-058", discipline: "Arreglo coral", nav: "Laboratorio del arreglo coral", title: "Transformar una obra para nuevas voces.", lead: "Cinco estaciones para comparar registros, identificar transformaciones y sustentar una propuesta vinculada con la arreglista.", tabs: ["Contexto", "Compara", "Interpreta", "Contrasta", "Diseña"], kind: "choral" }
   };
 
   const lab = LABS[requestedId];
@@ -43,33 +19,27 @@
 
   const station = (number, title, body) => `<section class="station${number === 1 ? " active" : ""}" data-panel="${number}" aria-hidden="${number !== 1}"><div class="station-card"><div class="eyebrow">Estación ${number} · ${title}</div>${body}</div></section>`;
   const next = number => number < 5 ? `<button class="btn btn-brand rounded-pill mt-4 next-station" data-next="${number + 1}">Continuar</button>` : "";
-  const check = (question, correct, options) => `<div class="check-activity mt-4" data-check-activity data-correct="${correct}"><h3 class="h4">Comprueba tu comprensión</h3><p>${question}</p><div class="check-options">${options.map((option, index) => `<button class="check-option" data-option="${String.fromCharCode(65 + index)}">${option}</button>`).join("")}</div><div class="check-feedback" data-check-feedback hidden></div></div>`;
-  const finalCard = (prompt, criteria) => `<div class="row g-4"><div class="col-lg-8"><h2 class="section-title fs-1">Producto final</h2><p>${prompt}</p><textarea id="final-product" class="form-control lab-textarea" data-save="final-product" placeholder="Desarrolla aquí tu propuesta…"></textarea><div id="word-count" class="source-note mt-2" aria-live="polite"></div></div><div class="col-lg-4"><div class="evidence-card"><div class="eyebrow text-white-50">Criterios</div><ul class="text-white-50 mt-3">${criteria.map(x => `<li>${x}</li>`).join("")}</ul><button class="btn btn-light rounded-pill" id="complete-lab">Marcar como completado</button><div id="completion-message" class="mt-3" aria-live="polite"></div></div></div></div>`;
 
-  const context = () => station(1, lab.tabs[0], `<h2 class="section-title fs-1">¿Qué sabemos y qué permanece en investigación?</h2><div class="row g-4"><div class="col-lg-7"><div id="context-bio" class="fs-5 text-secondary"><p>Consultando el catálogo…</p></div></div><div class="col-lg-5"><div class="source-box"><strong>Obras vinculadas</strong><div id="context-works" class="mt-2"><p>Consultando registros…</p></div></div></div></div><div id="context-quiz" class="mt-4" aria-live="polite"><p class="text-secondary mb-0">Consultando la actividad de esta creadora…</p></div>${next(1)}`);
-
-  const templates = {
-    poetry: () => context() +
-      station(2, "Lee / Examina", `<h2 class="section-title fs-1">Lee con contexto</h2><div class="text-placeholder"><span class="prototype-label">Texto simulado</span><blockquote class="fs-3 mt-3">“La ciudad guarda voces en sus patios; cada nombre regresa convertido en memoria.”</blockquote><p>Fragmento ficticio para probar la experiencia. No se atribuye a una obra histórica.</p></div>${check("¿Qué debe acompañar a un texto definitivo?", "B", ["Solo el diseño", "Autoría, fuente y condiciones de uso", "Una interpretación sin referencia"])}${next(2)}`) +
-      station(3, "Interpreta", `<h2 class="section-title fs-1">Construye una lectura argumentada</h2><p>Formula una interpretación provisional y explica qué evidencia textual necesitarías.</p><textarea class="form-control lab-textarea" data-save="interpretation"></textarea>${next(3)}`) +
-      station(4, "Contrasta", `<h2 class="section-title fs-1">Evalúa la trazabilidad</h2><div class="decision-grid">${["Autor o institución responsable", "Fecha o edición", "Procedencia rastreable", "Contraste independiente"].map((x,i)=>`<button class="choice-btn" data-choice="source-${i}" aria-pressed="false">${x}</button>`).join("")}</div><textarea class="form-control lab-textarea mt-4" data-save="source-reflection" placeholder="Identifica un vacío documental y una ruta de búsqueda…"></textarea>${next(4)}`) +
-      station(5, "Crea", finalCard("Redacta un comentario curatorial, un microtexto propio o una pregunta de investigación. Diferencia claramente evidencia, interpretación y creación.", ["Contextualización", "Uso crítico de fuentes", "Evidencia e inferencia", "Claridad de la propuesta"])),
-    composition: () => context() +
-      station(2, "Escucha", `<h2 class="section-title fs-1">Escucha y examina</h2><div data-prototype-media data-title="Muestra de obra musical" data-kind="audio y partitura"></div>${check("Para reconocer un contorno melódico, ¿qué observas?", "C", ["El diseño de la página", "Solo el volumen", "La dirección y los intervalos de la melodía"])}${next(2)}`) +
-      station(3, "Descubre", `<h2 class="section-title fs-1">Reconoce decisiones compositivas</h2><p>Selecciona los elementos que conviene documentar durante una escucha.</p><div class="decision-grid">${["Ritmo", "Melodía", "Forma", "Textura"].map((x,i)=>`<button class="choice-btn" data-choice="element-${i}" aria-pressed="false">${x}</button>`).join("")}</div><textarea class="form-control lab-textarea mt-4" data-save="listening" placeholder="Describe una observación y la evidencia sonora que la sostendría…"></textarea>${next(3)}`) +
-      station(4, "Compara", `<h2 class="section-title fs-1">Composición y arreglo</h2><div class="compare-grid"><div class="compare-box"><span class="creator-badge">Composición</span><p class="mt-3">Concibe y organiza la obra de partida.</p></div><div class="compare-box"><span class="creator-badge">Arreglo</span><p class="mt-3">Transforma una obra existente sin borrar su autoría.</p></div></div>${check("¿Qué debe conservar un arreglo responsable?", "A", ["La atribución de la obra de origen", "Solo el título", "Ninguna relación documental"])}${next(4)}`) +
-      station(5, "Crea", finalCard("Diseña una ficha de escucha que conecte contexto, rasgos musicales, evidencia observable y una pregunta de interpretación.", ["Escucha atenta", "Vocabulario musical", "Contexto patrimonial", "Evidencia observable"])),
-    piano: () => context() +
-      station(2, "Distingue", `<h2 class="section-title fs-1">Tres operaciones distintas</h2><div class="concept-grid"><article class="concept-card"><h3>Arreglo</h3><p>Reconfigura una obra para otro conjunto o textura.</p></article><article class="concept-card"><h3>Adaptación didáctica</h3><p>Ajusta dificultad y conserva rasgos reconocibles.</p></article><article class="concept-card"><h3>Transcripción</h3><p>Traslada procurando conservar la estructura.</p></article></div>${check("Se simplifica el acompañamiento para nivel inicial. ¿Qué operación es?", "B", ["Arreglo sin finalidad pedagógica", "Adaptación didáctica", "Transcripción literal"])}${next(2)}`) +
-      station(3, "Decide", `<h2 class="section-title fs-1">Define a quién adaptarás</h2><div class="row g-3"><div class="col-md-6"><label class="form-label">Nivel</label><select class="form-select" data-save="level"><option>Iniciación</option><option>Básico con lectura</option><option>Intermedio</option></select></div><div class="col-md-6"><label class="form-label">Género de práctica</label><select class="form-select" data-save="genre"><option>Albazo</option><option>Tonada</option><option>Pasillo</option></select></div></div>${check("¿Qué decisión es coherente con iniciación?", "A", ["Conservar melodía y simplificar acompañamiento", "Añadir grandes saltos", "Cambiar el género para evitar el ritmo"])}${next(3)}`) +
-      station(4, "Diseña", `<h2 class="section-title fs-1">Construye tu ficha</h2><div class="row g-3"><div class="col-md-6"><textarea class="form-control lab-textarea" data-save="preserve" placeholder="Qué preservar…"></textarea></div><div class="col-md-6"><textarea class="form-control lab-textarea" data-save="modify" placeholder="Qué modificar…"></textarea></div><div class="col-md-6"><textarea class="form-control lab-textarea" data-save="sequence" placeholder="Secuencia de práctica…"></textarea></div><div class="col-md-6"><textarea class="form-control lab-textarea" data-save="assessment" placeholder="Evidencia de aprendizaje…"></textarea></div></div>${next(4)}`) +
-      station(5, "Justifica", finalCard("Explica la relación entre nivel, decisiones pianísticas, preservación patrimonial y evidencia de aprendizaje.", ["Distinción conceptual", "Adecuación al nivel", "Coherencia musical", "Cuidado patrimonial"])),
-    choral: () => context() +
-      station(2, "Compara", `<h2 class="section-title fs-1">Obra de origen y versión coral</h2><div class="compare-grid"><div class="compare-box"><span class="creator-badge">Obra de origen</span><div data-prototype-media data-title="Obra de origen" data-kind="audio y partitura"></div></div><div class="compare-box"><span class="creator-badge">Versión coral</span><div data-prototype-media data-title="Versión coral" data-kind="audio y partitura"></div></div></div>${check("¿Qué evidencia muestra un cambio de textura?", "C", ["El título", "La fecha de nacimiento", "La redistribución de melodía entre voces"])}${next(2)}`) +
-      station(3, "Identifica", `<h2 class="section-title fs-1">Reconoce las transformaciones</h2><div class="decision-grid">${["Registro vocal", "Distribución y textura", "Armonización", "Timbre"].map((x,i)=>`<button class="choice-btn" data-choice="transform-${i}" aria-pressed="false">${x}</button>`).join("")}</div><textarea class="form-control lab-textarea mt-4" data-save="transform-reflection" placeholder="Explica qué evidencia necesitarías…"></textarea>${next(3)}`) +
-      station(4, "Justifica", `<h2 class="section-title fs-1">Decisión, propósito y evidencia</h2>${check("¿Cuál decisión está mejor justificada?", "A", ["Ajustar tesitura tras compararla con la extensión del coro", "Acelerar porque toda versión debe ser rápida", "Añadir voces sin revisar armonía ni texto"])}<textarea class="form-control lab-textarea mt-4" data-save="justification" placeholder="Ajustaría… porque… y lo comprobaría mediante…"></textarea>${next(4)}`) +
-      station(5, "Diseña", finalCard("Diseña un esquema coral o comentario técnico que explique qué conservar, qué transformar y cómo comprobar el resultado.", ["Rol de la arreglista", "Transformaciones", "Justificación", "Respeto a la obra de origen"]))
-  };
+  function buildExperience() {
+    return station(1, lab.tabs[0], `
+      <h2 class="section-title fs-1">¿Qué sabemos y qué permanece en investigación?</h2>
+      <div class="row g-4"><div class="col-lg-7"><div id="context-bio" class="fs-5 text-secondary"><p>Consultando el catálogo…</p></div></div><div class="col-lg-5"><div class="source-box"><strong>Obras vinculadas</strong><div id="context-works" class="mt-2"><p>Consultando registros…</p></div></div></div></div>
+      <div id="context-quiz" class="mt-4" aria-live="polite"><p class="text-secondary mb-0">Consultando la actividad de esta creadora…</p></div>${next(1)}`) +
+    station(2, lab.tabs[1], `
+      <h2 id="evidence-title" class="section-title fs-1">Examina una evidencia vinculada</h2>
+      <p id="evidence-intro" class="fs-5 text-secondary">Consultando las obras y materiales de esta creadora…</p>
+      <div id="evidence-records" class="row g-3 mt-1"></div><div id="media-records" class="mt-4"></div>
+      <div class="source-box mt-4"><strong id="evidence-question">Actividad de observación</strong><p id="evidence-guidance" class="mb-3 mt-2"></p><textarea class="form-control lab-textarea" data-save="evidence-observation" aria-label="Respuesta de observación"></textarea></div>${next(2)}`) +
+    station(3, lab.tabs[2], `
+      <h2 id="interpretation-title" class="section-title fs-1">Construye una interpretación situada</h2>
+      <p id="interpretation-prompt" class="fs-5">La consigna se completará con los datos de la creadora y su obra.</p><div id="interpretation-support" class="source-box mb-4"></div>
+      <textarea class="form-control lab-textarea" data-save="interpretation" aria-label="Interpretación argumentada"></textarea>${next(3)}`) +
+    station(4, lab.tabs[3], `
+      <h2 id="contrast-title" class="section-title fs-1">Contrasta las fuentes del registro</h2><p id="contrast-intro" class="fs-5">Compara lo que sostiene cada fuente antes de formular una conclusión.</p>
+      <div id="source-records" class="row g-3 mt-1"></div><div class="source-box mt-4"><strong id="contrast-question">Pregunta de contraste</strong><p id="contrast-guidance" class="mb-3 mt-2"></p><textarea class="form-control lab-textarea" data-save="source-reflection" aria-label="Contraste de fuentes"></textarea></div>${next(4)}`) +
+    station(5, lab.tabs[4], `
+      <div class="row g-4"><div class="col-lg-8"><h2 id="final-title" class="section-title fs-1">Producto final</h2><p id="final-prompt"></p><textarea id="final-product" class="form-control lab-textarea" data-save="final-product" placeholder="Desarrolla aquí tu propuesta…"></textarea><div id="word-count" class="source-note mt-2" aria-live="polite"></div></div><div class="col-lg-4"><div class="evidence-card"><div class="eyebrow text-white-50">Criterios</div><ul id="final-criteria" class="text-white-50 mt-3"></ul><button class="btn btn-light rounded-pill" id="complete-lab">Marcar como completado</button><div id="completion-message" class="mt-3" aria-live="polite"></div></div></div></div>`);
+  }
 
   document.title = `${lab.nav} · Voces y Melodías Lojanas`;
   $("#lab-nav-title").textContent = lab.nav;
@@ -77,7 +47,7 @@
   $("#lab-title").textContent = lab.title;
   $("#lab-lead").textContent = lab.lead;
   $("#station-tabs").innerHTML = lab.tabs.map((label, index) => `<button class="btn station-btn${index === 0 ? " active" : ""}" data-station="${index + 1}" role="tab" aria-selected="${index === 0}">${index + 1}. ${label}</button>`).join("");
-  $("#laboratory-content").innerHTML = templates[lab.kind]();
+  $("#laboratory-content").innerHTML = buildExperience();
 
   const key = `vml-lab-${requestedId}-`;
   function showStation(number, move = true) {
@@ -90,34 +60,65 @@
   }
   $$(".station-btn").forEach(button => button.addEventListener("click", () => showStation(Number(button.dataset.station))));
   $$(".next-station").forEach(button => button.addEventListener("click", () => showStation(Number(button.dataset.next))));
-  $$("[data-save]").forEach(input => { const saved = localStorage.getItem(key + input.dataset.save); if (saved !== null) input.value = saved; input.addEventListener(input.tagName === "SELECT" ? "change" : "input", () => { localStorage.setItem(key + input.dataset.save, input.value); updateWords(); }); });
-  $$("[data-choice]").forEach(button => { const storageKey = key + button.dataset.choice; const active = localStorage.getItem(storageKey) === "1"; button.classList.toggle("selected", active); button.setAttribute("aria-pressed", String(active)); button.addEventListener("click", () => { const selected = !button.classList.contains("selected"); button.classList.toggle("selected", selected); button.setAttribute("aria-pressed", String(selected)); localStorage.setItem(storageKey, selected ? "1" : "0"); }); });
+  $$('[data-save]').forEach(input => { const saved = localStorage.getItem(key + input.dataset.save); if (saved !== null) input.value = saved; input.addEventListener("input", () => { localStorage.setItem(key + input.dataset.save, input.value); updateWords(); }); });
   function updateWords() { const field = $("#final-product"); const output = $("#word-count"); if (!field || !output) return; const count = field.value.trim() ? field.value.trim().split(/\s+/).length : 0; output.textContent = `${count} palabras`; }
-  $("#complete-lab")?.addEventListener("click", () => { localStorage.setItem(key + "complete", "1"); $("#completion-message").innerHTML = '<div class="alert alert-light">Completado en este navegador. Puedes revisar o copiar tus respuestas.</div>'; });
+  $("#complete-lab").addEventListener("click", () => { localStorage.setItem(key + "complete", "1"); $("#completion-message").innerHTML = '<div class="alert alert-light">Completado en este navegador. Puedes revisar o copiar tus respuestas.</div>'; });
   showStation(Math.min(5, Math.max(1, Number(localStorage.getItem(key + "station") || 1))), false); updateWords();
+
+  const clean = value => VML.clean(value || "");
+  const safe = value => VML.safe(clean(value));
+  const unique = values => [...new Set(values.map(clean).filter(Boolean))];
+  const link = url => /^https?:\/\//i.test(String(url || "")) ? `<a href="${VML.safe(url)}" target="_blank" rel="noopener">Abrir material documentado</a>` : "";
+  const workCard = (work, featured) => `<article class="col-lg-6"><div class="source-box h-100"><div class="eyebrow">${featured ? "Obra de referencia" : "Obra vinculada"}</div><h3 class="h4 mt-2">${safe(work.title) || "Obra sin título normalizado"}</h3><p class="mb-2">${safe([work.type, work.genre, work.year].filter(Boolean).join(" · ") || "Registro de obra")}</p>${work.role ? `<p class="mb-2"><strong>Rol:</strong> ${safe(work.role)}</p>` : ""}${work.source ? `<p class="source-note mb-2"><strong>Fuente:</strong> ${safe(work.source)}</p>` : ""}${work.digitalFile ? `<p class="mb-0">${link(work.digitalFile) || safe(work.digitalFile)}</p>` : ""}</div></article>`;
+  const mediaCard = media => `<div class="source-box"><div class="eyebrow">Material vinculado</div><h3 class="h5 mt-2">${safe(media.title || media.type || "Recurso multimedia")}</h3>${media.type ? `<p class="mb-2">${safe(media.type)}</p>` : ""}${media.source ? `<p class="source-note mb-2"><strong>Fuente:</strong> ${safe(media.source)}</p>` : ""}${media.url ? `<p class="mb-0">${link(media.url) || safe(media.url)}</p>` : ""}</div>`;
 
   function renderCreator(data) {
     const creator = (data.creators || []).find(item => item.id === lab.creatorId);
-    const resource = (data.resources || []).find(item => item.id === requestedId);
-    const profile = creator || { name: "Creadora del catálogo", discipline: lab.discipline };
-    $("#context-bio").innerHTML = `<p><strong>${VML.safe(profile.name || "Creadora del catálogo")}</strong> · ${VML.safe(profile.discipline || profile.category || lab.discipline)}.</p><p>${VML.safe(profile.bio || "La ficha pública identifica el registro; la ampliación biográfica permanece sujeta a revisión documental y editorial.")}</p>${profile.source ? `<p class="source-note"><strong>Fuente:</strong> ${VML.safe(profile.source)}</p>` : ""}`;
+    const resource = (data.resources || []).find(item => item.id === requestedId) || VML.publicResources.find(item => item.id === requestedId);
+    const profile = creator || { name: "Creadora del catálogo", discipline: lab.discipline, works: [], media: [], questions: [] };
     const works = profile.works || [];
-    $("#context-works").innerHTML = works.length ? works.slice(0, 6).map(work => `<div class="border-bottom py-2"><strong>${VML.safe(VML.clean(work.title))}</strong><br><small>${VML.safe(work.genre || work.type || "Registro preliminar")}</small></div>`).join("") : `<p>${VML.safe(resource?.objective || "Las obras y materiales se incorporarán cuando hayan sido verificados y autorizados.")}</p>`;
-    const creatorQuestions = (profile.questions || []).filter(question =>
-      String(question.creatorId || "").trim() === lab.creatorId
-    );
+    const primaryWork = works.find(work => resource?.workBase && (work.id === resource.workBase || clean(work.title) === clean(resource.workBase))) || works[0] || null;
+    const workName = clean(primaryWork?.title) || "la obra vinculada";
+    const creatorName = clean(profile.name) || "la creadora";
+
+    $("#context-bio").innerHTML = `<p><strong>${safe(creatorName)}</strong> · ${safe(profile.discipline || profile.category || lab.discipline)}.</p><p>${safe(profile.bio || "La ficha pública identifica el registro; la ampliación biográfica permanece sujeta a revisión documental y editorial.")}</p>${profile.source ? `<p class="source-note"><strong>Fuente:</strong> ${safe(profile.source)}</p>` : ""}`;
+    $("#context-works").innerHTML = works.length ? works.slice(0, 6).map(work => `<div class="border-bottom py-2"><strong>${safe(work.title)}</strong><br><small>${safe(work.genre || work.type || "Registro preliminar")}</small></div>`).join("") : `<p>${safe(resource?.objective || "Las obras se incorporarán cuando hayan sido verificadas y autorizadas.")}</p>`;
+    const creatorQuestions = (profile.questions || []).filter(question => String(question.creatorId || "").trim() === lab.creatorId);
     const quiz = $("#context-quiz");
-    if (creatorQuestions.length) {
-      VML.mountQuiz(quiz, creatorQuestions, {
-        count: 1,
-        eyebrow: "Comprueba tu comprensión",
-        title: `¿Qué descubriste sobre ${profile.name}?`
-      });
-    } else {
-      quiz.innerHTML = `<div class="source-box"><strong>Actividad en preparación</strong><p class="mb-0 mt-2">Todavía no hay una pregunta publicada y vinculada con ${VML.safe(profile.name)}. No se mostrará una pregunta general ni perteneciente a otra creadora.</p></div>`;
-    }
-    $("#lab-status").textContent = `${VML.modeLabel()} · ${resource?.prototype ? "materiales simulados identificados" : "recurso educativo"}`;
+    if (creatorQuestions.length) VML.mountQuiz(quiz, creatorQuestions, { count: 1, eyebrow: "Comprueba tu comprensión", title: `¿Qué descubriste sobre ${creatorName}?` });
+    else quiz.innerHTML = `<div class="source-box"><strong>Actividad en preparación</strong><p class="mb-0 mt-2">Todavía no hay una pregunta publicada y vinculada con ${safe(creatorName)}. No se mostrará una pregunta general ni perteneciente a otra creadora.</p></div>`;
+
+    const evidenceTitles = { poetry: "Lee y examina el registro de una obra", composition: "Escucha o examina una obra documentada", piano: "Examina la obra antes de adaptarla", choral: "Compara la obra de origen y el arreglo documentado" };
+    $("#evidence-title").textContent = evidenceTitles[lab.kind];
+    $("#evidence-intro").textContent = primaryWork ? `Trabaja con “${workName}”, vinculada en la base de datos con ${creatorName}. Distingue lo que consta en el registro de aquello que todavía requiere evidencia.` : `Todavía no existe una obra pública vinculada con ${creatorName}. La actividad se limita a identificar ese vacío documental; no se presenta contenido ficticio como si fuera suyo.`;
+    $("#evidence-records").innerHTML = works.length ? works.slice(0, 2).map((work, index) => workCard(work, index === 0)).join("") : `<div class="col-12"><div class="source-box"><strong>Sin obra pública vinculada</strong><p class="mb-0 mt-2">Para habilitar esta estación debe publicarse al menos una obra con el mismo ID de creadora.</p></div></div>`;
+    $("#media-records").innerHTML = (profile.media || []).length ? (profile.media || []).slice(0, 2).map(mediaCard).join("") : `<div class="source-box"><strong>Audio, partitura o texto no disponible</strong><p class="mb-0 mt-2">No se simula una obra de ${safe(creatorName)}. Cuando exista un archivo autorizado, aparecerá aquí con su fuente y condiciones de uso.</p></div>`;
+    $("#evidence-question").textContent = primaryWork ? `¿Qué permite afirmar el registro de “${workName}”?` : `¿Qué falta para estudiar una obra de ${creatorName}?`;
+    $("#evidence-guidance").textContent = primaryWork ? `Anota el título, el rol atribuido a ${creatorName}, la fuente disponible y un dato que aún no debería darse por confirmado.` : "Identifica los datos, la fuente y el material que deberían incorporarse antes de proponer una interpretación.";
+
+    $("#interpretation-title").textContent = lab.kind === "composition" ? "Construye una escucha argumentada" : lab.kind === "choral" ? "Interpreta una transformación documentada" : lab.kind === "piano" ? "Formula una decisión de adaptación" : "Construye una lectura argumentada";
+    $("#interpretation-prompt").textContent = primaryWork ? `Formula una interpretación provisional sobre “${workName}” en relación con la trayectoria de ${creatorName}. Explica qué dato del registro utilizas y qué evidencia adicional necesitarías para sostenerla.` : `Explica por qué no sería responsable interpretar la producción de ${creatorName} sin una obra y una fuente vinculadas. Propón una ruta concreta para completar el registro.`;
+    $("#interpretation-support").innerHTML = `<strong>Objetivo de aprendizaje</strong><p class="mb-0 mt-2">${safe(resource?.objective || `Relacionar la obra documentada con la trayectoria de ${creatorName} mediante evidencia verificable.`)}</p>`;
+
+    const sources = unique([profile.source, ...works.map(work => work.source)]);
+    $("#contrast-title").textContent = `Contrasta las fuentes sobre ${creatorName}`;
+    $("#contrast-intro").textContent = primaryWork ? `Compara la fuente biográfica de ${creatorName} con la fuente asociada a “${workName}”. Una biografía general no demuestra por sí sola la autoría, fecha o características de una obra.` : `Examina qué fuente documenta a ${creatorName} y qué fuente específica faltaría para estudiar una obra.`;
+    $("#source-records").innerHTML = sources.length ? sources.slice(0, 4).map((source, index) => `<article class="col-lg-6"><div class="source-box h-100"><div class="eyebrow">Fuente ${index + 1}</div><p class="mt-2 mb-0">${safe(source)}</p></div></article>`).join("") : `<div class="col-12"><div class="source-box"><strong>Sin fuente pública suficiente</strong><p class="mb-0 mt-2">El contraste no puede completarse hasta incorporar procedencia verificable.</p></div></div>`;
+    $("#contrast-question").textContent = primaryWork ? `¿Qué afirma cada fuente sobre ${creatorName} y “${workName}”?` : `¿Qué fuente falta para pasar del registro biográfico al estudio de una obra?`;
+    $("#contrast-guidance").textContent = "Separa coincidencias, vacíos y posibles contradicciones. No conviertas una inferencia en un hecho confirmado.";
+
+    const finalPrompts = {
+      poetry: `Redacta una nota curatorial sobre ${creatorName} y “${workName}”. Distingue los datos verificados, tu interpretación y aquello que permanece en investigación.`,
+      composition: `Diseña una ficha de escucha sobre ${creatorName} y “${workName}” que conecte contexto, rasgos musicales observables, fuente y una pregunta de interpretación.`,
+      piano: `Propón una adaptación didáctica de “${workName}” vinculada con ${creatorName}. Indica qué conservarías, qué modificarías, para qué nivel y con qué evidencia evaluarías el aprendizaje.`,
+      choral: `Diseña un comentario técnico sobre el trabajo de ${creatorName} en “${workName}”: identifica la obra de origen, la transformación propuesta y la evidencia que permitiría comprobarla.`
+    };
+    $("#final-title").textContent = `${lab.tabs[4]} con ${creatorName}`;
+    $("#final-prompt").textContent = finalPrompts[lab.kind];
+    $("#final-criteria").innerHTML = ["Nombra a la creadora y la obra estudiada", "Distingue evidencia e interpretación", "Cita al menos una fuente del registro", "No atribuye contenidos ficticios o no verificados"].map(item => `<li>${VML.safe(item)}</li>`).join("");
+    $("#lab-status").textContent = `${VML.modeLabel()} · actividad vinculada con ${creatorName}`;
     $("#lab-status").classList.add("is-ready");
   }
+
   VML.load().then(renderCreator).catch(error => { $("#lab-status").textContent = `Laboratorio disponible · catálogo temporalmente no accesible (${error.message})`; renderCreator({ creators: [], resources: VML.publicResources }); });
 })();
