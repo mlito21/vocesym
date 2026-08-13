@@ -83,26 +83,18 @@ VML.isCreatorPublished = function (creator) {
   return Boolean(creator?.bio || creator?.birth || creator?.place || creator?.source);
 };
 
-VML.publicResources = [
-  {id:"RE-001",creatorId:"CR-001",title:"Laboratorio de lectura y memoria",areas:"Lengua y Literatura · patrimonio cultural",level:"Bachillerato y educación superior",objective:"Analizar cómo la documentación y el contexto sostienen una lectura patrimonial responsable.",prototype:true},
-  {id:"RE-047",creatorId:"CR-047",title:"Laboratorio de escucha y composición",areas:"Educación Musical · patrimonio cultural",level:"Bachillerato y educación superior",objective:"Reconocer decisiones compositivas mediante escucha guiada y análisis contextual.",prototype:true},
-  {id:"RE-052",creatorId:"CR-052",title:"Laboratorio de adaptación didáctica para piano",areas:"Educación Musical · didáctica instrumental",level:"Formación musical inicial y superior",objective:"Distinguir arreglo, adaptación y transcripción para diseñar una mediación pianística.",prototype:true},
-  {id:"RE-058",creatorId:"CR-058",title:"Laboratorio del arreglo coral",areas:"Educación Musical · producción musical",level:"Bachillerato y educación superior",objective:"Identificar y justificar transformaciones de una obra para un nuevo conjunto vocal.",prototype:true}
-];
-
 VML.publicQuestions = [
   {question:"¿Qué diferencia un catálogo preliminar de una ficha patrimonial completa?",options:["El catálogo identifica el registro; la ficha incorpora información verificada y fuentes","El catálogo contiene necesariamente todas las obras","No existe ninguna diferencia"],answer:"El catálogo identifica el registro; la ficha incorpora información verificada y fuentes",feedback:"El índice público permite localizar creadoras sin presentar como concluidos datos que aún están en revisión.",destination:"archivo.html"},
   {question:"¿Por qué el archivo distingue composición y arreglo?",options:["Porque son roles creativos diferentes y deben conservar su atribución","Porque el arreglo elimina la autoría de origen","Solo por motivos de diseño"],answer:"Porque son roles creativos diferentes y deben conservar su atribución",feedback:"La trazabilidad de autorías y transformaciones forma parte del rigor patrimonial.",destination:"conexiones.html"},
   {question:"¿Qué debe acompañar a un audio, una imagen o una partitura antes de publicarse?",options:["Fuente y condiciones de uso","Únicamente un título atractivo","Ninguna información adicional"],answer:"Fuente y condiciones de uso",feedback:"La publicación responsable exige procedencia, atribución y derechos o licencias claros.",destination:"proyecto.html"}
 ];
 
-VML.prototypeResourceIds = new Set(VML.publicResources.map(resource => resource.id));
 VML.resourceHref = function (resourceOrId) {
-  const id = typeof resourceOrId === "string" ? resourceOrId : resourceOrId?.id;
+  const resource = typeof resourceOrId === "string" ? { id: resourceOrId } : resourceOrId;
+  const id = resource?.id;
   if (!id) return VML.withMode("recursos.html");
-  return VML.prototypeResourceIds.has(id)
-    ? VML.withMode(`laboratorio.html?id=${encodeURIComponent(id)}`)
-    : VML.withMode(`recurso.html?id=${encodeURIComponent(id)}`);
+  const hasEmbed = /^https:\/\//i.test(String(resource?.embedUrl || "").trim());
+  return VML.withMode(`${hasEmbed ? "recurso" : "laboratorio"}.html?id=${encodeURIComponent(id)}`);
 };
 
 VML.ensureLoadingUI = function () {
@@ -226,6 +218,8 @@ VML.load = async function () {
       const media = rows(mediaResponse).map(item => ({
         id: VML.pick(item, "ID_MEDIA", "id"),
         creatorId: VML.pick(item, "ID_CREADORA", "creatorId"),
+        workId: VML.pick(item, "ID_OBRA", "workId"),
+        resourceId: VML.pick(item, "ID_RECURSO", "resourceId"),
         creator: VML.pick(item, "CREADORA", "creator"),
         type: VML.pick(item, "TIPO_RECURSO", "type"),
         title: VML.pick(item, "TÍTULO_DESCRIPCIÓN", "title"),

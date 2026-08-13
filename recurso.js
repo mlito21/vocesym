@@ -49,8 +49,6 @@ async function init(){
     const r=(data.resources||[]).find(x=>x.id===id);
     if(!r){fail("No se encontró el recurso "+id);return}
 
-    if(VML.prototypeResourceIds.has(r.id)){location.replace(VML.resourceHref(r));return}
-
     const c=(data.creators||[]).find(x=>x.id===r.creatorId);
     $("#resource-kind").textContent=r.title||"Experiencia educativa";
     $("#resource-title").textContent=c?.name||r.creator||"Recurso educativo";

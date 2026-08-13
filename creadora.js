@@ -5,7 +5,7 @@ function resourceHref(resource) {
 }
 
 function learningHrefForCreator(creator, resource) {
-  const linked = resource || VML.publicResources.find(item => item.creatorId === creator?.id);
+  const linked = resource;
   return linked ? resourceHref(linked) : "";
 }
 

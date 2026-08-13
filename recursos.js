@@ -1,21 +1,15 @@
 const $=s=>document.querySelector(s);
 let data=null;
-const specificExperiences=new Set(["RE-001","RE-047","RE-052","RE-058"]);
 
 function hasEmbed(r){
   return /^https:\/\//i.test(String(r.embedUrl||"").trim());
-}
-
-function isAvailable(r){
-  return specificExperiences.has(r.id)||hasEmbed(r);
 }
 
 async function init(){
   try{
     data=await VML.load();
     const rs=data.resources||[];
-    const available=rs.filter(isAvailable).length;
-    $("#resources-status").textContent=`${VML.modeLabel()} · ${rs.length} recursos registrados · ${available} disponibles para abrir`;
+    $("#resources-status").textContent=`${VML.modeLabel()} · ${rs.length} recursos educativos publicados`;
     const types=[...new Set(rs.map(r=>r.title).filter(Boolean))].sort();
     $("#resource-type").innerHTML='<option value="">Todos</option>'+types.map(t=>`<option>${VML.safe(t)}</option>`).join("");
     render();
@@ -34,17 +28,15 @@ function filtered(){
   const t=$("#resource-type").value;
   const s=$("#resource-state").value;
   return(data.resources||[]).filter(r=>{
-    const available=isAvailable(r);
     return(!q||[r.creator,r.title,r.areas,r.workBase,r.objective].join(" ").toLowerCase().includes(q))&&
       (!t||r.title===t)&&
-      (!s||(s==="available"?available:!available));
+      (!s||(s==="interactive"?hasEmbed(r):!hasEmbed(r)));
   });
 }
 
 function stateLabel(r){
   if(hasEmbed(r)) return {label:"Interactivo disponible",available:true};
-  if(specificExperiences.has(r.id)) return {label:"Prototipo funcional",available:true};
-  return {label:"En preparación",available:false};
+  return {label:"Laboratorio guiado",available:true};
 }
 
 function render(){
@@ -61,7 +53,7 @@ function render(){
       <h3 class="h3 mt-3">${VML.safe(creator?.name||r.creator||"Creadora")}</h3>
       <p class="text-secondary">${VML.safe(r.objective||"La experiencia educativa se encuentra todavía en preparación.")}</p>
       <div class="small"><strong>Áreas:</strong> ${VML.safe(r.areas||"Por definir")}<br><strong>Nivel:</strong> ${VML.safe(r.level||"Por definir")}</div>
-      <div class="resource-action"><a class="btn ${state.available?"btn-brand":"btn-outline-brand"} rounded-pill" href="${href(r)}">${state.available?"Abrir experiencia":"Ver ficha del recurso"}</a></div>
+      <div class="resource-action"><a class="btn btn-brand rounded-pill" href="${href(r)}">Abrir experiencia</a></div>
     </article></div>`;
   }).join("")||'<div class="col-12"><div class="alert alert-light">No hay recursos disponibles con estos filtros en la vista actual.</div></div>';
 }
