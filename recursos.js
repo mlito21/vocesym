@@ -61,6 +61,7 @@ function render(){
 function mountDiscoveryQuiz(){
   const slot=$("#resources-discovery-slot");
   if(!slot)return;
+  if(!(data.questions||[]).length){slot.remove();return;}
   slot.innerHTML=`<div class="row g-4 align-items-start"><div class="col-lg-4"><div class="eyebrow">Interactúa</div><h2 class="section-title fs-1 mt-2">Descubre jugando</h2><p class="text-secondary">Cinco preguntas aleatorias sobre creadoras, obras y conexiones. Es una experiencia transversal para el público general y no sustituye a los recursos educativos estructurados.</p></div><div class="col-lg-8"><div id="resources-quiz"></div></div></div>`;
   VML.mountQuiz("#resources-quiz",data.questions||[],{count:5,eyebrow:"Recorrido interactivo",title:"Pon a prueba lo que has descubierto"});
 }

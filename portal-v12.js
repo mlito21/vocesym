@@ -34,7 +34,7 @@ VML.load()
     }
 
     const aprende = document.querySelector("#aprende");
-    if (aprende && !document.querySelector("#interactua")) {
+    if (questions.length && aprende && !document.querySelector("#interactua")) {
       const section = document.createElement("section");
       section.id = "interactua";
       section.className = "chapter";
