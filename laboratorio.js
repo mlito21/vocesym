@@ -4,6 +4,10 @@
   const requestedId = new URLSearchParams(location.search).get("id");
   const clean = value => VML.clean(value || "");
   const safe = value => VML.safe(clean(value));
+  const stationLabel = value => {
+    const label = clean(value).replace(/\s*\/\s*/g, " y ");
+    return label ? label.charAt(0).toLocaleUpperCase("es-EC") + label.slice(1) : label;
+  };
   const normalize = value => clean(value).normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
   const validUrl = value => /^https:\/\//i.test(String(value || "").trim());
   const station = (number, title, body) => `<section class="station${number === 1 ? " active" : ""}" data-panel="${number}" aria-hidden="${number !== 1}"><div class="station-card"><div class="eyebrow">Estación ${number} · ${safe(title)}</div>${body}</div></section>`;
@@ -20,7 +24,7 @@
   function splitSequence(value) {
     const steps = clean(value).split(/→|>|;/).map(item => item.trim()).filter(Boolean).slice(0, 5);
     const defaults = ["Contextualiza", "Explora", "Analiza", "Produce", "Evalúa"];
-    return defaults.map((fallback, index) => steps[index] || fallback);
+    return defaults.map((fallback, index) => stationLabel(steps[index] || fallback));
   }
 
   function workCard(work) {
@@ -47,7 +51,7 @@
     station(2, tabs[1], `
       <h2 class="section-title fs-1">Explora la obra y sus materiales</h2>
       ${work ? workCard(work) : `<div class="alert alert-warning"><strong>Obra base no vinculada.</strong> El recurso indica “${safe(resource.workBase || "sin obra base")}”, pero no existe una coincidencia pública exacta. No se seleccionará otra obra automáticamente.</div>`}
-      <div class="mt-4">${media.length ? media.map(mediaCard).join("") : `<div class="source-box"><strong>Sin material vinculado mediante ID_OBRA o ID_RECURSO</strong><p class="mb-0 mt-2">No se mostrarán audios, textos o partituras asociados solamente a la creadora, porque podrían pertenecer a otra obra.</p></div>`}</div>
+      <div class="mt-4">${media.length ? media.map(mediaCard).join("") : `<div class="source-box"><strong>Material complementario en preparación</strong><p class="mb-0 mt-2">Todavía no hay un audio, texto o partitura publicado y vinculado de forma verificable con esta obra. El laboratorio conserva este vacío y no muestra materiales pertenecientes a otras obras.</p></div>`}</div>
       <label class="form-label fw-bold mt-4" for="exploration-response">Registra lo que la evidencia disponible permite observar</label><textarea id="exploration-response" class="form-control lab-textarea" data-save="exploration" placeholder="Describe datos observables y señala los límites de la evidencia disponible…"></textarea>${next(2)}`) +
     station(3, tabs[2], `
       <h2 class="section-title fs-1">Desarrolla la actividad</h2><div class="source-box"><strong>Consigna registrada en la Base Maestra</strong><p class="mb-0 mt-2">${safe(activity || "La actividad debe completarse en la Base Maestra antes de utilizar este laboratorio.")}</p></div>
@@ -64,13 +68,14 @@
     const updateWords = () => {
       const field = $("#final-product");
       if (!field) return;
-      $("#word-count").textContent = `${field.value.trim() ? field.value.trim().split(/\s+/).length : 0} palabras`;
+      const count = field.value.trim() ? field.value.trim().split(/\s+/).length : 0;
+      $("#word-count").textContent = `${count} ${count === 1 ? "palabra" : "palabras"}`;
     };
     const showStation = (number, move = true) => {
       $$(".station").forEach(panel => { const active = Number(panel.dataset.panel) === number; panel.classList.toggle("active", active); panel.setAttribute("aria-hidden", String(!active)); });
       $$(".station-btn").forEach(button => { const active = Number(button.dataset.station) === number; button.classList.toggle("active", active); button.setAttribute("aria-selected", String(active)); });
       const percent = number * 20;
-      $("#progress-label").textContent = `Recorrido ${number} de 5`;
+      $("#progress-label").textContent = `Estación ${number} de 5`;
       $("#progress-percent").textContent = `${percent}%`;
       $("#progress-bar").style.width = `${percent}%`;
       $(".lab-progress").setAttribute("aria-valuenow", String(percent));
