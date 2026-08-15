@@ -4,11 +4,10 @@ VML.load()
     const resources = data.resources || [];
     const questions = data.questions || [];
     const works = creators.reduce((total, creator) => total + (creator.works || []).length, 0);
+    const resourceLabel = resources.length === 1 ? "recurso educativo" : "recursos educativos";
 
     document.querySelector("#portal-live-status").textContent =
-      VML.isPublic()
-        ? `${VML.modeLabel()} · ${creators.length} creadoras · ${works} obras · ${resources.length} recursos educativos`
-        : `${VML.modeLabel()} · ${creators.length} creadoras · ${works} obras · ${resources.length} recursos educativos`;
+      `${VML.modeLabel()} · ${creators.length} creadoras · ${works} obras · ${resources.length} ${resourceLabel}`;
     document.querySelector("#portal-live-status").classList.add("is-ready");
 
     document.querySelector("#stat-creators-v12").textContent = creators.length;

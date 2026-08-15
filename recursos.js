@@ -9,7 +9,8 @@ async function init(){
   try{
     data=await VML.load();
     const rs=data.resources||[];
-    $("#resources-status").textContent=`${VML.modeLabel()} · ${rs.length} recursos educativos publicados`;
+    const resourceLabel=rs.length===1?"recurso educativo publicado":"recursos educativos publicados";
+    $("#resources-status").textContent=`${VML.modeLabel()} · ${rs.length} ${resourceLabel}`;
     const types=[...new Set(rs.map(r=>r.title).filter(Boolean))].sort();
     $("#resource-type").innerHTML='<option value="">Todos</option>'+types.map(t=>`<option>${VML.safe(t)}</option>`).join("");
     render();
@@ -62,8 +63,12 @@ function mountDiscoveryQuiz(){
   const slot=$("#resources-discovery-slot");
   if(!slot)return;
   if(!(data.questions||[]).length){slot.remove();return;}
-  slot.innerHTML=`<div class="row g-4 align-items-start"><div class="col-lg-4"><div class="eyebrow">Interactúa</div><h2 class="section-title fs-1 mt-2">Descubre jugando</h2><p class="text-secondary">Cinco preguntas aleatorias sobre creadoras, obras y conexiones. Es una experiencia transversal para el público general y no sustituye a los recursos educativos estructurados.</p></div><div class="col-lg-8"><div id="resources-quiz"></div></div></div>`;
-  VML.mountQuiz("#resources-quiz",data.questions||[],{count:5,eyebrow:"Recorrido interactivo",title:"Pon a prueba lo que has descubierto"});
+  const questionCount=Math.min(5,data.questions.length);
+  const description=questionCount===1
+    ? "Una pregunta aleatoria sobre las creadoras y sus obras. Es una experiencia transversal para el público general y no sustituye a los recursos educativos estructurados."
+    : `${questionCount} preguntas aleatorias sobre creadoras, obras y conexiones. Es una experiencia transversal para el público general y no sustituye a los recursos educativos estructurados.`;
+  slot.innerHTML=`<div class="row g-4 align-items-start"><div class="col-lg-4"><div class="eyebrow">Interactúa</div><h2 class="section-title fs-1 mt-2">Descubre jugando</h2><p class="text-secondary">${description}</p></div><div class="col-lg-8"><div id="resources-quiz"></div></div></div>`;
+  VML.mountQuiz("#resources-quiz",data.questions||[],{count:questionCount,eyebrow:"Recorrido interactivo",title:"Pon a prueba lo que has descubierto"});
 }
 
 $("#resource-search").addEventListener("input",render);
