@@ -84,10 +84,26 @@ VML.isCreatorPublished = function (creator) {
 };
 
 VML.publicQuestions = [
-  {question:"¿Qué diferencia un catálogo preliminar de una ficha patrimonial completa?",options:["El catálogo identifica el registro; la ficha incorpora información verificada y fuentes","El catálogo contiene necesariamente todas las obras","No existe ninguna diferencia"],answer:"El catálogo identifica el registro; la ficha incorpora información verificada y fuentes",feedback:"El índice público permite localizar creadoras sin presentar como concluidos datos que aún están en revisión.",destination:"archivo.html"},
-  {question:"¿Por qué el archivo distingue composición y arreglo?",options:["Porque son roles creativos diferentes y deben conservar su atribución","Porque el arreglo elimina la autoría de origen","Solo por motivos de diseño"],answer:"Porque son roles creativos diferentes y deben conservar su atribución",feedback:"La trazabilidad de autorías y transformaciones forma parte del rigor patrimonial.",destination:"conexiones.html"},
-  {question:"¿Qué debe acompañar a un audio, una imagen o una partitura antes de publicarse?",options:["Fuente y condiciones de uso","Únicamente un título atractivo","Ninguna información adicional"],answer:"Fuente y condiciones de uso",feedback:"La publicación responsable exige procedencia, atribución y derechos o licencias claros.",destination:"proyecto.html"}
+  {
+    id: "PG-003",
+    type: "Disciplina",
+    question: "¿Cómo está clasificada Matilde Hidalgo Navarro dentro del archivo?",
+    options: ["Poeta", "Compositora", "Arreglista", "Intérprete"],
+    answer: "Poeta",
+    feedback: "Matilde Hidalgo Navarro está incluida en la categoría de poetas del corpus Voces y Melodías Lojanas.",
+    creatorId: "CR-001",
+    workId: "",
+    difficulty: "Básica",
+    source: "01_Creadoras · CR-001",
+    destination: "creadora.html?id=CR-001"
+  }
 ];
+
+VML.isProductionQuestion = function (question) {
+  const identifiers = [question?.id, question?.creatorId, question?.workId]
+    .map(value => String(value || "").trim());
+  return !identifiers.some(value => /(?:^|-)TEST(?:-|$)/i.test(value));
+};
 
 VML.resourceHref = function (resourceOrId) {
   const resource = typeof resourceOrId === "string" ? { id: resourceOrId } : resourceOrId;
@@ -270,7 +286,7 @@ VML.load = async function () {
         publishable: VML.pick(item, "PUBLICABLE_WEB", "publishable")
       }));
 
-      const questions = rows(questionResponse).map(item => ({
+      const liveQuestions = rows(questionResponse).map(item => ({
         id: VML.pick(item, "ID_PREGUNTA", "id"),
         type: VML.pick(item, "TIPO", "type"),
         question: VML.pick(item, "PREGUNTA", "question"),
@@ -282,7 +298,19 @@ VML.load = async function () {
         difficulty: VML.pick(item, "DIFICULTAD", "difficulty"),
         source: VML.pick(item, "FUENTE", "source"),
         destination: VML.pick(item, "ENLACE_DESTINO", "destination")
-      })).filter(item => item.question && item.answer && item.options.length >= 2);
+      })).filter(item =>
+        item.question &&
+        item.answer &&
+        item.options.length >= 2 &&
+        VML.isProductionQuestion(item)
+      );
+
+      // La implementación pública anterior de Apps Script no expone todavía
+      // action=questions. Mientras se publica la versión corregida, el portal
+      // conserva una copia controlada de la pregunta real y verificada de la
+      // Base Maestra. Las preguntas ficticias de prueba nunca se muestran.
+      const questions = (liveQuestions.length ? liveQuestions : VML.publicQuestions)
+        .map(item => ({ ...item, options: [...item.options] }));
 
       const group = (items, key) => items.reduce((acc, item) => {
         const id = item[key];
