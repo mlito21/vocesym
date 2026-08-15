@@ -17,8 +17,10 @@ async function init(){
     $("#pending-count").textContent=pending.length;
     $("#coverage-percent").textContent=pct+"%";
     $("#coverage-fill").style.width=pct+"%";
+    const locationLabel=locations.length===1?"registro geográfico":"registros geográficos";
+    const pendingLabel=pending.length===1?"creadora":"creadoras";
     $("#map-status").textContent=locations.length
-      ? `${VML.modeLabel(dataset)} · ${locations.length} registro(s) geográfico(s) · ${pending.length} creadora(s) sin localización georreferenciada en la vista actual`
+      ? `${VML.modeLabel(dataset)} · ${locations.length} ${locationLabel} · ${pending.length} ${pendingLabel} sin localización georreferenciada en la vista actual`
       : `${VML.modeLabel(dataset)} · cartografía documental en preparación`;
     renderLocations();
     renderPending(pending);
@@ -64,9 +66,12 @@ function renderInterpretation(located,pending){
   const el=$("#map-interpretation");
   if(!el)return;
   if(!creators.length){el.innerHTML='<strong>Interpretación:</strong> la vista actual no contiene creadoras publicadas, por lo que todavía no existen puntos que representar.';return;}
+  const creatorLabel=creators.length===1?"creadora":"creadoras";
+  const locatedVerb=located===1?"cuenta":"cuentan";
+  const pendingVerb=pending===1?"permanece":"permanecen";
   el.innerHTML=VML.isPublic()&&!located
     ? `<strong>Interpretación:</strong> el catálogo público contiene ${creators.length} creadoras, pero sus localizaciones documentales aún no están publicadas. Esta ausencia se muestra como trabajo pendiente y no como una ubicación supuesta.`
-    : `<strong>Interpretación:</strong> la vista actual contiene ${creators.length} creadora(s); ${located} cuentan con localización georreferenciada y ${pending} permanecen sin coordenadas verificadas. La ausencia de un marcador no se completa por inferencia: se conserva como una necesidad de investigación documental.`;
+    : `<strong>Interpretación:</strong> la vista actual contiene ${creators.length} ${creatorLabel}; ${located} ${locatedVerb} con localización georreferenciada y ${pending} ${pendingVerb} sin coordenadas verificadas. La ausencia de un marcador no se completa por inferencia: se conserva como una necesidad de investigación documental.`;
 }
 
 function selectLocation(i,popup=true){
