@@ -6,16 +6,14 @@ El repositorio dispone de una arquitectura funcional:
 
 Google Sheets (Base Maestra) → vistas PREVIEW/WEB → Apps Script/API → portal HTML/CSS/JS → GitHub Pages.
 
-La Base Maestra registra actualmente:
+Estado público verificado al 15 de agosto de 2026:
 
-- 61 creadoras identificadas.
-- 95 obras o fragmentos preliminares.
-- 113 fuentes registradas.
-- 58 referencias multimedia iniciales.
-- 61 propuestas de recursos educativos.
-- 0 registros publicables según el control editorial vigente.
+- 61 creadoras en el directorio preliminar; 2 tienen ficha pública completa.
+- 4 obras, 1 recurso multimedia y 1 lugar publicados.
+- 1 laboratorio educativo público (`RE-001`) y 1 pregunta verificada (`PG-003`).
+- 0 relaciones y 0 mediaciones patrimoniales publicadas.
 
-Por tanto, el portal combina un **catálogo público preliminar** de identificación y un entorno PREVIEW académico. El catálogo no debe interpretarse como publicación definitiva de biografías, obras, fuentes o multimedia.
+El portal ofrece un **catálogo público preliminar** de identificación y consume únicamente vistas WEB. El material académico en revisión permanece en un entorno PREVIEW separado; no puede habilitarse desde la URL pública.
 
 ## Dos entornos lógicos
 
@@ -34,7 +32,7 @@ Fuente de datos:
 Configuración web:
 
 ```js
-API_MODE: "preview"
+API_MODE: "preview" // solo en el entorno interno separado
 ```
 
 Puede mostrar información preliminar, siempre identificada como tal.
@@ -51,8 +49,10 @@ Fuente de datos:
 - 10_WEB_Recursos
 - 17_WEB_Relaciones
 - 20_WEB_Lugares
+- 23_WEB_Mediacion
+- 26_WEB_Preguntas
 
-Configuración web futura:
+Configuración del portal:
 
 ```js
 API_MODE: "public"
@@ -86,9 +86,10 @@ Se recomienda validar por lotes pequeños, no las 61 creadoras simultáneamente.
 
 - CR-001 · Matilde Hidalgo Navarro
 - CR-047 · Blanca Cano Palacio
+- CR-052 · Rocío del Carmen Espinosa Ontaneda
 - CR-058 · Emily Katherine Ordóñez Celi
 
-Objetivo: completar documentación, derechos, biografía, obras y recurso educativo, y utilizar estos perfiles para validar todo el flujo de producción.
+Estado: Matilde completa actualmente el flujo público. Blanca conserva una actividad interna completa, pero sus fuentes y contenidos siguen sin publicación. Rocío y Emily permanecen en diseño preliminar porque sus actividades todavía no están desarrolladas. Ninguna debe promoverse por conveniencia de interfaz.
 
 ### Lote 2 · creadoras con fuentes y obras relativamente desarrolladas
 
@@ -110,4 +111,4 @@ La lógica de navegación debe conservar cinco niveles:
 
 ## Próximo hito de producción
 
-El índice preliminar ya permite localizar las 61 creadoras sin presentar como verificadas sus fichas. El siguiente hito es conseguir que el primer lote de fichas patrimoniales atraviese completamente el flujo editorial y aparezca correctamente en las vistas WEB. Una vez validado el proceso, se escala por lotes.
+El índice preliminar permite localizar las 61 creadoras sin presentar como verificadas sus fichas. `RE-001` valida el flujo completo de un primer laboratorio público. El siguiente hito es cerrar documentación, derechos, obra, pregunta y actividad de un segundo perfil antes de promoverlo a las vistas WEB.

@@ -61,7 +61,7 @@ Entidad de datos:
 - `14_PREVIEW_Recursos`
 - `10_WEB_Recursos`
 
-Los laboratorios de Matilde Hidalgo, Blanca Cano y Emily Ordóñez pertenecen a esta capa y no deben reemplazar la experiencia patrimonial general.
+Los laboratorios de Matilde Hidalgo, Blanca Cano, Rocío del Carmen Espinosa Ontaneda y Emily Ordóñez pertenecen a esta capa y no deben reemplazar la experiencia patrimonial general. En el corte actual, solo el laboratorio de Matilde está publicado; los otros tres permanecen en el entorno interno hasta completar sus controles documentales y pedagógicos.
 
 ## 3. Investigar · especialistas y equipo del proyecto
 

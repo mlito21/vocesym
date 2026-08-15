@@ -1,11 +1,12 @@
-# V12 · Lógica de presentación del sitio
+# Lógica de presentación del sitio
 
 ## Recorrido recomendado
 1. Proyecto: qué problema aborda y cómo la investigación se transforma en mediación.
 2. Sistematización: indicadores dinámicos y arquitectura Base Maestra → Vistas → API → Portal → Recursos.
 3. Explora: Archivo = quién; Cronología = cuándo; Mapa = dónde; Conexiones = cómo se relacionan.
-4. Aprende: catálogo completo + tres laboratorios enriquecidos.
-5. Trazabilidad: fuentes, estados, derechos y vacíos como parte del método.
+4. Interactúa: preguntas verificadas y retroalimentación vinculada con la ficha que sustenta la respuesta.
+5. Aprende: catálogo público controlado + un laboratorio piloto completo; los demás permanecen fuera de producción hasta su validación.
+6. Trazabilidad: fuentes, estados, derechos y vacíos como parte del método.
 
 ## Lectura del mapa
 El mapa muestra:

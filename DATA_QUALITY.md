@@ -13,8 +13,9 @@ Del mismo modo, una creadora puede tener una ficha básica en PREVIEW sin dispon
 | ID | Creadora | Estado actual | Fortalezas | Vacíos para producción | Prioridad |
 |---|---|---|---|---|---|
 | CR-047 | Blanca Cano Palacio | En revisión · No publicable | Lugar y fechas documentadas; biografía desarrollada; fuentes UNL, bibliográfica e institucional; varias obras documentadas; mediación patrimonial MP-047; laboratorio sonoro | Revisión académica final; derechos/autorización de fotografía; revisión final de obras y fuentes; aprobación editorial | Alta |
-| CR-001 | Matilde Hidalgo Navarro | Preliminar · No publicable | Año de nacimiento; fuente bibliográfica principal; laboratorio de poesía | Lugar pendiente; biografía validada ausente; fotografía pendiente de autorización; obras y atribuciones requieren revisión; mediación patrimonial específica aún no debe redactarse como definitiva | Media-alta |
-| CR-058 | Emily Katherine Ordóñez Celi | Preliminar · No publicable | Fuente vinculada con trabajo sobre arreglos de Blanca Cano; archivo personal para fotografía; laboratorio del arreglo | Lugar pendiente; biografía validada ausente; derechos de fotografía; revisión documental de arreglos y rol; mediación patrimonial específica aún no debe redactarse como definitiva | Media-alta |
+| CR-001 | Matilde Hidalgo Navarro | Verificado · Publicable | Biografía sustentada; dos fuentes trazables; dos obras públicas; pregunta verificada; laboratorio de poesía público | Derechos de fotografía pendientes; individualización, atribución y derechos de textos todavía en revisión; sin mediación patrimonial pública | Alta |
+| CR-052 | Rocío del Carmen Espinosa Ontaneda | Preliminar · No publicable | Propuesta de recurso y obra base identificadas | Actividad aún por diseñar; creadora, obras, preguntas y derechos sin aprobación pública | Media-alta |
+| CR-058 | Emily Katherine Ordóñez Celi | Preliminar · No publicable | Fuente vinculada con trabajo sobre arreglos de Blanca Cano; archivo personal para fotografía; propuesta de laboratorio del arreglo | Actividad aún por diseñar; lugar y biografía pendientes; derechos de fotografía; revisión documental de arreglos y rol | Media-alta |
 
 ## Estado de mediación patrimonial del lote piloto
 
@@ -36,23 +37,21 @@ Se mantiene en **En revisión / No publicable**.
 
 ### CR-001 · Matilde Hidalgo Navarro
 
-No debe generarse todavía una mediación patrimonial definitiva. La ficha actual presenta:
+La ficha biográfica y el laboratorio `RE-001` ya completaron el primer flujo público controlado. La ficha actual presenta:
 
-- `AÑO_NACIMIENTO = 1887`;
-- `LUGAR_NACIMIENTO = Pendiente de verificación`;
-- `BIOGRAFÍA_VALIDADA` vacía;
-- `ESTADO_BIOGRAFÍA = Pendiente`;
-- `ESTADO_VERIFICACIÓN = Preliminar`;
-- `PUBLICABLE_WEB = No`.
+- `AÑO_NACIMIENTO = 1889`;
+- `LUGAR_NACIMIENTO = Loja, Ecuador`;
+- biografía sustentada y en revisión editorial;
+- `ESTADO_VERIFICACIÓN = Verificado`;
+- `PUBLICABLE_WEB = Sí`;
+- fotografía omitida de la vista WEB mientras `DERECHOS_FOTOGRAFÍA = Pendiente de autorización`.
 
-Antes de redactar `MP-001` se requiere:
+Antes de redactar y publicar `MP-001` todavía se requiere:
 
-- [ ] verificar lugar de nacimiento;
-- [ ] construir y revisar síntesis biográfica a partir de fuentes trazables;
-- [ ] revisar obras y atribuciones;
-- [ ] resolver fuente y derechos de fotografía;
+- [ ] resolver los derechos de fotografía o documentar una licencia válida;
+- [ ] continuar la individualización y revisión de atribuciones de los textos;
 - [ ] definir con evidencia su aporte específico al patrimonio literario lojano;
-- [ ] pasar la ficha a estado En revisión antes de redactar la mediación pública final.
+- [ ] revisar editorialmente la mediación patrimonial como producto diferenciado del laboratorio.
 
 ### CR-058 · Emily Katherine Ordóñez Celi
 
@@ -75,7 +74,7 @@ Antes de redactar `MP-058` se requiere:
 - [ ] definir su aporte patrimonial sin reducir su perfil únicamente al trabajo de titulación;
 - [ ] pasar la ficha a estado En revisión antes de redactar la mediación pública final.
 
-## Candidata más próxima a producción
+## Siguiente candidata a producción
 
 **CR-047 · Blanca Cano Palacio** es actualmente el perfil piloto más avanzado documentalmente. La Base Maestra ya contiene:
 
@@ -144,7 +143,7 @@ Pendientes para considerarlo un REA publicable:
 - [ ] Verificar navegación completa por teclado.
 - [ ] Revisar contraste y foco visible en todos los estados interactivos.
 - [ ] Realizar revisión pedagógica final.
-- [ ] Cambiar estado de `En desarrollo` a un estado editorial aprobado solo después de la revisión.
+- [ ] Mantener el estado `Piloto` como control interno y promover a `Validado` solo después de la revisión.
 
 ### Decisión actual
 

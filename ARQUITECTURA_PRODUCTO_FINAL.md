@@ -62,9 +62,9 @@ PORTAL WEB
 | Mostrar evolución histórica | Cronología dinámica | `linea-tiempo.html` | Implementado | Alta |
 | Relacionar creadoras con territorio | Georreferenciación con precisión explícita | `mapa.html` | Implementado; cobertura limitada por datos | Alta |
 | Mostrar relaciones entre creación, obra y transformación | Grafo/relaciones documentales | `conexiones.html` | Implementado | Alta |
-| Divulgar vida y obra al público general | Narrativa curatorial por creadora | Mediación patrimonial | Modelo implementado con Blanca Cano | Crítica |
-| Facilitar interacción general | Banco de preguntas aleatorias | Inicio + creadora + recursos | Implementado en PREVIEW | Media-Alta |
-| Producir recursos educativos | H5P/Lumi/eXeLearning/laboratorios | Recursos + ficha de creadora | Infraestructura lista; contenidos por desarrollar | Crítica |
+| Divulgar vida y obra al público general | Narrativa curatorial por creadora | Mediación patrimonial | Modelo interno con Blanca Cano; aún no publicado | Crítica |
+| Facilitar interacción general | Banco de preguntas aleatorias | Inicio + creadora + recursos | Implementado en producción con 1 pregunta verificada | Media-Alta |
+| Producir recursos educativos | H5P/Lumi/eXeLearning/laboratorios | Recursos + ficha de creadora | Infraestructura lista y 1 laboratorio piloto público; demás contenidos en desarrollo | Crítica |
 | Evidenciar fuentes y rigor | Referencias, estados de verificación, derechos | Sección Investiga / trazabilidad | Implementado parcialmente | Crítica |
 | Incorporar audio, imagen, partitura o video | Multimedia documentada y autorizada | Ficha pública + recursos | Estructura existente; faltan derechos/materiales | Alta |
 | Preservar y circular productos del proyecto | Descarga/enlace a materiales autorizados | Biblioteca/recursos derivados | Pendiente de consolidación | Media |
@@ -148,7 +148,7 @@ Usos:
 
 - Inicio: 1 pregunta aleatoria.
 - Ficha: 1 pregunta sobre la creadora.
-- Recursos: recorrido de 5 preguntas.
+- Recursos: recorrido de hasta 5 preguntas verificadas; la interfaz ajusta el texto y la cantidad al banco disponible.
 
 ### Recursos educativos
 
