@@ -99,18 +99,37 @@ VML.publicQuestions = [
   }
 ];
 
+VML.isProductionId = function (value) {
+  return !/(?:^|-)TEST(?:-|$)/i.test(String(value || "").trim());
+};
+
+VML.isProductionRecord = function (record) {
+  return Object.entries(record || {}).every(([key, value]) => {
+    const normalizedKey = key.toLowerCase();
+    const isIdentifier = normalizedKey === "id" || normalizedKey.startsWith("id_") || normalizedKey.endsWith("id");
+    return !isIdentifier || !String(value || "").trim() || VML.isProductionId(value);
+  });
+};
+
 VML.isProductionQuestion = function (question) {
-  const identifiers = [question?.id, question?.creatorId, question?.workId]
-    .map(value => String(value || "").trim());
-  return !identifiers.some(value => /(?:^|-)TEST(?:-|$)/i.test(value));
+  return VML.isProductionRecord(question);
+};
+
+VML.isLaboratoryResource = function (resourceOrUrl) {
+  const url = String(typeof resourceOrUrl === "string" ? resourceOrUrl : resourceOrUrl?.embedUrl || "").trim();
+  return !/^https:\/\//i.test(url) || /(?:^|\/)laboratorio\.html(?:[?#]|$)/i.test(url);
+};
+
+VML.isEmbeddedResource = function (resourceOrUrl) {
+  const url = String(typeof resourceOrUrl === "string" ? resourceOrUrl : resourceOrUrl?.embedUrl || "").trim();
+  return /^https:\/\//i.test(url) && !VML.isLaboratoryResource(url);
 };
 
 VML.resourceHref = function (resourceOrId) {
   const resource = typeof resourceOrId === "string" ? { id: resourceOrId } : resourceOrId;
   const id = resource?.id;
   if (!id) return VML.withMode("recursos.html");
-  const hasEmbed = /^https:\/\//i.test(String(resource?.embedUrl || "").trim());
-  return VML.withMode(`${hasEmbed ? "recurso" : "laboratorio"}.html?id=${encodeURIComponent(id)}`);
+  return VML.withMode(`${VML.isEmbeddedResource(resource) ? "recurso" : "laboratorio"}.html?id=${encodeURIComponent(id)}`);
 };
 
 VML.ensureLoadingUI = function () {
@@ -195,7 +214,9 @@ VML.load = async function () {
       const [relationResponse, locationResponse, mediationResponse, questionResponse] =
         await Promise.all(["relations", "locations", "mediations", "questions"].map(action => VML.loadPublicAction(action)));
 
-      const rows = response => Array.isArray(response?.items) ? response.items : [];
+      const rows = response => Array.isArray(response?.items)
+        ? response.items.filter(VML.isProductionRecord)
+        : [];
       const creators = rows(creatorResponse).map(item => {
         const name = VML.pick(item, "NOMBRE_COMPLETO", "name");
         return {

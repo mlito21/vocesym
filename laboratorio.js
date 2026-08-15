@@ -103,7 +103,7 @@
       const data = await VML.load();
       const resource = (data.resources || []).find(item => item.id === requestedId);
       if (!resource) { fail(`El recurso ${requestedId} no está publicado.`); return; }
-      if (validUrl(resource.embedUrl)) { location.replace(VML.resourceHref(resource)); return; }
+      if (VML.isEmbeddedResource(resource)) { location.replace(VML.resourceHref(resource)); return; }
 
       const creator = (data.creators || []).find(item => item.id === resource.creatorId);
       if (!creator) { fail(`El recurso ${requestedId} no tiene una creadora pública vinculada.`); return; }

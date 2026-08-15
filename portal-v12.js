@@ -20,7 +20,7 @@ VML.load()
       featured.innerHTML = resources.slice(0, 3).map(resource => {
         const creator = creators.find(item => item.id === resource.creatorId);
         const href = VML.resourceHref(resource);
-        const format = /^https:\/\//i.test(String(resource.embedUrl || "").trim())
+        const format = VML.isEmbeddedResource(resource)
           ? "Experiencia interactiva"
           : "Laboratorio guiado";
         return `<div class="col-lg-4"><article class="story-card d-flex flex-column">

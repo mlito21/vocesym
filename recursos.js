@@ -2,7 +2,7 @@ const $=s=>document.querySelector(s);
 let data=null;
 
 function hasEmbed(r){
-  return /^https:\/\//i.test(String(r.embedUrl||"").trim());
+  return VML.isEmbeddedResource(r);
 }
 
 async function init(){
